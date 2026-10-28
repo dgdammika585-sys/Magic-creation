@@ -80,6 +80,10 @@
 @media(max-width:740px){.empty-hero{grid-template-columns:1fr;padding:22px;min-height:0}.empty-hero h1{font-size:31px}.empty-hero-art{position:absolute;right:0;bottom:-21px;opacity:.35;width:150px}.empty-hero-copy{position:relative;z-index:2;max-width:84%}.no-invites-card{grid-template-columns:1fr;gap:18px;padding:15px}.no-invites-art{min-height:150px}.how-grid{gap:8px}.how-card{padding:13px;min-height:0}.how-card h3{font-size:18px}.suggested-grid{gap:9px}.suggested-art{height:130px}.suggested-paper{width:73px;height:100px}.suggested-paper b{font-size:14px}.suggested-info{padding:9px}.suggested-info h3{font-size:17px}.suggested-info .outline-btn,.suggested-info .primary-btn{white-space:normal;width:100%;padding:8px 5px;font-size:8px}.inspiration-grid{grid-template-columns:1fr}.account-meta{display:none}}
 @media(max-width:430px){.how-grid{grid-template-columns:1fr 1fr}.suggested-grid{grid-template-columns:1fr}.suggested-art{height:150px}.suggested-info{padding:12px}.suggested-info .outline-btn,.suggested-info .primary-btn{font-size:9px;padding:9px}.account-chip{gap:5px}.account-avatar{height:30px;width:30px}}
 
+
+#workspaceFrame{display:none;position:fixed;inset:0;width:100%;height:100%;border:0;background:#f6f4f1;z-index:100}
+#workspaceFrame.open{display:block}
+body.workspace-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -105,6 +109,7 @@
   <footer class="footer"><span>© <span id="year"></span> MAGIC CREATIONS</span><span>Small details. Big feelings.</span><a href="index.html">Website home ↗</a></footer>
 </main>
 </div>
+<iframe id="workspaceFrame" title="MAGIC CREATIONS event workspace" loading="eager"></iframe>
 <div class="modal-back" id="createModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="createTitle">
  <div class="modal-head"><div><h2 id="createTitle">Create a new invitation</h2><p>Start with the basic event details. You can refine the design in your workspace.</p></div><button class="close" id="closeModal" aria-label="Close">×</button></div>
  <form id="createForm"><div class="form-grid">
@@ -264,7 +269,12 @@ function publishEvent(id){
 }
 function openWorkspace(id,section){
  var e=state.events.find(function(x){return x.id===id;});if(!e)return;
- state.active=e.id;saveState();location.href='event-workspace.html#app='+(section||'overview');
+ state.active=e.id;saveState();
+ var frame=document.getElementById('workspaceFrame');
+ if(!frame)return;
+ document.body.classList.add('workspace-open');
+ frame.classList.add('open');
+ frame.src='event-workspace.html#app='+(section||'overview');
 }
 function useTemplate(id){
  var t=templates.find(function(x){return x.id===id;});if(!t)return;
@@ -288,6 +298,15 @@ function bindPageEvents(){
  document.getElementById('createForm').onsubmit=createEvent;
  document.getElementById('createModal').onclick=function(ev){if(ev.target===this)closeModal();};
 }
+window.addEventListener('message',function(ev){
+ if(ev.origin!==location.origin)return;
+ if(!ev.data||ev.data.type!=='mc-back-to-invitations')return;
+ var frame=document.getElementById('workspaceFrame');
+ if(frame){frame.classList.remove('open');frame.src='about:blank';}
+ document.body.classList.remove('workspace-open');
+ state=readState();
+ page='dashboard';filter='all';render();
+});
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeModal();});
 state=readState();
 render();
