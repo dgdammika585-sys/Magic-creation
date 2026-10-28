@@ -241,6 +241,35 @@ body.workspace-open{overflow:hidden}
 .how-section-head h2{font-size:13px;font-weight:500;margin-bottom:13px}
 @media(max-width:740px){.empty-main-state{min-height:230px;padding:24px 6px}.empty-state-icon{margin-bottom:10px}}
 
+
+/* Invitation creation wizard */
+.creation-modal{position:relative;width:min(690px,100%);padding:30px 30px 24px;border-radius:12px}
+.creation-close{position:absolute;right:14px;top:13px;z-index:3;font-size:25px;line-height:1}
+.creation-step[hidden]{display:none!important}
+.wizard-kicker{display:block;font-size:8px;font-weight:700;letter-spacing:.15em;color:#8e6bc8;margin-bottom:7px}
+.creation-modal .modal-head{margin-bottom:21px;padding-right:24px}
+.creation-modal .modal-head h2{font:500 25px/1.25 var(--sans);letter-spacing:-.035em;color:#322b38;margin:0 0 6px}
+.creation-modal .modal-head p{font-size:10px;color:#827985;line-height:1.65;margin:0}
+.creation-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.creation-choice{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;width:100%;padding:13px 13px 14px;border:1px solid #e5dce9;border-radius:9px;background:#fffdfb;color:#302b35;transition:transform .16s,border-color .16s,box-shadow .16s}
+.creation-choice:hover,.creation-choice:focus-visible{border-color:#a78ae3;box-shadow:0 7px 22px #6c43b810;transform:translateY(-2px)}
+.choice-art{width:100%;height:124px;position:relative;display:grid;place-items:center;overflow:hidden;border-radius:6px;margin-bottom:13px}
+.choice-art-template{background:radial-gradient(circle at 25% 20%,#fff7f0 0,#f3e6eb 48%,#e7d9f4 100%)}
+.choice-card-mini{height:94px;width:66px;background:#fffdf8;border:1px solid #d1b8a6;outline:1px solid #e1cdbf;outline-offset:-5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;transform:rotate(-5deg);box-shadow:0 7px 18px #4231471c;color:#8b6a75}
+.choice-card-mini i{font:22px var(--serif);font-style:normal}.choice-card-mini b{font-size:5px;letter-spacing:.06em;font-weight:500}.choice-card-mini em{font-size:5px;letter-spacing:.15em;font-style:normal}
+.choice-spark{position:absolute;right:26%;top:20px;color:#b486cc;font-size:20px}
+.choice-art-custom{background:linear-gradient(145deg,#f4f1ff,#f9eefa)}
+.choice-blank{width:105px;height:90px;background:#fff;border:1px solid #ded6ec;border-radius:5px;padding:12px 12px;box-shadow:0 7px 18px #4231470d;display:flex;flex-direction:column;gap:8px;color:#8766bb}
+.choice-blank b{font:italic 24px/1 var(--serif);font-weight:400}.choice-blank i{font-size:6px;color:#c7bbd8;font-style:normal;letter-spacing:.1em}
+.choice-plus{position:absolute;right:calc(50% - 66px);bottom:15px;width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:#7342d4;color:white;font-size:18px;border:2px solid white}
+.choice-title{font:600 15px/1.35 var(--sans);margin-bottom:5px}
+.choice-copy{font-size:9px;line-height:1.7;color:#807682;min-height:31px}
+.choice-action{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:9px;font-weight:700;color:#7040d6}
+.wizard-footnote{font-size:8px;color:#988d9a;line-height:1.6;margin:18px 0 0}
+.details-modal-head{align-items:center}
+.back-choice{font-size:9px;padding:8px 10px;flex-shrink:0}
+@media(max-width:520px){.creation-modal{padding:25px 15px 19px}.creation-modal .modal-head h2{font-size:21px}.creation-choice-grid{grid-template-columns:1fr;gap:10px}.creation-choice{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:11px;align-items:center;padding:10px}.choice-art{grid-column:1;grid-row:1/4;height:91px;margin:0}.choice-card-mini{transform:scale(.78) rotate(-5deg)}.choice-blank{transform:scale(.75)}.choice-plus{right:1px;bottom:5px}.choice-title{grid-column:2;align-self:end;font-size:13px;margin:0}.choice-copy{grid-column:2;align-self:start;min-height:0;font-size:8px}.choice-action{grid-column:2;margin-top:5px;font-size:8px}.details-modal-head{align-items:flex-start}.back-choice{padding:7px}}
+
 </style>
 </head>
 <body>
@@ -289,15 +318,26 @@ body.workspace-open{overflow:hidden}
 </main>
 </div>
 <iframe id="workspaceFrame" title="MAGIC CREATIONS event workspace" loading="eager"></iframe>
-<div class="modal-back" id="createModal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="createTitle">
- <div class="modal-head"><div><h2 id="createTitle">Create a new invitation</h2><p>Start with the basic event details. You can refine the design in your workspace.</p></div><button class="close" id="closeModal" aria-label="Close">×</button></div>
- <form id="createForm"><div class="form-grid">
-  <div class="field full"><label for="eventNames">Invitation / couple names *</label><input class="input" id="eventNames" name="names" required maxlength="100" placeholder="e.g. Amaya & Dineth"></div>
-  <div class="field"><label for="eventType">Event type</label><select class="select" id="eventType" name="type"><option>Wedding</option><option>Engagement</option><option>Birthday</option><option>Anniversary</option><option>Baby shower</option><option>Other</option></select></div>
-  <div class="field"><label for="eventDate">Event date</label><input class="input" type="date" id="eventDate" name="date"></div>
-  <div class="field"><label for="eventTime">Event time</label><input class="input" type="time" id="eventTime" name="time" value="09:00"></div>
-  <div class="field"><label for="eventVenue">Venue / location</label><input class="input" id="eventVenue" name="venue" maxlength="180" placeholder="Colombo, Sri Lanka"></div>
- </div><div class="form-actions"><button class="outline-btn" type="button" id="cancelCreate">Cancel</button><button class="primary-btn" type="submit">Create invitation ↗</button></div></form>
+<div class="modal-back" id="createModal"><div class="modal creation-modal" role="dialog" aria-modal="true" aria-labelledby="createTitle">
+ <button class="close creation-close" id="closeModal" aria-label="Close">×</button>
+ <section id="creationChoiceStep" class="creation-step">
+  <div class="modal-head"><div><span class="wizard-kicker">STEP 1 · GET STARTED</span><h2 id="createTitle">Create a new invitation</h2><p>Choose how you’d like to start.</p></div></div>
+  <div class="creation-choice-grid">
+   <button class="creation-choice" id="chooseTemplate" type="button"><span class="choice-art choice-art-template" aria-hidden="true"><span class="choice-card-mini"><i>✧</i><b>YOU ARE INVITED</b><em>YOUR DESIGN</em></span><span class="choice-spark">✦</span></span><span class="choice-title">Use a template</span><span class="choice-copy">Start from a ready-made design and make it yours.</span><span class="choice-action">Browse templates <span aria-hidden="true">↗</span></span></button>
+   <button class="creation-choice" id="chooseCustom" type="button"><span class="choice-art choice-art-custom" aria-hidden="true"><span class="choice-blank"><b>Aa</b><i>────────</i><i>──────</i><i>─────────</i></span><span class="choice-plus">＋</span></span><span class="choice-title">Custom invitation</span><span class="choice-copy">Build your own from scratch in the template editor.</span><span class="choice-action">Start from scratch <span aria-hidden="true">↗</span></span></button>
+  </div>
+  <p class="wizard-footnote">You can edit your details and preview your invitation before sharing it.</p>
+ </section>
+ <section id="createDetailsStep" class="creation-step" hidden>
+  <div class="modal-head details-modal-head"><div><span class="wizard-kicker">STEP 2 · EVENT DETAILS</span><h2 id="createDetailsTitle">Create your custom invitation</h2><p id="createDetailsDescription">Start with a clean canvas. Add your details, then customize it in the editor.</p></div><button class="outline-btn back-choice" type="button" id="backToChoices">← Back</button></div>
+  <form id="createForm"><div class="form-grid">
+   <div class="field full"><label for="eventNames">Invitation / couple names *</label><input class="input" id="eventNames" name="names" required maxlength="100" placeholder="e.g. Amaya & Dineth"></div>
+   <div class="field"><label for="eventType">Event type</label><select class="select" id="eventType" name="type"><option>Wedding</option><option>Engagement</option><option>Birthday</option><option>Anniversary</option><option>Baby shower</option><option>Other</option></select></div>
+   <div class="field"><label for="eventDate">Event date</label><input class="input" type="date" id="eventDate" name="date"></div>
+   <div class="field"><label for="eventTime">Event time</label><input class="input" type="time" id="eventTime" name="time" value="09:00"></div>
+   <div class="field"><label for="eventVenue">Venue / location</label><input class="input" id="eventVenue" name="venue" maxlength="180" placeholder="Colombo, Sri Lanka"></div>
+  </div><div class="form-actions"><button class="outline-btn" type="button" id="cancelCreate">Cancel</button><button class="primary-btn" type="submit">Continue to editor ↗</button></div></form>
+ </section>
 </div></div>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -305,7 +345,7 @@ body.workspace-open{overflow:hidden}
 (function(){
 'use strict';
 var KEY='magic_creations_workspace_v1';
-var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null;
+var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,creationMode=null,templateStartPending=false;
 var templates=[
  {id:'ever-after',name:'Ever After',type:'Wedding',tone:'rose',desc:'Romantic floral · Soft rose'},
  {id:'botanical',name:'Botanical Vows',type:'Wedding',tone:'sage',desc:'Natural · Minimal'},
@@ -315,7 +355,8 @@ var templates=[
  {id:'our-beginning',name:'Our Beginning',type:'Video',tone:'dark',desc:'Cinematic · Motion'},
  {id:'golden-hour',name:'Golden Hour',type:'Birthday',tone:'cream',desc:'Joyful · Warm'},
  {id:'save-date',name:'Save Our Date',type:'Animated',tone:'rose',desc:'Animated · Elegant'},
- {id:'sri-lankan',name:'Nil Manel',type:'Traditional',tone:'blue',desc:'Sri Lankan-inspired'}
+ {id:'sri-lankan',name:'Nil Manel',type:'Traditional',tone:'blue',desc:'Sri Lankan-inspired'},
+ {id:'custom-blank',name:'Custom Studio',type:'Custom',tone:'cream',desc:'Start from a blank canvas'}
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
 function freshEvent(names,type,date,time,venue){
@@ -335,9 +376,9 @@ function workspaceUrl(e,section){state.active=e.id;saveState();return 'event-wor
 function makePreviewLink(e){
  var d={names:e.names||e.title,date:e.date,time:e.time,venue:e.venue,message:e.message,story:e.story,template:e.template,type:e.type,hostPhone:e.hostPhone||'',sections:e.sections||{},agenda:e.agenda||[],videoUrl:e.videoUrl||'',musicUrl:e.musicUrl||'',wishes:(e.wishes||[]).filter(function(w){return w.approved;}).map(function(w){return {name:w.name,message:w.message};})};
  var code=btoa(unescape(encodeURIComponent(JSON.stringify(d))));
- return location.origin+location.pathname.replace(/dashboard\.html(?:#.*)?$/,'event-workspace.html')+'#invite='+encodeURIComponent(code);
+ return location.origin+location.pathname.replace(/[^/]+$/,'event-workspace.html')+'#invite='+encodeURIComponent(code);
 }
-function setPage(p){page=p;document.querySelectorAll('[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===p);});render();}
+function setPage(p){if(p!=='templates')templateStartPending=false;page=p;document.querySelectorAll('[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===p);});render();}
 function greeting(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening';}
 function status(e){return e.published?'live':'draft';}
 function coverClass(e){var t=template(e);return ({rose:'cover-rose',sage:'cover-sage',blue:'cover-blue',cream:'cover-cream',lilac:'cover-lilac',dark:'cover-dark'})[t.tone]||'cover-rose';}
@@ -421,7 +462,7 @@ function recentRsvps(rows){
  return '<div class="rsvp-rows">'+rows.map(function(x){var g=x.guest,cl=g.status==='declined'?'declined':g.status==='maybe'?'maybe':'';return '<div class="rsvp-row"><span class="rsvp-avatar">'+esc(initials(g.name))+'</span><div class="rsvp-row-main"><b>'+esc(g.name)+'</b><small>'+esc(x.event.names||x.event.title)+' · '+esc(g.group||'Guest')+'</small></div><span class="rsvp-pill '+cl+'">'+esc((g.status||'pending').charAt(0).toUpperCase()+(g.status||'pending').slice(1))+'</span></div>';}).join('')+'</div>';
 }
 function templatesPage(){
- return '<div class="section-head"><div><div class="eyebrow">THE MAGIC COLLECTION</div><h2>Invitation Templates</h2><p>Explore original design concepts for your celebrations.</p></div><button class="primary-btn" data-create>＋ Create new invitation</button></div><div class="template-page-grid">'+templates.map(function(t){return '<article class="template-mini"><div class="template-art '+esc(t.tone)+'"><div class="template-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type.toUpperCase())+'</small></div></div><div class="template-meta"><h3>'+esc(t.name)+'</h3><p>'+esc(t.desc)+'</p><button class="outline-btn" data-use-template="'+esc(t.id)+'">Use this design ↗</button></div></article>';}).join('')+'</div><p class="billing-note">These are original starter concepts. A complete custom editor and cloud template library are planned for a later phase.</p>';
+ return '<div class="section-head"><div><div class="eyebrow">THE MAGIC COLLECTION</div><h2>Invitation Templates</h2><p>Explore original design concepts for your celebrations.</p></div><button class="primary-btn" data-create>＋ Create new invitation</button></div><div class="template-page-grid">'+templates.filter(function(t){return t.id!=='custom-blank';}).map(function(t){return '<article class="template-mini"><div class="template-art '+esc(t.tone)+'"><div class="template-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type.toUpperCase())+'</small></div></div><div class="template-meta"><h3>'+esc(t.name)+'</h3><p>'+esc(t.desc)+'</p><button class="outline-btn" data-use-template="'+esc(t.id)+'">Use this design ↗</button></div></article>';}).join('')+'</div><p class="billing-note">These are original starter concepts. A complete custom editor and cloud template library are planned for a later phase.</p>';
 }
 function billingPage(){
  return '<div class="section-head"><div><div class="eyebrow">PACKAGES & ENQUIRIES</div><h2>Billing</h2><p>Explore service options and ask for a quote before you order.</p></div></div><div class="billing-grid"><article class="billing-card"><span class="tag">THE ESSENTIALS</span><h3>Classic</h3><p>A beautifully designed digital invitation with your event details and personal wording.</p><ul><li>Personalized invitation artwork</li><li>Names, date and venue</li><li>Digital share-ready design</li></ul><a class="outline-btn" target="_blank" rel="noopener" href="https://wa.me/94759579143?text=Hello%20MAGIC%20CREATIONS%2C%20I%20would%20like%20to%20ask%20about%20the%20Classic%20invitation.">Ask about Classic ↗</a></article><article class="billing-card"><span class="tag">MORE WAYS TO CELEBRATE</span><h3>Signature</h3><p>A richer invitation concept with custom refinements and optional event sections.</p><ul><li>Custom styling</li><li>Optional motion design</li><li>Personalized event details</li></ul><a class="primary-btn" target="_blank" rel="noopener" href="https://wa.me/94759579143?text=Hello%20MAGIC%20CREATIONS%2C%20I%20would%20like%20to%20ask%20about%20the%20Signature%20invitation.">Ask about Signature ↗</a></article><article class="billing-card"><span class="tag">MADE JUST FOR YOU</span><h3>Custom Magic</h3><p>For custom artwork, animated invitations and video invitation requests.</p><ul><li>Custom creative direction</li><li>Video invitation enquiries</li><li>Scope and price agreed first</li></ul><a class="outline-btn" target="_blank" rel="noopener" href="https://wa.me/94759579143?text=Hello%20MAGIC%20CREATIONS%2C%20I%20would%20like%20a%20custom%20invitation%20quote.">Request a quote ↗</a></article></div><p class="billing-note">No online payments or subscriptions are connected in this prototype. Final pricing and payment instructions must be confirmed directly with MAGIC CREATIONS.</p>';
@@ -435,13 +476,41 @@ function guidePage(){
  ];
  return '<div class="section-head"><div><div class="eyebrow">GETTING STARTED</div><h2>Dashboard Guide</h2><p>A simple path from first details to a shareable invitation.</p></div></div><div class="guide-list">'+steps.map(function(s){return '<article class="guide-item"><div class="guide-no">'+s.n+'</div><div><h3>'+s.title+'</h3><p>'+s.desc+'</p></div><button class="outline-btn" '+(s.n==='01'?'data-create':s.n==='02'?'data-page="templates"':s.n==='03'?'data-open-guests':'data-preview-first')+'>'+(s.n==='01'?'Start ↗':s.n==='02'?'Browse ↗':s.n==='03'?'Guests ↗':'Preview ↗')+'</button></article>';}).join('')+'</div><p class="billing-note">For help, use the WhatsApp support button on the left. The current site is a prototype and does not yet include customer login, cloud database access or automatic live RSVP syncing.</p>';
 }
-function openModal(){document.getElementById('createModal').classList.add('open');setTimeout(function(){document.getElementById('eventNames').focus();},30);}
-function closeModal(){document.getElementById('createModal').classList.remove('open');document.getElementById('createForm').reset();selectedTemplateForCreate=null;}
+function showCreationStep(step){
+ var choices=document.getElementById('creationChoiceStep'),details=document.getElementById('createDetailsStep');
+ if(choices)choices.hidden=step!=='choices';
+ if(details)details.hidden=step!=='details';
+}
+function openModal(){
+ creationMode=null;selectedTemplateForCreate=null;templateStartPending=false;
+ showCreationStep('choices');
+ document.getElementById('createModal').classList.add('open');
+}
+function openDetailsStep(mode){
+ creationMode=mode||'custom';
+ showCreationStep('details');
+ document.getElementById('createModal').classList.add('open');
+ var title=document.getElementById('createDetailsTitle'),desc=document.getElementById('createDetailsDescription');
+ if(title)title.textContent=creationMode==='template'?'Add your event details':'Create your custom invitation';
+ if(desc)desc.textContent=creationMode==='template'?'Your design is selected. Add the basics, then personalize it in the editor.':'Start with a clean canvas. Add your details, then customize the invitation in the editor.';
+ setTimeout(function(){var nameField=document.getElementById('eventNames');if(nameField)nameField.focus();},30);
+}
+function closeModal(){
+ document.getElementById('createModal').classList.remove('open');
+ var form=document.getElementById('createForm');if(form)form.reset();
+ selectedTemplateForCreate=null;creationMode=null;templateStartPending=false;
+ showCreationStep('choices');
+}
 function createEvent(ev){
- ev.preventDefault();var form=new FormData(document.getElementById('createForm')),names=String(form.get('names')||'').trim();if(!names)return;
+ ev.preventDefault();
+ var form=new FormData(document.getElementById('createForm')),names=String(form.get('names')||'').trim();if(!names)return;
+ var mode=creationMode||'custom';
  var e=freshEvent(names,String(form.get('type')||'Wedding'),String(form.get('date')||''),String(form.get('time')||'09:00'),String(form.get('venue')||'').trim());
- e.template=selectedTemplateForCreate||'ever-after';selectedTemplateForCreate=null;
- state.events.push(e);state.active=e.id;saveState();closeModal();page='dashboard';filter='all';render();toast('Invitation draft created. Open its dashboard to personalize the design.');
+ e.template=mode==='custom'?'custom-blank':(selectedTemplateForCreate||'ever-after');
+ if(mode==='custom'){e.message='';e.story='';}
+ state.events.push(e);state.active=e.id;saveState();closeModal();page='dashboard';filter='all';render();
+ openWorkspace(e.id,'editor');
+ toast(mode==='template'?'Invitation created. Personalize your selected design in the editor.':'Custom invitation created. Start designing in the editor.');
 }
 function createPreview(e){
  e.link=makePreviewLink(e);saveState();return e.link;
@@ -466,9 +535,13 @@ function openWorkspace(id,section){
 }
 function useTemplate(id){
  var t=templates.find(function(x){return x.id===id;});if(!t)return;
- if(!state.events.length){selectedTemplateForCreate=id;document.getElementById('eventType').value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional')?'Wedding':t.type;openModal();toast('Template selected. Add your event details to continue.');return;}
+ if(templateStartPending||!state.events.length){
+  templateStartPending=false;selectedTemplateForCreate=id;
+  var typeField=document.getElementById('eventType');if(typeField)typeField.value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional'||t.type==='Custom')?'Wedding':t.type;
+  openDetailsStep('template');toast('Template selected. Add your event details to continue.');return;
+ }
  var e=state.events.find(function(x){return x.id===state.active;})||state.events[0];
- e.template=id;if(t.type!=='Video'&&t.type!=='Animated'&&t.type!=='Traditional'&&(!e.type||e.type==='Wedding'))e.type=t.type;
+ e.template=id;if(t.type!=='Video'&&t.type!=='Animated'&&t.type!=='Traditional'&&t.type!=='Custom'&&(!e.type||e.type==='Wedding'))e.type=t.type;
  saveState();openWorkspace(e.id,'editor');
 }
 function bindPageEvents(){
@@ -481,6 +554,9 @@ function bindPageEvents(){
  document.querySelectorAll('[data-use-template]').forEach(function(b){b.onclick=function(){useTemplate(b.dataset.useTemplate);};});
  document.querySelectorAll('[data-open-guests]').forEach(function(b){b.onclick=function(){var e=current();if(e)openWorkspace(e.id,'guests');else openModal();};});
  document.querySelectorAll('[data-preview-first]').forEach(function(b){b.onclick=function(){var e=current();if(e)previewEvent(e.id);else openModal();};});
+ document.getElementById('chooseTemplate').onclick=function(){closeModal();templateStartPending=true;setPage('templates');toast('Choose a design to continue.');};
+ document.getElementById('chooseCustom').onclick=function(){templateStartPending=false;selectedTemplateForCreate=null;openDetailsStep('custom');};
+ document.getElementById('backToChoices').onclick=function(){if(document.getElementById('createForm'))document.getElementById('createForm').reset();creationMode=null;selectedTemplateForCreate=null;showCreationStep('choices');};
  document.getElementById('closeModal').onclick=closeModal;
  document.getElementById('cancelCreate').onclick=closeModal;
  document.getElementById('createForm').onsubmit=createEvent;
