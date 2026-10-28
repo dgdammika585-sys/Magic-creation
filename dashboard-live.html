@@ -270,6 +270,30 @@ body.workspace-open{overflow:hidden}
 .back-choice{font-size:9px;padding:8px 10px;flex-shrink:0}
 @media(max-width:520px){.creation-modal{padding:25px 15px 19px}.creation-modal .modal-head h2{font-size:21px}.creation-choice-grid{grid-template-columns:1fr;gap:10px}.creation-choice{display:grid;grid-template-columns:76px minmax(0,1fr);column-gap:11px;align-items:center;padding:10px}.choice-art{grid-column:1;grid-row:1/4;height:91px;margin:0}.choice-card-mini{transform:scale(.78) rotate(-5deg)}.choice-blank{transform:scale(.75)}.choice-plus{right:1px;bottom:5px}.choice-title{grid-column:2;align-self:end;font-size:13px;margin:0}.choice-copy{grid-column:2;align-self:start;min-height:0;font-size:8px}.choice-action{grid-column:2;margin-top:5px;font-size:8px}.details-modal-head{align-items:flex-start}.back-choice{padding:7px}}
 
+
+/* Selected-template confirmation and invitation-link wizard step */
+.template-confirm-heading{align-items:center}
+.template-confirm-heading .modal-head h2{font-size:27px}
+.template-confirm-layout{display:grid;grid-template-columns:minmax(190px,.82fr) minmax(0,1.18fr);gap:21px;align-items:start}
+.template-confirm-preview{min-width:0}
+.template-confirm-preview .template-art{height:310px;min-height:310px;border-radius:7px;display:grid;place-items:center;overflow:hidden}
+.template-confirm-preview .template-paper{width:63%;height:78%;min-height:0;max-height:248px;padding:18px;box-shadow:0 12px 28px #30203320}
+.template-confirm-preview .template-paper b{font-size:clamp(18px,2vw,27px);line-height:1.12;overflow-wrap:anywhere}
+.template-confirm-preview .template-paper small{font-size:6px;letter-spacing:.12em}
+.template-confirm-intro{font-size:10px;color:#7f7583;line-height:1.8;margin:0 0 18px}
+.template-confirm-form-panel .field label{font-size:9px;display:flex;gap:4px;align-items:center}
+.required-star{color:#b84969}
+.template-confirm-form-panel .input{font-size:10px;padding:11px 12px}
+.template-confirm-form-panel .hint{font-size:8px;line-height:1.65}
+.slug-preview-box{display:flex;align-items:center;gap:0;flex-wrap:wrap;background:#f8f5fb;border:1px solid #e9e0f1;border-radius:6px;margin-top:12px;padding:10px 11px;overflow-wrap:anywhere;line-height:1.6}
+.slug-preview-label{flex-basis:100%;font-size:7px;letter-spacing:.13em;font-weight:700;color:#9a89a5;margin-bottom:4px}
+.slug-prefix{font-size:8px;color:#877b8c;overflow-wrap:anywhere}
+.slug-preview-box strong{font-size:8px;color:#7040d6;overflow-wrap:anywhere;font-weight:700}
+.template-confirm-note{font-size:8px;color:#958995;line-height:1.7;margin:10px 0 0}
+.template-confirm-actions{margin-top:17px}
+.template-confirm-actions .primary-btn{white-space:normal;text-align:center}
+@media(max-width:620px){.creation-modal{max-height:92vh;overflow:auto}.template-confirm-layout{grid-template-columns:1fr;gap:14px}.template-confirm-preview .template-art{height:165px;min-height:165px}.template-confirm-preview .template-paper{height:134px;width:95px;padding:9px}.template-confirm-preview .template-paper b{font-size:17px}.template-confirm-preview .template-paper small{font-size:4px}.template-confirm-intro{font-size:9px;margin-bottom:12px}.template-confirm-heading .modal-head h2{font-size:22px}.template-confirm-actions{display:grid;grid-template-columns:auto minmax(0,1fr)}}
+
 </style>
 </head>
 <body>
@@ -328,8 +352,24 @@ body.workspace-open{overflow:hidden}
   </div>
   <p class="wizard-footnote">You can edit your details and preview your invitation before sharing it.</p>
  </section>
+ <section id="createTemplateConfirmStep" class="creation-step" hidden>
+  <div class="modal-head template-confirm-heading"><div><span class="wizard-kicker">STEP 2 · YOUR DESIGN</span><h2>Great choice!</h2><p id="selectedTemplateQuestion">Create your invitation using this design?</p></div><button class="outline-btn back-choice" type="button" id="backToTemplateGallery">← Templates</button></div>
+  <div class="template-confirm-layout">
+   <div id="templateConfirmArtwork" class="template-confirm-preview" aria-label="Selected invitation design preview"></div>
+   <div class="template-confirm-form-panel">
+    <p class="template-confirm-intro">We’ll walk you through a few quick questions — names, date and venue — and your invitation will be ready to share.</p>
+    <form id="templateConfirmForm">
+     <div class="field"><label for="invitationTitle">Invitation title <span class="required-star">*</span></label><input class="input" id="invitationTitle" name="invitationTitle" required maxlength="100" placeholder="e.g. Harsha & Chathu"></div>
+     <div class="field" style="margin-top:13px"><label for="invitationSlug">Invitation link <span class="required-star">*</span></label><input class="input" id="invitationSlug" name="invitationSlug" required minlength="3" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" autocomplete="off" spellcheck="false" placeholder="harsha-chathu"><span class="hint">Lowercase letters, numbers and hyphens only. Set once — this address name can’t be changed after you create the invitation.</span></div>
+     <div class="slug-preview-box"><span class="slug-preview-label">LINK PREVIEW</span><span id="invitationUrlPrefix" class="slug-prefix"></span><strong id="slugPreview">your-invitation</strong></div>
+     <p class="template-confirm-note">The link name will be saved with the invitation. A public short link needs the publishing service connected; this prototype’s share link includes the invitation details.</p>
+     <div class="form-actions template-confirm-actions"><button class="outline-btn" type="button" id="cancelTemplateSetup">Cancel</button><button class="primary-btn" type="submit">Continue to event details ↗</button></div>
+    </form>
+   </div>
+  </div>
+ </section>
  <section id="createDetailsStep" class="creation-step" hidden>
-  <div class="modal-head details-modal-head"><div><span class="wizard-kicker">STEP 2 · EVENT DETAILS</span><h2 id="createDetailsTitle">Create your custom invitation</h2><p id="createDetailsDescription">Start with a clean canvas. Add your details, then customize it in the editor.</p></div><button class="outline-btn back-choice" type="button" id="backToChoices">← Back</button></div>
+  <div class="modal-head details-modal-head"><div><span class="wizard-kicker" id="createDetailsKicker">STEP 3 · EVENT DETAILS</span><h2 id="createDetailsTitle">Create your custom invitation</h2><p id="createDetailsDescription">Start with a clean canvas. Add your details, then customize it in the editor.</p></div><button class="outline-btn back-choice" type="button" id="backToChoices">← Back</button></div>
   <form id="createForm"><div class="form-grid">
    <div class="field full"><label for="eventNames">Invitation / couple names *</label><input class="input" id="eventNames" name="names" required maxlength="100" placeholder="e.g. Amaya & Dineth"></div>
    <div class="field"><label for="eventType">Event type</label><select class="select" id="eventType" name="type"><option>Wedding</option><option>Engagement</option><option>Birthday</option><option>Anniversary</option><option>Baby shower</option><option>Other</option></select></div>
@@ -345,7 +385,7 @@ body.workspace-open{overflow:hidden}
 (function(){
 'use strict';
 var KEY='magic_creations_workspace_v1';
-var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,creationMode=null,templateStartPending=false;
+var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,creationMode=null,templateStartPending=false,selectedInvitationTitle='',selectedInvitationSlug='',slugManuallyEdited=false;
 var templates=[
  {id:'ever-after',name:'Ever After',type:'Wedding',tone:'rose',desc:'Romantic floral · Soft rose'},
  {id:'botanical',name:'Botanical Vows',type:'Wedding',tone:'sage',desc:'Natural · Minimal'},
@@ -360,7 +400,7 @@ var templates=[
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
 function freshEvent(names,type,date,time,venue){
- return {id:uid(),title:names,names:names,type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
+ return {id:uid(),title:names,names:names,invitationTitle:'',invitationSlug:'',type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
 }
 function defaultState(){return {active:null,events:[]};}
 function readState(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.events)&&s.events.length){s.active=s.active||s.events[0].id;return s;}}}catch(e){}return defaultState();}
@@ -374,9 +414,9 @@ function toast(msg){var el=document.getElementById('toast');el.textContent=msg;e
 function template(e){return templates.find(function(t){return t.id===(e&&e.template);})||templates[0];}
 function workspaceUrl(e,section){state.active=e.id;saveState();return 'event-workspace.html#app='+(section||'overview');}
 function makePreviewLink(e){
- var d={names:e.names||e.title,date:e.date,time:e.time,venue:e.venue,message:e.message,story:e.story,template:e.template,type:e.type,hostPhone:e.hostPhone||'',sections:e.sections||{},agenda:e.agenda||[],videoUrl:e.videoUrl||'',musicUrl:e.musicUrl||'',wishes:(e.wishes||[]).filter(function(w){return w.approved;}).map(function(w){return {name:w.name,message:w.message};})};
+ var d={invitationTitle:e.invitationTitle||'',invitationSlug:e.invitationSlug||'',names:e.names||e.title,date:e.date,time:e.time,venue:e.venue,message:e.message,story:e.story,template:e.template,type:e.type,hostPhone:e.hostPhone||'',sections:e.sections||{},agenda:e.agenda||[],videoUrl:e.videoUrl||'',musicUrl:e.musicUrl||'',wishes:(e.wishes||[]).filter(function(w){return w.approved;}).map(function(w){return {name:w.name,message:w.message};})};
  var code=btoa(unescape(encodeURIComponent(JSON.stringify(d))));
- return location.origin+location.pathname.replace(/[^/]+$/,'event-workspace.html')+'#invite='+encodeURIComponent(code);
+ var url=location.origin+location.pathname.replace(/[^/]+$/,'event-workspace.html');if(e.invitationSlug)url+='?slug='+encodeURIComponent(e.invitationSlug);return url+'#invite='+encodeURIComponent(code);
 }
 function setPage(p){if(p!=='templates')templateStartPending=false;page=p;document.querySelectorAll('[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===p);});render();}
 function greeting(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening';}
@@ -446,7 +486,7 @@ function dashboardPage(){
 }
 function invitationCard(e){
  var t=template(e),isLive=!!e.published,cover=coverClass(e),days=dateDays(e.date);
- var title=esc(e.names||e.title||'Untitled invitation');
+ var title=esc(e.invitationTitle||e.names||e.title||'Untitled invitation');
  var description=esc(e.message||'Add a personal message to make your invitation feel special.');
  var preview=!!e.link;
  return '<article class="invite-card" data-invite-card="'+esc(e.id)+'"><div class="invite-cover '+cover+'"><span class="cover-badge '+(isLive?'live':'')+'"><i class="status-dot"></i>'+ (isLive?'LIVE':'TEMPLATE')+'</span><div class="cover-design '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc((e.names||e.title||'Your Special Day').replace(/\s+/g,' '))+'</b><span>'+esc((e.type||'Celebration').toUpperCase())+'</span></div></div><div class="invite-body"><div class="invite-meta"><span class="invite-type">'+esc(e.type||'Celebration')+' · '+esc(t.name)+'</span><span class="status '+(isLive?'live':'')+'">'+(isLive?'● Live':'Draft')+'</span></div><h3 class="invite-title">'+title+'</h3><p class="invite-description">'+description+'</p><div class="invite-date"><span class="date-ico">◷</span><span>'+esc(dateLine(e))+'</span></div><div class="invite-actions"><button class="outline-btn" data-preview="'+esc(e.id)+'">Preview</button><button class="outline-btn" data-open="'+esc(e.id)+'">Open dashboard</button><button class="'+(isLive?'quiet-btn':'primary-btn')+'" data-publish="'+esc(e.id)+'">'+(isLive?'Unpublish':'Publish')+'</button></div></div></article>';
@@ -477,29 +517,54 @@ function guidePage(){
  return '<div class="section-head"><div><div class="eyebrow">GETTING STARTED</div><h2>Dashboard Guide</h2><p>A simple path from first details to a shareable invitation.</p></div></div><div class="guide-list">'+steps.map(function(s){return '<article class="guide-item"><div class="guide-no">'+s.n+'</div><div><h3>'+s.title+'</h3><p>'+s.desc+'</p></div><button class="outline-btn" '+(s.n==='01'?'data-create':s.n==='02'?'data-page="templates"':s.n==='03'?'data-open-guests':'data-preview-first')+'>'+(s.n==='01'?'Start ↗':s.n==='02'?'Browse ↗':s.n==='03'?'Guests ↗':'Preview ↗')+'</button></article>';}).join('')+'</div><p class="billing-note">For help, use the WhatsApp support button on the left. The current site is a prototype and does not yet include customer login, cloud database access or automatic live RSVP syncing.</p>';
 }
 function showCreationStep(step){
- var choices=document.getElementById('creationChoiceStep'),details=document.getElementById('createDetailsStep');
- if(choices)choices.hidden=step!=='choices';
- if(details)details.hidden=step!=='details';
+ var choices=document.getElementById('creationChoiceStep'),confirm=document.getElementById('createTemplateConfirmStep'),details=document.getElementById('createDetailsStep');
+ if(choices)choices.hidden=step!=='choices';if(confirm)confirm.hidden=step!=='template-confirm';if(details)details.hidden=step!=='details';
 }
-function openModal(){
- creationMode=null;selectedTemplateForCreate=null;templateStartPending=false;
- showCreationStep('choices');
- document.getElementById('createModal').classList.add('open');
+function slugify(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').replace(/-{2,}/g,'-').slice(0,60).replace(/-+$/g,'');}
+function openTemplateConfirmStep(id){
+ var t=templates.find(function(x){return x.id===id;});if(!t)return;
+ selectedTemplateForCreate=id;creationMode='template';templateStartPending=false;selectedInvitationTitle='';selectedInvitationSlug='';slugManuallyEdited=false;
+ showCreationStep('template-confirm');document.getElementById('createModal').classList.add('open');
+ var q=document.getElementById('selectedTemplateQuestion');if(q)q.textContent='Create your invitation using “'+t.name+'”?';
+ var art=document.getElementById('templateConfirmArtwork');
+ if(art)art.innerHTML='<div class="template-art '+esc(t.tone)+'"><div class="template-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type==='Custom'?'YOUR OWN DESIGN':t.type.toUpperCase())+'</small></div></div>';
+ var titleField=document.getElementById('invitationTitle'),slugField=document.getElementById('invitationSlug'),prefix=document.getElementById('invitationUrlPrefix'),preview=document.getElementById('slugPreview');
+ if(titleField)titleField.value='';if(slugField)slugField.value='';
+ if(prefix)prefix.textContent=location.origin+location.pathname.replace(/[^/]+$/,'event-workspace.html')+'?slug=';
+ if(preview)preview.textContent='your-invitation';
+ var typeField=document.getElementById('eventType');if(typeField)typeField.value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional'||t.type==='Custom')?'Wedding':t.type;
+ setTimeout(function(){if(titleField)titleField.focus();},30);
 }
+function updateSlugPreview(){var field=document.getElementById('invitationSlug'),preview=document.getElementById('slugPreview');if(field){field.value=slugify(field.value);if(preview)preview.textContent=field.value||'your-invitation';}}
+function continueTemplateSetup(ev){
+ ev.preventDefault();
+ var titleField=document.getElementById('invitationTitle'),slugField=document.getElementById('invitationSlug');
+ var title=String(titleField&&titleField.value||'').trim(),slug=slugify(slugField&&slugField.value||'');
+ if(!title){if(titleField)titleField.reportValidity();return;}
+ if(!slug||slug.length<3||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)){
+  if(slugField){slugField.value=slug;slugField.setCustomValidity('Use at least 3 lowercase letters/numbers separated by single hyphens.');slugField.reportValidity();slugField.setCustomValidity('');}
+  toast('Please enter a valid invitation link name.');return;
+ }
+ if((state.events||[]).some(function(e){return e.invitationSlug===slug;})){
+  if(slugField){slugField.setCustomValidity('This invitation link name is already used in your saved drafts. Choose another one.');slugField.reportValidity();slugField.setCustomValidity('');}
+  toast('That link name is already used. Please choose another.');return;
+ }
+ selectedInvitationTitle=title;selectedInvitationSlug=slug;creationMode='template';openDetailsStep('template');
+}
+function openModal(){creationMode=null;selectedTemplateForCreate=null;templateStartPending=false;selectedInvitationTitle='';selectedInvitationSlug='';slugManuallyEdited=false;showCreationStep('choices');document.getElementById('createModal').classList.add('open');}
 function openDetailsStep(mode){
- creationMode=mode||'custom';
- showCreationStep('details');
- document.getElementById('createModal').classList.add('open');
- var title=document.getElementById('createDetailsTitle'),desc=document.getElementById('createDetailsDescription');
+ creationMode=mode||'custom';showCreationStep('details');document.getElementById('createModal').classList.add('open');
+ var title=document.getElementById('createDetailsTitle'),desc=document.getElementById('createDetailsDescription'),kicker=document.getElementById('createDetailsKicker');
+ if(kicker)kicker.textContent=creationMode==='template'?'STEP 3 · EVENT DETAILS':'STEP 2 · EVENT DETAILS';
  if(title)title.textContent=creationMode==='template'?'Add your event details':'Create your custom invitation';
- if(desc)desc.textContent=creationMode==='template'?'Your design is selected. Add the basics, then personalize it in the editor.':'Start with a clean canvas. Add your details, then customize the invitation in the editor.';
+ if(desc)desc.textContent=creationMode==='template'?'Add the event names, date, time and venue. Your selected design and invitation link name are saved for this draft.':'Start with a clean canvas. Add your details, then customize the invitation in the editor.';
  setTimeout(function(){var nameField=document.getElementById('eventNames');if(nameField)nameField.focus();},30);
 }
 function closeModal(){
  document.getElementById('createModal').classList.remove('open');
  var form=document.getElementById('createForm');if(form)form.reset();
- selectedTemplateForCreate=null;creationMode=null;templateStartPending=false;
- showCreationStep('choices');
+ var cf=document.getElementById('templateConfirmForm');if(cf)cf.reset();
+ selectedTemplateForCreate=null;creationMode=null;templateStartPending=false;selectedInvitationTitle='';selectedInvitationSlug='';slugManuallyEdited=false;showCreationStep('choices');
 }
 function createEvent(ev){
  ev.preventDefault();
@@ -507,10 +572,10 @@ function createEvent(ev){
  var mode=creationMode||'custom';
  var e=freshEvent(names,String(form.get('type')||'Wedding'),String(form.get('date')||''),String(form.get('time')||'09:00'),String(form.get('venue')||'').trim());
  e.template=mode==='custom'?'custom-blank':(selectedTemplateForCreate||'ever-after');
+ e.invitationTitle=selectedInvitationTitle||names;e.invitationSlug=selectedInvitationSlug||slugify(e.invitationTitle);
  if(mode==='custom'){e.message='';e.story='';}
- state.events.push(e);state.active=e.id;saveState();closeModal();page='dashboard';filter='all';render();
- openWorkspace(e.id,'editor');
- toast(mode==='template'?'Invitation created. Personalize your selected design in the editor.':'Custom invitation created. Start designing in the editor.');
+ state.events.push(e);state.active=e.id;saveState();var modeForToast=mode;closeModal();page='dashboard';filter='all';render();openWorkspace(e.id,'editor');
+ toast(modeForToast==='template'?'Invitation draft created. Personalize your selected design in the editor.':'Invitation draft created. Start designing in the editor.');
 }
 function startCustomInvitation(){
  closeModal();
@@ -544,11 +609,7 @@ function openWorkspace(id,section){
 }
 function useTemplate(id){
  var t=templates.find(function(x){return x.id===id;});if(!t)return;
- if(templateStartPending||!state.events.length){
-  templateStartPending=false;selectedTemplateForCreate=id;
-  var typeField=document.getElementById('eventType');if(typeField)typeField.value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional'||t.type==='Custom')?'Wedding':t.type;
-  openDetailsStep('template');toast('Template selected. Add your event details to continue.');return;
- }
+ if(templateStartPending||!state.events.length){openTemplateConfirmStep(id);toast('Template selected. Add a title and invitation link name.');return;}
  var e=state.events.find(function(x){return x.id===state.active;})||state.events[0];
  e.template=id;if(t.type!=='Video'&&t.type!=='Animated'&&t.type!=='Traditional'&&t.type!=='Custom'&&(!e.type||e.type==='Wedding'))e.type=t.type;
  saveState();openWorkspace(e.id,'editor');
@@ -565,7 +626,12 @@ function bindPageEvents(){
  document.querySelectorAll('[data-preview-first]').forEach(function(b){b.onclick=function(){var e=current();if(e)previewEvent(e.id);else openModal();};});
  document.getElementById('chooseTemplate').onclick=function(){closeModal();templateStartPending=true;setPage('templates');toast('Choose a design to continue.');};
  document.getElementById('chooseCustom').onclick=function(){startCustomInvitation();};
- document.getElementById('backToChoices').onclick=function(){if(document.getElementById('createForm'))document.getElementById('createForm').reset();creationMode=null;selectedTemplateForCreate=null;showCreationStep('choices');};
+ document.getElementById('backToChoices').onclick=function(){if(creationMode==='template'&&selectedTemplateForCreate){showCreationStep('template-confirm');return;}if(document.getElementById('createForm'))document.getElementById('createForm').reset();creationMode=null;selectedTemplateForCreate=null;showCreationStep('choices');};
+ document.getElementById('backToTemplateGallery').onclick=function(){document.getElementById('createModal').classList.remove('open');selectedTemplateForCreate=null;selectedInvitationTitle='';selectedInvitationSlug='';creationMode=null;templateStartPending=true;page='templates';render();};
+ document.getElementById('cancelTemplateSetup').onclick=closeModal;
+ document.getElementById('templateConfirmForm').onsubmit=continueTemplateSetup;
+ document.getElementById('invitationTitle').addEventListener('input',function(){if(!slugManuallyEdited){var sf=document.getElementById('invitationSlug');sf.value=slugify(this.value);updateSlugPreview();}});
+ document.getElementById('invitationSlug').addEventListener('input',function(){slugManuallyEdited=true;this.setCustomValidity('');updateSlugPreview();});
  document.getElementById('closeModal').onclick=closeModal;
  document.getElementById('cancelCreate').onclick=closeModal;
  document.getElementById('createForm').onsubmit=createEvent;
