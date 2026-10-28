@@ -400,7 +400,7 @@ var templates=[
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
 function freshEvent(names,type,date,time,venue){
- return {id:uid(),title:names,names:names,invitationTitle:'',invitationSlug:'',type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
+ return {id:uid(),title:names,names:names,invitationTitle:'',invitationSlug:'',type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true,guestbook:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
 }
 function defaultState(){return {active:null,events:[]};}
 function readState(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.events)&&s.events.length){s.active=s.active||s.events[0].id;return s;}}}catch(e){}return defaultState();}
@@ -549,9 +549,16 @@ function continueTemplateSetup(ev){
   if(slugField){slugField.setCustomValidity('This invitation link name is already used in your saved drafts. Choose another one.');slugField.reportValidity();slugField.setCustomValidity('');}
   toast('That link name is already used. Please choose another.');return;
  }
- selectedInvitationTitle=title;selectedInvitationSlug=slug;creationMode='template';openDetailsStep('template');
-}
-function openModal(){creationMode=null;selectedTemplateForCreate=null;templateStartPending=false;selectedInvitationTitle='';selectedInvitationSlug='';slugManuallyEdited=false;showCreationStep('choices');document.getElementById('createModal').classList.add('open');}
+ var picked=templates.find(function(t){return t.id===selectedTemplateForCreate;})||templates[0];
+ var eventTypeField=document.getElementById('eventType');
+ var type=eventTypeField&&eventTypeField.value?eventTypeField.value:(picked.type==='Video'||picked.type==='Animated'||picked.type==='Traditional'||picked.type==='Custom'?'Wedding':picked.type);
+ var e=freshEvent(title,type,'','09:00','');
+ e.title=title;e.names=title;e.invitationTitle=title;e.invitationSlug=slug;e.template=picked.id;
+ e.sections=e.sections||{};e.sections.guestbook=true;
+ state.events.push(e);state.active=e.id;selectedInvitationTitle=title;selectedInvitationSlug=slug;
+ saveState();closeModal();page='dashboard';filter='all';render();openWorkspace(e.id,'wizardsections');
+ toast('Invitation created. Step 1: choose your sections.');
+}function openModal(){creationMode=null;selectedTemplateForCreate=null;templateStartPending=false;selectedInvitationTitle='';selectedInvitationSlug='';slugManuallyEdited=false;showCreationStep('choices');document.getElementById('createModal').classList.add('open');}
 function openDetailsStep(mode){
  creationMode=mode||'custom';showCreationStep('details');document.getElementById('createModal').classList.add('open');
  var title=document.getElementById('createDetailsTitle'),desc=document.getElementById('createDetailsDescription'),kicker=document.getElementById('createDetailsKicker');
