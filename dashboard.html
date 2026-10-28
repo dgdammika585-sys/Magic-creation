@@ -228,6 +228,19 @@ body.workspace-open{overflow:hidden}
 @media(max-width:900px){.empty-main-state{min-height:235px}}
 @media(max-width:740px){.empty-invitations-section .invitations-title-row{margin-top:2px}.empty-main-state{min-height:215px;padding:17px 6px}.empty-main-copy h2{font-size:17px}.empty-main-copy p{font-size:9px}}
 
+
+/* Empty-state centre follows the reference screenshot: no My Invitations heading until an invitation exists */
+.empty-main-state{min-height:295px;display:grid;place-items:center;text-align:center;padding:30px 12px 31px;margin-top:0}
+.empty-main-copy{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.empty-state-icon{height:66px;width:72px;margin:0 auto 12px}
+.empty-state-icon svg{height:64px;width:72px}
+.empty-main-copy h2{font:600 18px/1.35 var(--sans);margin:0 0 6px;color:#312b37}
+.empty-main-copy p{max-width:360px;margin:0 auto 14px;color:#817782;font-size:9px;line-height:1.7}
+.empty-main-copy .primary-btn{font-size:9px;padding:9px 16px;background:#7040d6;border-color:#7040d6}
+.how-section{padding-top:4px}
+.how-section-head h2{font-size:13px;font-weight:500;margin-bottom:13px}
+@media(max-width:740px){.empty-main-state{min-height:230px;padding:24px 6px}.empty-state-icon{margin-bottom:10px}}
+
 </style>
 </head>
 <body>
@@ -343,8 +356,7 @@ function emptyDashboardPage(){
  {n:'4.',ico:'▥',title:'Track',desc:'Review responses and event details.'}
  ];
  var main=dashboardWelcome(true)+
- '<section class="empty-invitations-section"><div class="invitations-title-row"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div></div>'+
- '<div class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 72 64" role="img" aria-label="Calendar and add invitation"><rect x="13" y="9" width="43" height="43" rx="6" fill="#eee8ff" stroke="#9d8ce1" stroke-width="2"/><path d="M13 21h43" stroke="#9d8ce1" stroke-width="3"/><path d="M24 5v10M44 5v10" stroke="#8e7bd4" stroke-width="4" stroke-linecap="round"/><rect x="21" y="28" width="7" height="7" rx="2" fill="#b8a8f2"/><rect x="32" y="28" width="7" height="7" rx="2" fill="#d6cafa"/><rect x="21" y="39" width="7" height="7" rx="2" fill="#d6cafa"/><circle cx="53" cy="48" r="13" fill="#db4d9d" stroke="#fffdf9" stroke-width="3"/><path d="M53 42v12M47 48h12" stroke="#fff" stroke-width="2.7" stroke-linecap="round"/></svg></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></div></section>'+
+ '<section class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 72 64" role="img" aria-label="Calendar and add invitation"><rect x="13" y="9" width="43" height="43" rx="6" fill="#eee8ff" stroke="#9d8ce1" stroke-width="2"/><path d="M13 21h43" stroke="#9d8ce1" stroke-width="3"/><path d="M24 5v10M44 5v10" stroke="#8e7bd4" stroke-width="4" stroke-linecap="round"/><rect x="21" y="28" width="7" height="7" rx="2" fill="#b8a8f2"/><rect x="32" y="28" width="7" height="7" rx="2" fill="#d6cafa"/><rect x="21" y="39" width="7" height="7" rx="2" fill="#d6cafa"/><circle cx="53" cy="48" r="13" fill="#db4d9d" stroke="#fffdf9" stroke-width="3"/><path d="M53 42v12M47 48h12" stroke="#fff" stroke-width="2.7" stroke-linecap="round"/></svg></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></section>'+
  '<section class="how-section"><div class="how-section-head"><h2>How it works</h2></div><div class="how-strip">'+how.map(function(x){return '<article class="how-step"><div class="how-step-icon">'+x.ico+'</div><h3><span>'+x.n+'</span> '+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
  '<p class="billing-note">MAGIC CREATIONS dashboard preview. This version saves invitation data in this browser only.</p>';
  return dashboardLayout(main,railTemplates()+railInspiration());
