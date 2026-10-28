@@ -84,6 +84,122 @@
 #workspaceFrame{display:none;position:fixed;inset:0;width:100%;height:100%;border:0;background:#f6f4f1;z-index:100}
 #workspaceFrame.open{display:block}
 body.workspace-open{overflow:hidden}
+
+/* Screenshot-inspired two-column dashboard: main invitations plus contextual right rail */
+.page:has(.dashboard-layout){max-width:1440px;padding:23px clamp(18px,2.4vw,34px) 30px}
+.dashboard-layout{display:grid;grid-template-columns:minmax(0,1fr) 258px;gap:23px;align-items:start}
+.dashboard-primary,.dashboard-rail{min-width:0}
+.dashboard-primary .dash-welcome{min-height:112px;padding:17px 22px;grid-template-columns:minmax(0,1fr) 92px;gap:8px;margin-bottom:13px;background:linear-gradient(112deg,#fbf7f3 0%,#f8f1f2 65%,#f2e9f2 100%);border-color:#eee3e4}
+.dashboard-primary .dash-welcome h1{font:500 clamp(22px,2vw,29px)/1.2 var(--sans);letter-spacing:-.04em;margin:5px 0 3px;color:#29252d}
+.dashboard-primary .dash-welcome .eyebrow{font-size:7px;letter-spacing:.12em}
+.dashboard-primary .dash-welcome p{font-size:10px;line-height:1.65}
+.dashboard-primary .welcome-art{height:82px}
+.dashboard-primary .welcome-orbit{width:82px;height:82px;border-color:#e4cbdc;background:#ffffff80}
+.dashboard-primary .welcome-orbit:after{inset:5px;border-color:#f1dce9}
+.dashboard-primary .welcome-card{height:62px;width:46px;font-size:19px;transform:rotate(-7deg)}
+.dashboard-primary .welcome-flower{font-size:18px;top:-4px;right:-5px;color:#b88ac4}
+.dashboard-primary .welcome-stars{font-size:16px;left:-10px;bottom:-5px;color:#9d8ab7}
+.empty-main-state{min-height:252px;display:grid;place-items:center;text-align:center;padding:24px 15px 27px}
+.empty-main-copy{max-width:440px;margin:auto}
+.empty-state-icon{position:relative;width:56px;height:49px;margin:0 auto 13px;color:#8570c8;display:grid;place-items:center}
+.calendar-icon{font-size:39px;line-height:1;color:#9583d8}
+.plus-icon{position:absolute;right:1px;bottom:-2px;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#df4d9b;color:#fff;font-size:18px;border:2px solid #fffdf9}
+.empty-main-copy h2{font:500 21px/1.3 var(--sans);margin:0 0 5px;color:#28232d}
+.empty-main-copy p{max-width:360px;font-size:10px;line-height:1.65;color:#817782;margin:0 auto 13px}
+.empty-main-copy .primary-btn{background:#7040d6;color:#fff;border-radius:7px;padding:10px 17px;font-size:10px;box-shadow:0 3px 9px #7040d620}
+.empty-main-copy .primary-btn:hover{background:#5d2ec3}
+.how-section{margin-top:1px;padding-top:14px}
+.how-section-head h2{font:500 14px/1.4 var(--sans);margin:0 0 15px;color:#3a3340}
+.how-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.how-step{text-align:center;min-width:0;padding:0 3px}
+.how-step-icon{width:30px;height:30px;margin:0 auto 7px;border-radius:9px;display:grid;place-items:center;background:#f0e8ff;color:#7852c7;font-size:15px}
+.how-step:nth-child(2) .how-step-icon{background:#fff0f6;color:#d35a9c}
+.how-step:nth-child(3) .how-step-icon{background:#fff3df;color:#be8531}
+.how-step:nth-child(4) .how-step-icon{background:#eaf5ee;color:#639877}
+.how-step h3{font:500 10px/1.4 var(--sans);margin:0 0 4px;color:#45404a}
+.how-step h3 span{font-weight:700}
+.how-step p{font-size:8px;line-height:1.55;color:#8c828d;margin:0}
+.dashboard-rail{padding-top:2px}
+.rail-section{margin:0 0 23px;min-width:0}
+.rail-section-head{margin:0 0 11px}
+.rail-section-head h2{font:500 15px/1.35 var(--sans);margin:0 0 4px;color:#332d38}
+.rail-section-head p{font-size:8px;line-height:1.5;color:#8a8088;margin:0}
+.rail-section-head-row{display:flex;align-items:start;justify-content:space-between;gap:8px}
+.rail-section-head-row h2{font-size:14px}
+.rail-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.rail-template-tile{border:0;background:transparent;padding:0;min-width:0;text-align:left;color:inherit;cursor:pointer}
+.rail-template-thumb{height:92px;width:100%;display:grid;place-items:center;overflow:hidden;padding:7px}
+.rail-template-thumb.rose{background:linear-gradient(145deg,#ebcbc8,#f8eee4)}
+.rail-template-thumb.sage{background:linear-gradient(145deg,#cfd8c7,#f7f2e7)}
+.rail-template-thumb.blue{background:linear-gradient(145deg,#34475f,#c7ced4)}
+.rail-template-thumb.cream{background:linear-gradient(145deg,#e3d3b6,#fff8e9)}
+.rail-template-thumb.lilac{background:linear-gradient(145deg,#d9c8e0,#fff3f4)}
+.rail-template-thumb.dark{background:linear-gradient(145deg,#282b36,#87778b)}
+.rail-template-paper{width:72%;height:80%;background:#fffaf2;border:1px solid #d2b6a4;outline:1px solid #fff8f0;outline-offset:-4px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;color:#78554d;padding:3px;box-shadow:0 4px 8px #2c1e1d20;transform:rotate(-4deg)}
+.rail-template-paper b{font:italic 9px/1.1 var(--serif);font-weight:400;overflow-wrap:anywhere;margin:6px 0}
+.rail-template-paper small{font-size:3px;letter-spacing:.08em}
+.rail-template-paper.sage{background:#f5f5e9;color:#55634e;border-color:#b6c2ac}
+.rail-template-paper.blue{background:#f4f0e8;color:#32445b;border-color:#a9b6c4}
+.rail-template-paper.cream{background:#fff8e9;color:#806944;border-color:#d3c19d}
+.rail-template-paper.lilac{background:#fcf4fb;color:#765b7d;border-color:#d4bfd8}
+.rail-template-paper.dark{background:#282a33;color:#f2e4d5;border-color:#b29c8c}
+.rail-template-name{display:block;font-size:7px;text-align:center;color:#695f69;padding-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rail-template-tile:hover .rail-template-thumb{outline:2px solid #b69ae7;outline-offset:1px}
+.rail-text-link{display:inline-block;border:0;background:transparent;padding:6px 0 0;color:#7757bd;font-size:8px;font-weight:600;text-align:left;cursor:pointer}
+.rail-inspiration{padding-top:2px}
+.rail-help-link{width:100%;display:flex;align-items:center;gap:9px;border:0;background:transparent;padding:6px 0;text-align:left;color:#6f6572;font-size:8px;cursor:pointer}
+.rail-help-link span:first-child{width:16px;text-align:center;color:#9a7ac7;font-size:13px;flex-shrink:0}
+.rail-help-link:hover,.rail-text-link:hover{color:#6840b8}
+.dashboard-primary .invitations-title-row{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:20px 0 10px}
+.invitations-title-row h2{font:500 21px/1.25 var(--sans);letter-spacing:-.02em;margin:4px 0;color:#342d37}
+.invitations-title-row p{font-size:9px;color:#8c828d;margin:0}
+.invitations-title-row .eyebrow{font-size:7px}
+.dashboard-primary .invitations-title-row .primary-btn{background:#7040d6;border-radius:6px;padding:9px 12px;font-size:9px}
+.dashboard-primary .filters{padding-bottom:7px;margin-bottom:10px;gap:5px;border-bottom-color:#eee7ef}
+.dashboard-primary .filter{font-size:9px;padding:6px 9px;border-radius:5px}
+.dashboard-primary .filter.active{background:#f0e9ff;border-color:#e0d4fa;color:#6740b6}
+.dashboard-primary .filter.active span{background:#ddcffd;color:#55339e}
+.dashboard-primary .invitation-grid{grid-template-columns:1fr;gap:10px}
+.dashboard-primary .invite-card{display:grid;grid-template-columns:minmax(135px,31%) minmax(0,1fr);border-radius:8px;box-shadow:none;border-color:#eee7e2}
+.dashboard-primary .invite-cover{height:100%;min-height:158px}
+.dashboard-primary .invite-body{padding:12px 14px}
+.dashboard-primary .invite-title{font:500 17px/1.3 var(--sans);margin:3px 0 4px}
+.dashboard-primary .invite-description{font-size:9px;line-height:1.55;margin-bottom:8px;min-height:0}
+.dashboard-primary .invite-meta{margin-bottom:3px}
+.dashboard-primary .invite-actions{margin-top:10px;gap:5px}
+.dashboard-primary .invite-actions .primary-btn,.dashboard-primary .invite-actions .outline-btn{flex:0 1 auto;padding:7px 9px;font-size:8px}
+.dashboard-primary .no-invitations{padding:22px 15px}
+.dashboard-rail .upcoming-card{grid-template-columns:58px minmax(0,1fr);gap:9px}
+.dashboard-rail .upcoming-art{min-height:78px}
+.dashboard-rail .upcoming-paper{height:54px;width:39px;font-size:17px}
+.dashboard-rail .upcoming-title{font:500 11px/1.35 var(--sans);margin:4px 0}
+.dashboard-rail .upcoming-status{font-size:7px;letter-spacing:.08em}
+.dashboard-rail .upcoming-date{font-size:8px;line-height:1.5;align-items:start}
+.dashboard-rail .countdown-line{margin:4px 0 7px}
+.dashboard-rail .countdown-line strong{font:18px var(--serif)}
+.dashboard-rail .countdown-line span{font-size:8px}
+.dashboard-rail .upcoming-card .outline-btn{font-size:8px;padding:6px 7px;white-space:normal}
+.dashboard-rail .rsvp-empty{padding:14px 10px;background:#fffdfa}
+.dashboard-rail .rsvp-empty-icon{font-size:19px;margin-bottom:3px}
+.dashboard-rail .rsvp-empty strong{font:500 13px var(--sans)}
+.dashboard-rail .rsvp-empty p{font-size:8px;line-height:1.6}
+.dashboard-rail .rsvp-rows{gap:0}
+.dashboard-rail .rsvp-row{gap:7px;padding:7px 0}
+.dashboard-rail .rsvp-avatar{height:25px;width:25px;font-size:7px}
+.dashboard-rail .rsvp-row-main b{font-size:8px}
+.dashboard-rail .rsvp-row-main small{font-size:7px}
+.dashboard-rail .rsvp-pill{font-size:7px;padding:4px 5px}
+.dashboard-rail .tip-panel{margin-top:1px;padding:13px;grid-template-columns:minmax(0,1fr) 39px;gap:8px;border-radius:7px}
+.dashboard-rail .tip-panel h3{font:500 13px/1.35 var(--sans);margin:5px 0}
+.dashboard-rail .tip-panel p{font-size:8px;line-height:1.6;margin-bottom:5px}
+.dashboard-rail .tip-kicker{font-size:7px}
+.dashboard-rail .tip-art{width:35px;height:50px;font-size:18px}
+.dashboard-layout .billing-note{font-size:8px;margin-top:15px}
+@media(max-width:1080px){.dashboard-layout{grid-template-columns:minmax(0,1fr) 235px;gap:17px}.page:has(.dashboard-layout){padding-left:20px;padding-right:20px}}
+@media(max-width:900px){.dashboard-layout{grid-template-columns:minmax(0,1fr)}.dashboard-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start;border-top:1px solid #e8ded6;padding-top:18px}.dashboard-rail .rail-section{margin-bottom:0}.dashboard-rail .tip-panel{align-self:start}.dashboard-primary .dash-welcome{grid-template-columns:minmax(0,1fr) 100px}}
+@media(max-width:740px){.page:has(.dashboard-layout){padding:16px 13px 30px}.dashboard-rail{grid-template-columns:1fr;gap:6px}.dashboard-primary .dash-welcome{grid-template-columns:minmax(0,1fr) 65px;padding:15px;min-height:95px}.dashboard-primary .dash-welcome h1{font-size:19px}.dashboard-primary .dash-welcome p{font-size:9px}.dashboard-primary .welcome-art{height:65px}.dashboard-primary .welcome-orbit{width:61px;height:61px}.dashboard-primary .welcome-card{width:37px;height:49px;font-size:15px}.empty-main-state{min-height:220px;padding:20px 6px}.how-strip{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:17px}.how-step p{font-size:8px}.dashboard-primary .invitations-title-row{align-items:start}.dashboard-primary .invitations-title-row .primary-btn{padding:8px;font-size:8px;white-space:normal}.dashboard-primary .invite-card{grid-template-columns:100px minmax(0,1fr)}.dashboard-primary .invite-cover{min-height:100%;}.dashboard-primary .cover-design{width:69px;height:95px;padding:7px}.dashboard-primary .cover-design b{font-size:15px;margin:8px 0}.dashboard-primary .invite-body{padding:10px}.dashboard-primary .invite-title{font-size:14px}.dashboard-primary .invite-description{font-size:8px}.dashboard-primary .invite-actions .primary-btn,.dashboard-primary .invite-actions .outline-btn{padding:6px;font-size:7px}.rail-template-thumb{height:100px}}
+@media(max-width:390px){.dashboard-primary .invite-card{grid-template-columns:1fr}.dashboard-primary .invite-cover{min-height:110px}.dashboard-primary .invitations-title-row{flex-direction:column}.dashboard-primary .invitations-title-row .primary-btn{width:100%}}
+
 </style>
 </head>
 <body>
@@ -174,28 +290,35 @@ function render(){
  else target.innerHTML=dashboardPage();
  bindPageEvents();
 }
-function emptyDashboardPage(){
+function dashboardLayout(main,rail){return '<div class="dashboard-layout"><div class="dashboard-primary">'+main+'</div><aside class="dashboard-rail">'+rail+'</aside></div>';}
+function dashboardWelcome(empty){
+ var headline=empty?'Welcome to MAGIC CREATIONS! ✧':'Let’s create beautiful memories together.';
+ var subtitle=empty?'You don’t have any invitations yet. Let’s create something beautiful.':'Your celebrations, invitations and event details — all in one place.';
+ return '<section class="welcome dash-welcome"><div class="welcome-text"><div class="eyebrow">'+greeting()+' · YOUR CELEBRATION STARTS HERE</div><h1>'+headline+'</h1><p>'+subtitle+'</p></div><div class="welcome-art" aria-hidden="true"><div class="welcome-orbit"><div class="welcome-card">❦</div><span class="welcome-flower">✧</span><span class="welcome-stars">✿</span></div></div></section>';
+}
+function railTemplates(){
  var picks=templates.slice(0,3);
+ return '<section class="rail-section"><div class="rail-section-head"><h2>Start with a beautiful template</h2><p>Choose a design to begin.</p></div><div class="rail-template-grid">'+picks.map(function(t){return '<button class="rail-template-tile" data-use-template="'+esc(t.id)+'" aria-label="Use '+esc(t.name)+' template"><span class="rail-template-thumb '+esc(t.tone)+'"><span class="rail-template-paper '+esc(t.tone)+'"><small>YOU ARE</small><b>'+esc(t.name)+'</b><small>INVITED</small></span></span><span class="rail-template-name">'+esc(t.name)+'</span></button>';}).join('')+'</div><button class="rail-text-link" data-page="templates">Browse all templates ↗</button></section>';
+}
+function railInspiration(){
+ return '<section class="rail-section rail-inspiration"><div class="rail-section-head"><h2>Need some inspiration?</h2></div>'+
+ '<button class="rail-help-link" data-page="templates"><span>♡</span><span>Wedding invitation ideas</span></button>'+
+ '<button class="rail-help-link" data-page="guide"><span>✧</span><span>Design tips & trends</span></button>'+
+ '<button class="rail-help-link" data-page="guide"><span>♧</span><span>How to manage guests</span></button>'+
+ '<button class="rail-text-link" data-page="guide">Visit our help centre →</button></section>';
+}
+function emptyDashboardPage(){
  var how=[
- {n:'01',ico:'✧',title:'Create',desc:'Pick a template and customize it your way.'},
- {n:'02',ico:'↗',title:'Share',desc:'Send your invitation link to guests.'},
- {n:'03',ico:'♡',title:'Guests RSVP',desc:'Guests respond through your invitation.'},
- {n:'04',ico:'▤',title:'Track',desc:'Review guest responses and event details.'}
+ {n:'1.',ico:'✎',title:'Create',desc:'Pick a template and customize it your way.'},
+ {n:'2.',ico:'↗',title:'Share',desc:'Send your invitation link to guests.'},
+ {n:'3.',ico:'♡',title:'Guests RSVP',desc:'Guests respond to your invitation.'},
+ {n:'4.',ico:'▥',title:'Track',desc:'Review responses and event details.'}
  ];
- var cards=picks.map(function(t){return '<article class="suggested-card"><div class="suggested-art '+esc(t.tone)+'"><div class="suggested-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type.toUpperCase())+'</small></div></div><div class="suggested-info"><h3>'+esc(t.name)+'</h3><p>'+esc(t.desc)+'</p><button class="outline-btn" data-use-template="'+esc(t.id)+'">Start with this design ↗</button></div></article>';}).join('');
- return '<div class="empty-dashboard">'+
- '<section class="empty-hero"><div class="empty-hero-copy"><div class="eyebrow">'+greeting().toUpperCase()+' · YOUR NEXT CELEBRATION STARTS HERE</div><h1>Welcome to MAGIC CREATIONS! ✧</h1><p>You don’t have any invitations yet. Let’s create something beautiful for your special day.</p></div><div class="empty-hero-art" aria-hidden="true"><div class="empty-orbit"><div class="empty-invite-paper"><span>❦</span><small>MADE WITH LOVE</small></div></div></div></section>'+
- '<section><div class="section-head"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div></div>'+
- '<div class="no-invites-card"><div class="no-invites-art" aria-hidden="true"><div class="no-invites-paper"><span>❦</span><small>YOUR DAY · YOUR STORY</small></div></div><div class="no-invites-copy"><div class="eyebrow">A BEAUTIFUL BEGINNING</div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most. Choose a style, add your event details and preview your design.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></div></section>'+
- '<section><div class="section-head"><div><div class="eyebrow">A SIMPLE JOURNEY</div><h2>How it works</h2><p>Four simple steps to your shareable invitation.</p></div></div><div class="how-grid">'+how.map(function(x){return '<article class="how-card"><div class="how-num">'+x.n+'</div><div class="how-icon">'+x.ico+'</div><h3>'+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
- '<section class="suggested-wrap"><div class="section-head"><div><div class="eyebrow">A LITTLE INSPIRATION</div><h2>Start with a beautiful template</h2><p>Explore original invitation design concepts for your celebration.</p></div><button class="outline-btn" data-page="templates">Browse all templates ↗</button></div><div class="suggested-grid">'+cards+'</div></section>'+
- '<section><div class="section-head"><div><div class="eyebrow">HERE TO HELP</div><h2>Need some inspiration?</h2><p>Find ideas and simple guidance to help you begin.</p></div></div><div class="inspiration-grid">'+
- '<article class="inspiration-card"><span class="inspiration-icon">♡</span><div><strong>Wedding invitation ideas</strong><p>Explore romantic, classic and modern invitation styles.</p><button class="quiet-btn" data-page="templates">Explore designs →</button></div></article>'+
- '<article class="inspiration-card"><span class="inspiration-icon">✧</span><div><strong>Design tips & trends</strong><p>Choose a balanced palette, readable fonts and meaningful photos.</p><button class="quiet-btn" data-page="guide">Read the guide →</button></div></article>'+
- '<article class="inspiration-card"><span class="inspiration-icon">♧</span><div><strong>How to manage guests</strong><p>Learn how to organize your guest list and event details.</p><button class="quiet-btn" data-page="guide">Get started →</button></div></article>'+
- '</div></section>'+
- '<p class="billing-note">MAGIC CREATIONS dashboard preview. Event and guest data is saved in this browser. Customer login, cloud sync and automatic RSVP tracking are not connected yet.</p>'+
- '</div>';
+ var main=dashboardWelcome(true)+
+ '<section class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><span class="calendar-icon">▦</span><span class="plus-icon">＋</span></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></section>'+
+ '<section class="how-section"><div class="how-section-head"><h2>How it works</h2></div><div class="how-strip">'+how.map(function(x){return '<article class="how-step"><div class="how-step-icon">'+x.ico+'</div><h3><span>'+x.n+'</span> '+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
+ '<p class="billing-note">MAGIC CREATIONS dashboard preview. This version saves invitation data in this browser only.</p>';
+ return dashboardLayout(main,railTemplates()+railInspiration());
 }
 function dashboardPage(){
  var events=state.events||[];
@@ -205,15 +328,16 @@ function dashboardPage(){
  var allGuests=[];
  events.forEach(function(e){(e.guests||[]).forEach(function(g){allGuests.push({guest:g,event:e});});});
  var recent=allGuests.slice(-5).reverse().filter(function(x){return x.guest.status==='accepted'||x.guest.status==='declined'||x.guest.status==='maybe';});
- var cards=shown.length?shown.map(invitationCard).join(''):'<div class="no-invitations"><div class="empty-icon">✧</div><h3>'+ (filter==='all'?'Your first invitation starts here.':filter==='live'?'No live invitations yet.':'No draft invitations.')+'</h3><p>'+(filter==='all'?'Create an invitation for your wedding, engagement, birthday or other special celebration.':'Try another filter or create a new invitation to get started.')+'</p><button class="primary-btn" data-create>+ Create new invitation</button></div>';
- return '<section class="welcome"><div class="welcome-text"><div class="eyebrow">'+greeting()+', WELCOME TO MAGIC CREATIONS</div><h1>Let’s create beautiful<br>memories together.</h1><p>Your celebrations, invitations and event details — all in one place.</p></div><div class="welcome-art" aria-hidden="true"><div class="welcome-orbit"><div class="welcome-card">❦</div><span class="welcome-flower">✧</span><span class="welcome-stars">✿</span></div></div></section>'+
- '<section><div class="section-head"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div><button class="primary-btn" data-create>＋ Create new invitation</button></div>'+
+ var cards=shown.length?shown.map(invitationCard).join(''):'<div class="no-invitations"><div class="empty-icon">✧</div><h3>'+(filter==='all'?'Your first invitation starts here.':filter==='live'?'No live invitations yet.':'No draft invitations.')+'</h3><p>'+(filter==='all'?'Create an invitation for your wedding, engagement, birthday or other special celebration.':'Try another filter or create a new invitation to get started.')+'</p><button class="primary-btn" data-create>+ Create new invitation</button></div>';
+ var main=dashboardWelcome(false)+
+ '<section class="invitation-section"><div class="invitations-title-row"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div><button class="primary-btn" data-create>＋ Create new invitation</button></div>'+
  '<div class="filters" role="group" aria-label="Filter invitations"><button class="filter '+(filter==='all'?'active':'')+'" data-filter="all">All <span>'+countFor('all')+'</span></button><button class="filter '+(filter==='live'?'active':'')+'" data-filter="live">Live <span>'+countFor('live')+'</span></button><button class="filter '+(filter==='draft'?'active':'')+'" data-filter="draft">Draft <span>'+countFor('draft')+'</span></button></div>'+
  '<div class="invitation-grid">'+cards+'</div></section>'+
- '<div class="dashboard-lower"><section class="panel"><div class="panel-head"><div><h3>Upcoming Event</h3><p>Your next celebration at a glance.</p></div>'+(upcoming?'<button class="text-link" data-open="'+esc(upcoming.id)+'">View timeline ↗</button>':'')+'</div>'+upcomingCard(upcoming)+'</section>'+
- '<section class="panel"><div class="panel-head"><div><h3>Recent RSVPs</h3><p>Latest responses recorded in your guest list.</p></div><button class="text-link" data-open-guests>View guests ↗</button></div>'+recentRsvps(recent)+'</section></div>'+
- '<section class="tip-panel"><div><div class="tip-kicker">A LITTLE DESIGN INSPIRATION</div><h3>Make it feel like your story.</h3><p>A beautiful background photo, thoughtful typography and a warm colour palette can make your invitation feel personal and memorable.</p><button class="quiet-btn" data-page="templates">Explore design ideas →</button></div><div class="tip-art" aria-hidden="true">❦</div></section>'+
- '<p class="billing-note">Prototype note: event data is saved in this browser only. Customer accounts, cloud syncing and automatic live RSVP collection are not connected yet.</p>';
+ '<p class="billing-note">Prototype note: invitation and guest data are saved in this browser only. Customer accounts, cloud syncing and automatic live RSVP collection are not connected yet.</p>';
+ var rail='<section class="rail-section"><div class="rail-section-head rail-section-head-row"><h2>Upcoming Event</h2>'+(upcoming?'<button class="rail-text-link" data-open="'+esc(upcoming.id)+'">View timeline ↗</button>':'')+'</div>'+upcomingCard(upcoming)+'</section>'+
+ '<section class="rail-section rail-panel-section"><div class="rail-section-head rail-section-head-row"><div><h2>Recent RSVPs</h2><p>Latest responses from your guest list.</p></div><button class="rail-text-link" data-open-guests>View guests</button></div>'+recentRsvps(recent)+'</section>'+
+ '<section class="tip-panel"><div><div class="tip-kicker">DESIGN TIP</div><h3>Make it feel like your story.</h3><p>A meaningful photo, clear typography and a warm colour palette can make your invitation personal.</p><button class="quiet-btn" data-page="templates">Explore ideas →</button></div><div class="tip-art" aria-hidden="true">❦</div></section>';
+ return dashboardLayout(main,rail);
 }
 function invitationCard(e){
  var t=template(e),isLive=!!e.published,cover=coverClass(e),days=dateDays(e.date);
