@@ -163,3 +163,15 @@ for insert to anon, authenticated with check (approved = false and length(trim(m
 -- IMPORTANT: promote your own account to admin only after signing up, by running:
 -- update public.profiles set role = 'admin' where id = 'YOUR_AUTH_USER_UUID';
 -- Do this only for your own account in the Supabase SQL Editor.
+
+
+-- Explicit API privileges; RLS policies above still decide which rows are accessible.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update, delete on public.invitations to authenticated;
+grant select, insert on public.orders to authenticated;
+grant update on public.orders to authenticated;
+grant select, insert, update, delete on public.guests to authenticated;
+grant select on public.invitations to anon;
+grant select, insert on public.guestbook_entries to anon, authenticated;
+grant select on public.guestbook_entries to authenticated;
