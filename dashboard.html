@@ -26,6 +26,60 @@
 @media(max-width:1080px){.sidebar{width:218px}.main{margin-left:218px}.welcome{grid-template-columns:1fr .5fr;padding:24px}.dashboard-lower{grid-template-columns:1fr}.billing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:740px){.sidebar{width:65px;padding:15px 7px}.brand{padding:4px 0 22px;justify-content:center}.brand-copy,.side-label,.side-link span:not(.side-ico),.support-card,.side-home{display:none}.brand-mark{height:41px;width:41px;flex-shrink:0}.side-nav{gap:6px}.side-link{justify-content:center;padding:13px 0}.side-ico{font-size:18px}.main{margin-left:65px}.topbar{height:55px;padding:0 13px}.page{padding:19px 13px 36px}.welcome{grid-template-columns:1fr;padding:22px;min-height:0}.welcome-art{position:absolute;right:6px;bottom:-17px;opacity:.55}.welcome-text{max-width:88%}.welcome h1{font-size:30px}.section-head{align-items:start;flex-direction:column}.section-head h2{font-size:27px}.section-head .primary-btn{width:100%}.invitation-grid{grid-template-columns:1fr}.invite-cover{height:165px}.dashboard-lower{gap:13px;margin-top:18px}.panel{padding:14px}.upcoming-card{grid-template-columns:82px 1fr;gap:10px}.upcoming-art{min-height:105px}.upcoming-title{font-size:19px}.template-page-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.template-art{height:140px}.template-paper{width:82px;height:110px}.template-paper b{font-size:17px}.template-meta{padding:10px}.template-meta h3{font-size:18px}.billing-grid{grid-template-columns:1fr}.guide-item{grid-template-columns:35px 1fr;gap:10px;padding:13px}.guide-item>.outline-btn{grid-column:2;justify-self:start}.footer{padding:16px 13px}.invite-actions .primary-btn,.invite-actions .outline-btn{padding:9px 7px;font-size:9px}}
 @media(max-width:390px){.welcome h1{font-size:27px}.welcome{padding:18px}.welcome-text{max-width:100%}.welcome-art{opacity:.28}.filters{gap:2px}.filter{padding:8px}.invite-body{padding:14px}.tip-panel{grid-template-columns:1fr 54px;padding:14px}.tip-art{width:50px;height:65px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+.account-chip{display:flex;align-items:center;gap:9px}
+.account-avatar{height:34px;width:34px;border:1px solid #d9c4b8;background:#f6ebe4;color:#956b64;border-radius:50%;display:grid;place-items:center;font:13px var(--serif)}
+.account-meta small{display:block;font-size:7px;letter-spacing:.14em;color:#9a8277;font-weight:700}
+.account-meta strong{display:block;font-size:9px;color:#4a403a;font-weight:600}
+.empty-dashboard{display:grid;gap:28px}
+.empty-hero{background:linear-gradient(120deg,#f4e7df,#fbf5ef 58%,#e4e6dc);border:1px solid #eadbd1;padding:25px 29px;display:grid;grid-template-columns:1fr .72fr;align-items:center;gap:20px;min-height:172px;overflow:hidden;position:relative}
+.empty-hero h1{font:400 clamp(30px,3.5vw,43px)/1.13 var(--serif);margin:10px 0 7px;letter-spacing:-.035em}
+.empty-hero p{margin:0;font-size:11px;line-height:1.8;color:#786b62;max-width:490px}
+.empty-hero-art{height:130px;display:grid;place-items:center;position:relative}
+.empty-orbit{width:135px;height:135px;border:1px solid #d2b5a7;border-radius:50%;display:grid;place-items:center;position:relative}
+.empty-orbit:after{content:"";position:absolute;inset:9px;border:1px solid #e5d1c6;border-radius:50%}
+.empty-invite-paper{position:relative;z-index:1;width:82px;height:111px;background:#fffaf2;border:1px solid #c6a697;outline:1px solid #e0c5b6;outline-offset:-7px;box-shadow:0 12px 30px #49352a19;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#a3736d;transform:rotate(-5deg)}
+.empty-invite-paper span{font:27px var(--serif)}
+.empty-invite-paper small{font-size:5px;letter-spacing:.12em;margin-top:6px}
+.no-invites-card{background:#fffdfa;border:1px solid var(--line);display:grid;grid-template-columns:.8fr 1.2fr;align-items:center;gap:26px;padding:25px}
+.no-invites-art{min-height:180px;background:linear-gradient(135deg,#e6d1c6,#f9f0e6 60%,#e6e5dc);display:grid;place-items:center;position:relative;overflow:hidden}
+.no-invites-art:before{content:"✧";font:140px var(--serif);position:absolute;color:#ad747512;left:0;top:-49px}
+.no-invites-paper{width:105px;height:139px;background:#fffaf2;border:1px solid #cfb2a3;outline:1px solid #e0c7b9;outline-offset:-8px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#a77670;box-shadow:0 13px 35px #41302620;transform:rotate(4deg);position:relative}
+.no-invites-paper span{font:34px var(--serif)}
+.no-invites-paper small{font-size:6px;letter-spacing:.12em;margin-top:7px}
+.no-invites-copy h2{font:400 clamp(27px,3vw,36px)/1.2 var(--serif);margin:8px 0}
+.no-invites-copy p{font-size:10px;line-height:1.85;color:var(--muted);max-width:440px;margin:0 0 16px}
+.how-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:17px}
+.how-card{background:#fffdfa;border:1px solid var(--line);padding:17px 15px;min-height:142px}
+.how-num{font:italic 14px var(--serif);color:var(--rose)}
+.how-icon{height:34px;width:34px;border:1px solid #e6d2c7;background:#f7ece5;color:#a6746e;display:grid;place-items:center;margin:11px 0}
+.how-card h3{font:20px var(--serif);font-weight:400;margin:0 0 5px}
+.how-card p{font-size:9px;line-height:1.7;color:var(--muted);margin:0}
+.suggested-wrap{margin-top:0}
+.suggested-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+.suggested-card{background:#fffdfa;border:1px solid var(--line);min-width:0}
+.suggested-art{height:160px;display:grid;place-items:center;overflow:hidden}
+.suggested-art.rose{background:linear-gradient(135deg,#d6b0a8,#fbf2e9)}
+.suggested-art.sage{background:linear-gradient(135deg,#bbc7b2,#f5f1e7)}
+.suggested-art.blue{background:linear-gradient(135deg,#34485e,#e0dcd3)}
+.suggested-paper{height:116px;width:83px;background:#fffaf2;border:1px solid #d2b7a8;outline:1px solid #e2ccc0;outline-offset:-7px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:9px;text-align:center;color:#76574c;box-shadow:0 10px 24px #3327201a;transform:rotate(-3deg)}
+.suggested-paper b{font:italic 17px/1.1 var(--serif);font-weight:400;margin:9px 0}
+.suggested-paper small{font-size:5px;letter-spacing:.11em}
+.suggested-paper.sage{background:#f5f5e9;color:#58684f;border-color:#b8c3ac}
+.suggested-paper.blue{background:#f4f1e9;color:#3a4a5f;border-color:#acb7c4}
+.suggested-info{padding:12px}
+.suggested-info h3{font:20px var(--serif);font-weight:400;margin:0}
+.suggested-info p{font-size:9px;color:var(--muted);margin:4px 0 11px}
+.inspiration-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.inspiration-card{border:1px solid var(--line);background:#fffdfa;padding:15px;display:flex;align-items:flex-start;gap:11px}
+.inspiration-icon{height:33px;width:33px;flex-shrink:0;background:#f5e9e2;border:1px solid #e7d5ca;display:grid;place-items:center;color:#9b6e66;font-size:16px}
+.inspiration-card strong{display:block;font-size:10px;margin:1px 0 4px}
+.inspiration-card p{font-size:9px;color:var(--muted);line-height:1.7;margin:0 0 7px}
+.inspiration-card button{padding:0}
+@media(max-width:1050px){.how-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.no-invites-card{grid-template-columns:.7fr 1.3fr}}
+@media(max-width:740px){.empty-hero{grid-template-columns:1fr;padding:22px;min-height:0}.empty-hero h1{font-size:31px}.empty-hero-art{position:absolute;right:0;bottom:-21px;opacity:.35;width:150px}.empty-hero-copy{position:relative;z-index:2;max-width:84%}.no-invites-card{grid-template-columns:1fr;gap:18px;padding:15px}.no-invites-art{min-height:150px}.how-grid{gap:8px}.how-card{padding:13px;min-height:0}.how-card h3{font-size:18px}.suggested-grid{gap:9px}.suggested-art{height:130px}.suggested-paper{width:73px;height:100px}.suggested-paper b{font-size:14px}.suggested-info{padding:9px}.suggested-info h3{font-size:17px}.suggested-info .outline-btn,.suggested-info .primary-btn{white-space:normal;width:100%;padding:8px 5px;font-size:8px}.inspiration-grid{grid-template-columns:1fr}.account-meta{display:none}}
+@media(max-width:430px){.how-grid{grid-template-columns:1fr 1fr}.suggested-grid{grid-template-columns:1fr}.suggested-art{height:150px}.suggested-info{padding:12px}.suggested-info .outline-btn,.suggested-info .primary-btn{font-size:9px;padding:9px}.account-chip{gap:5px}.account-avatar{height:30px;width:30px}}
+
 </style>
 </head>
 <body>
@@ -46,7 +100,7 @@
   </div><a class="side-home" href="index.html">← View website</a></div>
 </aside>
 <main class="main">
-  <header class="topbar"><a class="top-link" href="index.html"><span class="top-dot"></span> MAGIC CREATIONS · SRI LANKA</a><span class="top-right" id="welcomeDate"></span></header>
+  <header class="topbar"><a class="top-link" href="index.html"><span class="top-dot"></span> MAGIC CREATIONS · SRI LANKA</a><div class="account-chip"><div class="account-meta"><small>INDIVIDUAL</small><strong>MAGIC CREATIONS MEMBER</strong></div><span class="account-avatar" aria-hidden="true">MC</span></div></header>
   <div class="page" id="pageContent"></div>
   <footer class="footer"><span>© <span id="year"></span> MAGIC CREATIONS</span><span>Small details. Big feelings.</span><a href="index.html">Website home ↗</a></footer>
 </main>
@@ -66,7 +120,7 @@
 (function(){
 'use strict';
 var KEY='magic_creations_workspace_v1';
-var page='dashboard',filter='all',state=null;
+var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null;
 var templates=[
  {id:'ever-after',name:'Ever After',type:'Wedding',tone:'rose',desc:'Romantic floral · Soft rose'},
  {id:'botanical',name:'Botanical Vows',type:'Wedding',tone:'sage',desc:'Natural · Minimal'},
@@ -82,7 +136,7 @@ function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(3
 function freshEvent(names,type,date,time,venue){
  return {id:uid(),title:names,names:names,type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
 }
-function defaultState(){var e=freshEvent('Your First Invitation','Wedding','','09:00','');e.id='event-demo';return {active:e.id,events:[e]};}
+function defaultState(){return {active:null,events:[]};}
 function readState(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.events)&&s.events.length){s.active=s.active||s.events[0].id;return s;}}}catch(e){}return defaultState();}
 function saveState(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch(e){toast('Browser storage is full. Please remove large uploaded images in the event workspace and try again.');return false;}}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
@@ -115,8 +169,32 @@ function render(){
  else target.innerHTML=dashboardPage();
  bindPageEvents();
 }
+function emptyDashboardPage(){
+ var picks=templates.slice(0,3);
+ var how=[
+ {n:'01',ico:'✧',title:'Create',desc:'Pick a template and customize it your way.'},
+ {n:'02',ico:'↗',title:'Share',desc:'Send your invitation link to guests.'},
+ {n:'03',ico:'♡',title:'Guests RSVP',desc:'Guests respond through your invitation.'},
+ {n:'04',ico:'▤',title:'Track',desc:'Review guest responses and event details.'}
+ ];
+ var cards=picks.map(function(t){return '<article class="suggested-card"><div class="suggested-art '+esc(t.tone)+'"><div class="suggested-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type.toUpperCase())+'</small></div></div><div class="suggested-info"><h3>'+esc(t.name)+'</h3><p>'+esc(t.desc)+'</p><button class="outline-btn" data-use-template="'+esc(t.id)+'">Start with this design ↗</button></div></article>';}).join('');
+ return '<div class="empty-dashboard">'+
+ '<section class="empty-hero"><div class="empty-hero-copy"><div class="eyebrow">'+greeting().toUpperCase()+' · YOUR NEXT CELEBRATION STARTS HERE</div><h1>Welcome to MAGIC CREATIONS! ✧</h1><p>You don’t have any invitations yet. Let’s create something beautiful for your special day.</p></div><div class="empty-hero-art" aria-hidden="true"><div class="empty-orbit"><div class="empty-invite-paper"><span>❦</span><small>MADE WITH LOVE</small></div></div></div></section>'+
+ '<section><div class="section-head"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div></div>'+
+ '<div class="no-invites-card"><div class="no-invites-art" aria-hidden="true"><div class="no-invites-paper"><span>❦</span><small>YOUR DAY · YOUR STORY</small></div></div><div class="no-invites-copy"><div class="eyebrow">A BEAUTIFUL BEGINNING</div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most. Choose a style, add your event details and preview your design.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></div></section>'+
+ '<section><div class="section-head"><div><div class="eyebrow">A SIMPLE JOURNEY</div><h2>How it works</h2><p>Four simple steps to your shareable invitation.</p></div></div><div class="how-grid">'+how.map(function(x){return '<article class="how-card"><div class="how-num">'+x.n+'</div><div class="how-icon">'+x.ico+'</div><h3>'+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
+ '<section class="suggested-wrap"><div class="section-head"><div><div class="eyebrow">A LITTLE INSPIRATION</div><h2>Start with a beautiful template</h2><p>Explore original invitation design concepts for your celebration.</p></div><button class="outline-btn" data-page="templates">Browse all templates ↗</button></div><div class="suggested-grid">'+cards+'</div></section>'+
+ '<section><div class="section-head"><div><div class="eyebrow">HERE TO HELP</div><h2>Need some inspiration?</h2><p>Find ideas and simple guidance to help you begin.</p></div></div><div class="inspiration-grid">'+
+ '<article class="inspiration-card"><span class="inspiration-icon">♡</span><div><strong>Wedding invitation ideas</strong><p>Explore romantic, classic and modern invitation styles.</p><button class="quiet-btn" data-page="templates">Explore designs →</button></div></article>'+
+ '<article class="inspiration-card"><span class="inspiration-icon">✧</span><div><strong>Design tips & trends</strong><p>Choose a balanced palette, readable fonts and meaningful photos.</p><button class="quiet-btn" data-page="guide">Read the guide →</button></div></article>'+
+ '<article class="inspiration-card"><span class="inspiration-icon">♧</span><div><strong>How to manage guests</strong><p>Learn how to organize your guest list and event details.</p><button class="quiet-btn" data-page="guide">Get started →</button></div></article>'+
+ '</div></section>'+
+ '<p class="billing-note">MAGIC CREATIONS dashboard preview. Event and guest data is saved in this browser. Customer login, cloud sync and automatic RSVP tracking are not connected yet.</p>'+
+ '</div>';
+}
 function dashboardPage(){
  var events=state.events||[];
+ if(!events.length)return emptyDashboardPage();
  var shown=events.filter(function(e){return filter==='all'||status(e)===filter;});
  var upcoming=events.filter(function(e){var d=dateDays(e.date);return d!==null&&d>=0;}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));})[0]||events.find(function(e){return !e.date;})||null;
  var allGuests=[];
@@ -165,11 +243,12 @@ function guidePage(){
  return '<div class="section-head"><div><div class="eyebrow">GETTING STARTED</div><h2>Dashboard Guide</h2><p>A simple path from first details to a shareable invitation.</p></div></div><div class="guide-list">'+steps.map(function(s){return '<article class="guide-item"><div class="guide-no">'+s.n+'</div><div><h3>'+s.title+'</h3><p>'+s.desc+'</p></div><button class="outline-btn" '+(s.n==='01'?'data-create':s.n==='02'?'data-page="templates"':s.n==='03'?'data-open-guests':'data-preview-first')+'>'+(s.n==='01'?'Start ↗':s.n==='02'?'Browse ↗':s.n==='03'?'Guests ↗':'Preview ↗')+'</button></article>';}).join('')+'</div><p class="billing-note">For help, use the WhatsApp support button on the left. The current site is a prototype and does not yet include customer login, cloud database access or automatic live RSVP syncing.</p>';
 }
 function openModal(){document.getElementById('createModal').classList.add('open');setTimeout(function(){document.getElementById('eventNames').focus();},30);}
-function closeModal(){document.getElementById('createModal').classList.remove('open');document.getElementById('createForm').reset();}
+function closeModal(){document.getElementById('createModal').classList.remove('open');document.getElementById('createForm').reset();selectedTemplateForCreate=null;}
 function createEvent(ev){
  ev.preventDefault();var form=new FormData(document.getElementById('createForm')),names=String(form.get('names')||'').trim();if(!names)return;
  var e=freshEvent(names,String(form.get('type')||'Wedding'),String(form.get('date')||''),String(form.get('time')||'09:00'),String(form.get('venue')||'').trim());
- state.events.push(e);state.active=e.id;saveState();closeModal();page='dashboard';filter='all';render();toast('Invitation draft created. Add your design and event details in the workspace.');
+ e.template=selectedTemplateForCreate||'ever-after';selectedTemplateForCreate=null;
+ state.events.push(e);state.active=e.id;saveState();closeModal();page='dashboard';filter='all';render();toast('Invitation draft created. Open its dashboard to personalize the design.');
 }
 function createPreview(e){
  e.link=makePreviewLink(e);saveState();return e.link;
@@ -189,7 +268,7 @@ function openWorkspace(id,section){
 }
 function useTemplate(id){
  var t=templates.find(function(x){return x.id===id;});if(!t)return;
- if(!state.events.length){var e=freshEvent('Your First Invitation',t.type,'','09:00','');state.events.push(e);state.active=e.id;}
+ if(!state.events.length){selectedTemplateForCreate=id;document.getElementById('eventType').value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional')?'Wedding':t.type;openModal();toast('Template selected. Add your event details to continue.');return;}
  var e=state.events.find(function(x){return x.id===state.active;})||state.events[0];
  e.template=id;if(t.type!=='Video'&&t.type!=='Animated'&&t.type!=='Traditional'&&(!e.type||e.type==='Wedding'))e.type=t.type;
  saveState();openWorkspace(e.id,'editor');
