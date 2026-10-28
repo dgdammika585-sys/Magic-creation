@@ -208,6 +208,26 @@ body.workspace-open{overflow:hidden}
 .primary-btn{background:#7040d6;border-color:#7040d6;color:#fff;border-radius:6px}
 .primary-btn:hover{background:#5f30c4;border-color:#5f30c4}
 
+
+/* Refine the centre content to match the two reference dashboard states */
+.empty-invitations-section{min-width:0}
+.empty-invitations-section .invitations-title-row{margin:3px 0 0;align-items:center}
+.empty-invitations-section .invitations-title-row h2{font:500 20px/1.3 var(--sans);letter-spacing:-.02em;margin:4px 0;color:#302a36}
+.empty-invitations-section .invitations-title-row p{font-size:9px;color:#8b818d;margin:0}
+.empty-invitations-section .invitations-title-row .eyebrow{font-size:7px;letter-spacing:.13em}
+.empty-main-state{min-height:265px;padding:22px 12px 24px}
+.empty-main-copy{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.empty-state-icon{width:70px;height:64px;margin:0 auto 11px}
+.empty-state-icon svg{display:block;width:70px;height:64px;filter:drop-shadow(0 5px 6px #7660c716)}
+.empty-main-copy h2{font-size:18px;font-weight:600;margin-bottom:6px}
+.empty-main-copy p{font-size:9px;max-width:335px;margin-bottom:13px}
+.empty-main-copy .primary-btn{font-size:9px;padding:9px 15px}
+.how-section{padding-top:10px}
+.how-section-head h2{font-size:13px;margin-bottom:13px}
+.how-step-icon{border:0;width:29px;height:29px;border-radius:9px}
+@media(max-width:900px){.empty-main-state{min-height:235px}}
+@media(max-width:740px){.empty-invitations-section .invitations-title-row{margin-top:2px}.empty-main-state{min-height:215px;padding:17px 6px}.empty-main-copy h2{font-size:17px}.empty-main-copy p{font-size:9px}}
+
 </style>
 </head>
 <body>
@@ -323,7 +343,8 @@ function emptyDashboardPage(){
  {n:'4.',ico:'▥',title:'Track',desc:'Review responses and event details.'}
  ];
  var main=dashboardWelcome(true)+
- '<section class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><span class="calendar-icon">▦</span><span class="plus-icon">＋</span></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></section>'+
+ '<section class="empty-invitations-section"><div class="invitations-title-row"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div></div>'+
+ '<div class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 72 64" role="img" aria-label="Calendar and add invitation"><rect x="13" y="9" width="43" height="43" rx="6" fill="#eee8ff" stroke="#9d8ce1" stroke-width="2"/><path d="M13 21h43" stroke="#9d8ce1" stroke-width="3"/><path d="M24 5v10M44 5v10" stroke="#8e7bd4" stroke-width="4" stroke-linecap="round"/><rect x="21" y="28" width="7" height="7" rx="2" fill="#b8a8f2"/><rect x="32" y="28" width="7" height="7" rx="2" fill="#d6cafa"/><rect x="21" y="39" width="7" height="7" rx="2" fill="#d6cafa"/><circle cx="53" cy="48" r="13" fill="#db4d9d" stroke="#fffdf9" stroke-width="3"/><path d="M53 42v12M47 48h12" stroke="#fff" stroke-width="2.7" stroke-linecap="round"/></svg></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></div></section>'+
  '<section class="how-section"><div class="how-section-head"><h2>How it works</h2></div><div class="how-strip">'+how.map(function(x){return '<article class="how-step"><div class="how-step-icon">'+x.ico+'</div><h3><span>'+x.n+'</span> '+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
  '<p class="billing-note">MAGIC CREATIONS dashboard preview. This version saves invitation data in this browser only.</p>';
  return dashboardLayout(main,railTemplates()+railInspiration());
