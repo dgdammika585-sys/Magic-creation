@@ -118,7 +118,7 @@ function render(){
 function dashboardPage(){
  var events=state.events||[];
  var shown=events.filter(function(e){return filter==='all'||status(e)===filter;});
- var upcoming=events.filter(function(e){var d=dateDays(e.date);return d!==null&&d>=0;}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));})[0]||events.filter(function(e){return !!e.date;}).sort(function(a,b){return String(b.date).localeCompare(String(a.date));})[0]||events[0]||null;
+ var upcoming=events.filter(function(e){var d=dateDays(e.date);return d!==null&&d>=0;}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));})[0]||events.find(function(e){return !e.date;})||null;
  var allGuests=[];
  events.forEach(function(e){(e.guests||[]).forEach(function(g){allGuests.push({guest:g,event:e});});});
  var recent=allGuests.slice(-5).reverse().filter(function(x){return x.guest.status==='accepted'||x.guest.status==='declined'||x.guest.status==='maybe';});
