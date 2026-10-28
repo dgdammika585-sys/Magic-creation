@@ -262,7 +262,29 @@ body.workspace-open{overflow:hidden}
 </aside>
 <main class="main">
   <header class="topbar"><a class="top-link" href="index.html"><span class="top-dot"></span> MAGIC CREATIONS · SRI LANKA</a><div class="account-chip"><div class="account-meta"><small>INDIVIDUAL</small><strong>MAGIC CREATIONS MEMBER</strong></div><span class="account-avatar" aria-hidden="true">MC</span></div></header>
-  <div class="page" id="pageContent"></div>
+  <div class="page" id="pageContent"><div class="dashboard-layout">
+<div class="dashboard-primary">
+<section class="welcome dash-welcome"><div class="welcome-text"><div class="eyebrow">WELCOME · YOUR CELEBRATION STARTS HERE</div><h1>Welcome to MAGIC CREATIONS! ✧</h1><p>You don’t have any invitations yet. Let’s create something beautiful.</p></div><div class="welcome-art" aria-hidden="true"><div class="welcome-orbit"><div class="welcome-card">❦</div><span class="welcome-flower">✧</span><span class="welcome-stars">✿</span></div></div></section>
+<section class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 72 64" role="img" aria-label="Calendar and add invitation"><rect x="13" y="9" width="43" height="43" rx="6" fill="#eee8ff" stroke="#9d8ce1" stroke-width="2"/><path d="M13 21h43" stroke="#9d8ce1" stroke-width="3"/><path d="M24 5v10M44 5v10" stroke="#8e7bd4" stroke-width="4" stroke-linecap="round"/><rect x="21" y="28" width="7" height="7" rx="2" fill="#b8a8f2"/><rect x="32" y="28" width="7" height="7" rx="2" fill="#d6cafa"/><rect x="21" y="39" width="7" height="7" rx="2" fill="#d6cafa"/><circle cx="53" cy="48" r="13" fill="#db4d9d" stroke="#fffdf9" stroke-width="3"/><path d="M53 42v12M47 48h12" stroke="#fff" stroke-width="2.7" stroke-linecap="round"/></svg></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></section>
+<section class="how-section"><div class="how-section-head"><h2>How it works</h2></div><div class="how-strip">
+<article class="how-step"><div class="how-step-icon">✎</div><h3><span>1.</span> Create</h3><p>Pick a template and customize it your way.</p></article>
+<article class="how-step"><div class="how-step-icon">↗</div><h3><span>2.</span> Share</h3><p>Send your invitation link to guests.</p></article>
+<article class="how-step"><div class="how-step-icon">♡</div><h3><span>3.</span> Guests RSVP</h3><p>Guests respond to your invitation.</p></article>
+<article class="how-step"><div class="how-step-icon">▥</div><h3><span>4.</span> Track</h3><p>Review responses and event details.</p></article>
+</div></section>
+</div>
+<aside class="dashboard-rail">
+<section class="rail-section"><div class="rail-section-head"><h2>Start with a beautiful template</h2><p>Choose a design to begin.</p></div><div class="rail-template-grid">
+<button class="rail-template-tile" type="button"><span class="rail-template-thumb rose"><span class="rail-template-paper rose"><small>YOU ARE</small><b>Ever After</b><small>INVITED</small></span></span><span class="rail-template-name">Ever After</span></button>
+<button class="rail-template-tile" type="button"><span class="rail-template-thumb sage"><span class="rail-template-paper sage"><small>YOU ARE</small><b>Botanical Vows</b><small>INVITED</small></span></span><span class="rail-template-name">Botanical Vows</span></button>
+<button class="rail-template-tile" type="button"><span class="rail-template-thumb blue"><span class="rail-template-paper blue"><small>YOU ARE</small><b>Blue Hour</b><small>INVITED</small></span></span><span class="rail-template-name">Blue Hour</span></button>
+</div><button class="rail-text-link" data-page="templates">Browse all templates ↗</button></section>
+<section class="rail-section rail-inspiration"><div class="rail-section-head"><h2>Need some inspiration?</h2></div>
+<button class="rail-help-link" data-page="templates"><span>♡</span><span>Wedding invitation ideas</span></button>
+<button class="rail-help-link" data-page="guide"><span>✧</span><span>Design tips &amp; trends</span></button>
+<button class="rail-help-link" data-page="guide"><span>♧</span><span>How to manage guests</span></button>
+<button class="rail-text-link" data-page="guide">Visit our help centre →</button></section>
+</aside></div></div>
   <footer class="footer"><span>© <span id="year"></span> MAGIC CREATIONS</span><span>Small details. Big feelings.</span><a href="index.html">Website home ↗</a></footer>
 </main>
 </div>
@@ -279,6 +301,7 @@ body.workspace-open{overflow:hidden}
 </div></div>
 <div class="toast" id="toast" role="status"></div>
 <script>
+/* The initial page markup is intentionally populated: the dashboard remains visible even if browser JavaScript fails. */
 (function(){
 'use strict';
 var KEY='magic_creations_workspace_v1';
