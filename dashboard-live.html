@@ -345,7 +345,7 @@ function dateLine(e){return (e.date?niceDate(e.date):'Date to be confirmed')+(e.
 function countFor(f){var es=state.events;return f==='all'?es.length:es.filter(function(e){return status(e)===f;}).length;}
 function render(){
  document.getElementById('year').textContent=new Date().getFullYear();
- document.getElementById('welcomeDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+ var welcomeDateEl=document.getElementById('welcomeDate');if(welcomeDateEl)welcomeDateEl.textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
  document.querySelectorAll('[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===page);});
  var target=document.getElementById('pageContent');
  if(page==='templates')target.innerHTML=templatesPage();
