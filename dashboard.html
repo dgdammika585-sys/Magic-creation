@@ -512,6 +512,15 @@ function createEvent(ev){
  openWorkspace(e.id,'editor');
  toast(mode==='template'?'Invitation created. Personalize your selected design in the editor.':'Custom invitation created. Start designing in the editor.');
 }
+function startCustomInvitation(){
+ closeModal();
+ var e=freshEvent('Your names','Wedding','','09:00','');
+ e.template='custom-blank';e.message='';e.story='';
+ state.events.push(e);state.active=e.id;saveState();
+ page='dashboard';filter='all';render();
+ openWorkspace(e.id,'editor');
+ toast('Blank custom invitation opened. Add your event details in the editor.');
+}
 function createPreview(e){
  e.link=makePreviewLink(e);saveState();return e.link;
 }
@@ -555,7 +564,7 @@ function bindPageEvents(){
  document.querySelectorAll('[data-open-guests]').forEach(function(b){b.onclick=function(){var e=current();if(e)openWorkspace(e.id,'guests');else openModal();};});
  document.querySelectorAll('[data-preview-first]').forEach(function(b){b.onclick=function(){var e=current();if(e)previewEvent(e.id);else openModal();};});
  document.getElementById('chooseTemplate').onclick=function(){closeModal();templateStartPending=true;setPage('templates');toast('Choose a design to continue.');};
- document.getElementById('chooseCustom').onclick=function(){templateStartPending=false;selectedTemplateForCreate=null;openDetailsStep('custom');};
+ document.getElementById('chooseCustom').onclick=function(){startCustomInvitation();};
  document.getElementById('backToChoices').onclick=function(){if(document.getElementById('createForm'))document.getElementById('createForm').reset();creationMode=null;selectedTemplateForCreate=null;showCreationStep('choices');};
  document.getElementById('closeModal').onclick=closeModal;
  document.getElementById('cancelCreate').onclick=closeModal;
