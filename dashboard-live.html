@@ -363,7 +363,7 @@ body.workspace-open{overflow:hidden}
      <div class="field" style="margin-top:13px"><label for="invitationSlug">Invitation link <span class="required-star">*</span></label><input class="input" id="invitationSlug" name="invitationSlug" required minlength="3" maxlength="60" pattern="[a-z0-9]+(-[a-z0-9]+)*" autocomplete="off" spellcheck="false" placeholder="harsha-chathu"><span class="hint">Lowercase letters, numbers and hyphens only. Set once — this address name can’t be changed after you create the invitation.</span></div>
      <div class="slug-preview-box"><span class="slug-preview-label">LINK PREVIEW</span><span id="invitationUrlPrefix" class="slug-prefix"></span><strong id="slugPreview">your-invitation</strong></div>
      <p class="template-confirm-note">The link name will be saved with the invitation. A public short link needs the publishing service connected; this prototype’s share link includes the invitation details.</p>
-     <div class="form-actions template-confirm-actions"><button class="outline-btn" type="button" id="cancelTemplateSetup">Cancel</button><button class="primary-btn" type="submit">Continue to event details ↗</button></div>
+     <div class="form-actions template-confirm-actions"><button class="outline-btn" type="button" id="cancelTemplateSetup">Cancel</button><button class="primary-btn" type="submit">Continue to sections ↗</button></div>
     </form>
    </div>
   </div>
@@ -530,7 +530,7 @@ function openTemplateConfirmStep(id){
  if(art)art.innerHTML='<div class="template-art '+esc(t.tone)+'"><div class="template-paper '+esc(t.tone)+'"><small>YOU ARE INVITED</small><b>'+esc(t.name)+'</b><small>'+esc(t.type==='Custom'?'YOUR OWN DESIGN':t.type.toUpperCase())+'</small></div></div>';
  var titleField=document.getElementById('invitationTitle'),slugField=document.getElementById('invitationSlug'),prefix=document.getElementById('invitationUrlPrefix'),preview=document.getElementById('slugPreview');
  if(titleField)titleField.value='';if(slugField)slugField.value='';
- if(prefix)prefix.textContent=location.origin+location.pathname.replace(/[^/]+$/,'event-workspace.html')+'?slug=';
+ if(prefix)prefix.textContent=location.origin+location.pathname.replace(/[^/]+$/,'')+'i/';
  if(preview)preview.textContent='your-invitation';
  var typeField=document.getElementById('eventType');if(typeField)typeField.value=(t.type==='Video'||t.type==='Animated'||t.type==='Traditional'||t.type==='Custom')?'Wedding':t.type;
  setTimeout(function(){if(titleField)titleField.focus();},30);
