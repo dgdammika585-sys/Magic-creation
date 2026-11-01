@@ -837,7 +837,7 @@ if(style)html=html.replace(/<section([^>]*)>/,function(tag){return tag.replace(/
 if(c.subheading){var sub=esc(c.subheading);if(/<div class="public-kicker"[^>]*>/.test(html))html=html.replace(/(<div class="public-kicker"[^>]*>)[\s\S]*?(<\/div>)/,function(_,a,b){return a+sub+b;});else html=html.replace(/(<section[^>]*>)/,'$1<div class="public-kicker">'+sub+'</div>');}
 if(c.title){var title=esc(c.title);if(/<h2[^>]*class="public-title"[^>]*>/.test(html))html=html.replace(/(<h2[^>]*class="public-title"[^>]*>)[\s\S]*?(<\/h2>)/,function(_,a,b){return a+title+b;});else html=html.replace(/(<section[^>]*>)/,'$1<h2 class="public-title">'+title+'</h2>');}
 if(c.description){var desc=esc(c.description);if(/<p[^>]*class="public-story"[^>]*>/.test(html))html=html.replace(/(<p[^>]*class="public-story"[^>]*>)[\s\S]*?(<\/p>)/,function(_,a,b){return a+desc+b;});else html=html.replace(/(<h2[^>]*>[^<]*<\/h2>)/,'$1<p class="public-story">'+desc+'</p>');}
-return html;
+return {key:group.key,html:html,position:group.position};
 });
 return (prefix+groups.map(function(x){return x.html;}).join('')).replace(/<!--MC_SECTION:[a-zA-Z0-9_-]+-->/g,'');
 }
