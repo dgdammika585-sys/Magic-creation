@@ -1,0 +1,8 @@
+[functions.guest-lookup]
+# Guest links carry a random 256-bit token. The function validates the token
+# against a SHA-256 hash; no Supabase service secret is ever sent to the browser.
+verify_jwt = false
+
+[functions.guest-rsvp]
+# The function validates a guest token and writes through a server-only SQL RPC.
+verify_jwt = false
