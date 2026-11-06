@@ -393,7 +393,7 @@ var templates=[
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
 function freshEvent(names,type,date,time,venue){
- return {id:uid(),title:names,names:names,invitationTitle:'',invitationSlug:'',type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'ever-after',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
+ return {id:uid(),title:names,names:names,invitationTitle:'',invitationSlug:'',type:type||'Wedding',date:date||'',time:time||'09:00',venue:venue||'',hostPhone:'',template:'golden-heritage',message:'Together with our families, we invite you to celebrate our special day.',story:'',budget:0,published:false,sections:{countdown:true,story:true,agenda:true,gallery:true,map:true,rsvp:true},guests:[],agenda:[],gallery:[],wishes:[],tables:[],expenses:[],link:''};
 }
 function defaultState(){return {active:null,events:[]};}
 function readState(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.events)&&s.events.length){s.active=s.active||s.events[0].id;return s;}}}catch(e){}return defaultState();}
@@ -435,7 +435,7 @@ function dashboardWelcome(empty){
  return '<section class="welcome dash-welcome"><div class="welcome-text"><div class="eyebrow">'+greeting()+' · YOUR CELEBRATION STARTS HERE</div><h1>'+headline+'</h1><p>'+subtitle+'</p></div><div class="welcome-art" aria-hidden="true"><div class="welcome-orbit"><div class="welcome-card">❦</div><span class="welcome-flower">✧</span><span class="welcome-stars">✿</span></div></div></section>';
 }
 function railTemplates(){
- var picks=templates.slice(0,3);
+ var picks=templates.filter(function(t){return t.id!=='custom-blank';});
  return '<section class="rail-section"><div class="rail-section-head"><h2>Start with a beautiful template</h2><p>Choose a design to begin.</p></div><div class="rail-template-grid">'+picks.map(function(t){return '<button class="rail-template-tile" data-use-template="'+esc(t.id)+'" aria-label="Use '+esc(t.name)+' template"><span class="rail-template-thumb '+esc(t.tone)+'"><span class="rail-template-paper '+esc(t.tone)+'"><small>YOU ARE</small><b>'+esc(t.name)+'</b><small>INVITED</small></span></span><span class="rail-template-name">'+esc(t.name)+'</span></button>';}).join('')+'</div><button class="rail-text-link" data-page="templates">Browse all templates ↗</button></section>';
 }
 function railInspiration(){
