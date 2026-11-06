@@ -19,8 +19,17 @@ The Supabase publishable key (or legacy anon key) may be used by a browser only 
 
 1. In the Supabase SQL Editor, run `supabase-schema.sql` if this is a new project.
 2. Then run `supabase/migrations/202611060001_guest_tokens_rsvp.sql`.
-3. Deploy the functions in `supabase/functions/guest-lookup` and `supabase/functions/guest-rsvp` using the Supabase CLI or your Supabase deployment workflow.
-4. Make sure the Edge Functions have the project environment variables `SUPABASE_URL` and `SUPABASE_SECRET_KEYS` available. Supabase-hosted Edge Functions provide these by default. Older setups may provide `SUPABASE_SERVICE_ROLE_KEY`; the functions support that fallback too.
+3. Install the Supabase CLI, then run these commands from the repository root:
+
+```sh
+supabase login
+supabase link --project-ref YOUR_PROJECT_REF
+supabase functions deploy guest-lookup
+supabase functions deploy guest-rsvp
+```
+
+   Replace `YOUR_PROJECT_REF` with the project reference from your Supabase dashboard. These commands deploy only the Edge Functions; they do not apply the SQL migration for you.
+4. Supabase-hosted Edge Functions provide `SUPABASE_URL` and `SUPABASE_SECRET_KEYS` in their runtime. Older setups may provide `SUPABASE_SERVICE_ROLE_KEY`; the functions support that fallback too. For local development, copy `supabase/functions/.env.example` to `supabase/functions/.env` and fill it with local values from `supabase status`. Do not commit the `.env` file.
 5. Keep the public website origin in the allowlist in `supabase/functions/_shared/common.ts`. Add a local development origin only when testing locally.
 6. Create a published invitation and guest records in Supabase. To issue a guest link while signed in as the invitation owner, call:
 
