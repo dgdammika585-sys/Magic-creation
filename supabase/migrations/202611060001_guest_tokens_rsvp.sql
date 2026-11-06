@@ -44,7 +44,7 @@ begin
 
   return new;
 end;
-$;
+$$;
 
 drop trigger if exists seating_tables_validate_update on public.seating_tables;
 create trigger seating_tables_validate_update
