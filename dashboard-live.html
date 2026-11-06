@@ -608,7 +608,7 @@ function openWorkspace(id,section){
  frame.classList.add('open');
  frame.src='event-workspace.html?v=202611040517#app='+(section||'overview');
 }
-function openTemplatePreview(id){
+function openTemplatePreview(id){window.open('event-workspace.html?v=202611061045&fulltemplate='+encodeURIComponent(id),'_blank','noopener,noreferrer');return;
  var t=templates.find(function(x){return x.id===id;});if(!t)return;
  var old=document.getElementById('templatePreviewOverlay');if(old)old.remove();
  var overlay=document.createElement('div');overlay.id='templatePreviewOverlay';overlay.className='template-preview-backdrop';
