@@ -18,8 +18,9 @@ The Supabase publishable key (or legacy anon key) may be used by a browser only 
 ## Setup order
 
 1. In the Supabase SQL Editor, run `supabase-schema.sql` if this is a new project.
-2. Then run `supabase/migrations/202611060001_guest_tokens_rsvp.sql`.
-3. Install the Supabase CLI, then run these commands from the repository root:
+2. Run `supabase/migrations/202611060001_guest_tokens_rsvp.sql`.
+3. Run `supabase/migrations/202611060002_auth_profile_trigger.sql`. This creates a customer profile automatically after Auth signup; user-supplied metadata can never set the admin role.
+4. Install the Supabase CLI, then run these commands from the repository root:
 
 ```sh
 supabase login
@@ -29,9 +30,9 @@ supabase functions deploy guest-rsvp
 ```
 
    Replace `YOUR_PROJECT_REF` with the project reference from your Supabase dashboard. These commands deploy only the Edge Functions; they do not apply the SQL migration for you.
-4. Supabase-hosted Edge Functions provide `SUPABASE_URL` and `SUPABASE_SECRET_KEYS` in their runtime. Older setups may provide `SUPABASE_SERVICE_ROLE_KEY`; the functions support that fallback too. For local development, copy `supabase/functions/.env.example` to `supabase/functions/.env` and fill it with local values from `supabase status`. Do not commit the `.env` file.
-5. Keep the public website origin in the allowlist in `supabase/functions/_shared/common.ts`. Add a local development origin only when testing locally.
-6. Create a published invitation and guest records in Supabase. To issue a guest link while signed in as the invitation owner, call:
+5. Supabase-hosted Edge Functions provide `SUPABASE_URL` and `SUPABASE_SECRET_KEYS` in their runtime. Older setups may provide `SUPABASE_SERVICE_ROLE_KEY`; the functions support that fallback too. For local development, copy `supabase/functions/.env.example` to `supabase/functions/.env` and fill it with local values from `supabase status`. Do not commit the `.env` file.
+6. Keep the public website origin in the allowlist in `supabase/functions/_shared/common.ts`. Add a local development origin only when testing locally.
+7. Create a published invitation and guest records in Supabase. To issue a guest link while signed in as the invitation owner, call:
 
 ```js
 const { data, error } = await supabase.rpc('issue_guest_invitation_token', {
@@ -42,8 +43,8 @@ if (error) throw error;
 // Do not store or log it in analytics.
 ```
 
-7. A guest page can call the lookup endpoint with `{ slug, token }`, then show only the returned guest details. For an RSVP, call the second endpoint with `{ token, response: 'attending' | 'not_attending', request_id: crypto.randomUUID() }`.
-8. For an invitation to show a table name, the owner must enable `invitations.show_guest_table`, assign the guest using `assign_guest_table(guest_id, table_id)`, and the guest must have an `attending` RSVP.
+8. A guest page can call the lookup endpoint with `{ slug, token }`, then show only the returned guest details. For an RSVP, call the second endpoint with `{ token, response: 'attending' | 'not_attending', request_id: crypto.randomUUID() }`.
+9. For an invitation to show a table name, the owner must enable `invitations.show_guest_table`, assign the guest using `assign_guest_table(guest_id, table_id)`, and the guest must have an `attending` RSVP.
 
 ## Endpoints
 
