@@ -332,6 +332,7 @@ body.workspace-open{overflow:hidden}
 <button class="rail-template-tile" type="button"><span class="rail-template-thumb sage"><span class="rail-template-paper sage"><small>YOU ARE</small><b>Botanical Vows</b><small>INVITED</small></span></span><span class="rail-template-name">Botanical Vows</span></button>
 <button class="rail-template-tile" type="button"><span class="rail-template-thumb blue"><span class="rail-template-paper blue"><small>YOU ARE</small><b>Blue Hour</b><small>INVITED</small></span></span><span class="rail-template-name">Blue Hour</span></button>
 <a class="rail-template-tile" href="templates/five-hearts-date-reveal.html" target="_blank" rel="noopener"><span class="rail-template-thumb cream"><span class="rail-template-paper cream"><small>REVEAL YOUR DATE</small><b>♥ ♥ ♥ ♥ ♥</b><small>FIVE HEARTS</small></span></span><span class="rail-template-name">Five Hearts · NEW</span></a>
+<a class="rail-template-tile" href="templates/heritage-master-template.html" target="_blank" rel="noopener"><span class="rail-template-thumb cream"><span class="rail-template-paper cream"><small>MAGIC CREATIONS</small><b>HERITAGE</b><small>MASTER TEMPLATE</small></span></span><span class="rail-template-name">Heritage Master · NEW</span></a>
 </div><button class="rail-text-link" data-page="templates">Browse all templates ↗</button></section>
 <section class="rail-section rail-inspiration"><div class="rail-section-head"><h2>Need some inspiration?</h2></div>
 <button class="rail-help-link" data-page="templates"><span>♡</span><span>Wedding invitation ideas</span></button>
@@ -390,6 +391,7 @@ var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,crea
 var templates=[
  {id:'golden-heritage',name:'Golden Heritage',type:'Traditional Wedding',tone:'heritage-gold',desc:'Classic Sinhala ceremony · Gold & ivory'},
  {id:'sinhala-poruwa-story',name:'Sinhala Poruwa Story',type:'Traditional Wedding',tone:'sinhala-poruwa',desc:'Video-inspired · Full wedding story'},
+ {id:'heritage-master',name:'Sri Lankan Heritage Master',type:'Traditional Wedding',tone:'heritage-gold',desc:'Complete invitation · Five-heart reveal · RSVP · Story · Gallery'},
  {id:'custom-blank',name:'Custom Studio',type:'Custom',tone:'cream',desc:'Start from a blank canvas'}
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
@@ -615,7 +617,7 @@ function bindPageEvents(){
  document.querySelectorAll('[data-open]').forEach(function(b){b.onclick=function(){openWorkspace(b.dataset.open,'overview');};});
  document.querySelectorAll('[data-preview]').forEach(function(b){b.onclick=function(){previewEvent(b.dataset.preview);};});
  document.querySelectorAll('[data-publish]').forEach(function(b){b.onclick=function(){publishEvent(b.dataset.publish);};});
- document.querySelectorAll('[data-preview-template]').forEach(function(b){b.onclick=function(){window.open('event-workspace.html?fulltemplate='+encodeURIComponent(b.dataset.previewTemplate),'_blank','noopener,noreferrer');};});
+ document.querySelectorAll('[data-preview-template]').forEach(function(b){b.onclick=function(){var id=b.dataset.previewTemplate;if(id==='heritage-master'){window.open('templates/heritage-master-template.html','_blank','noopener,noreferrer');return;}window.open('event-workspace.html?fulltemplate='+encodeURIComponent(id),'_blank','noopener,noreferrer');};});
  document.querySelectorAll('[data-use-template]').forEach(function(b){b.onclick=function(){useTemplate(b.dataset.useTemplate);};});
  document.querySelectorAll('[data-open-guests]').forEach(function(b){b.onclick=function(){var e=current();if(e)openWorkspace(e.id,'guests');else openModal();};});
  document.querySelectorAll('[data-preview-first]').forEach(function(b){b.onclick=function(){var e=current();if(e)previewEvent(e.id);else openModal();};});
