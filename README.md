@@ -28,6 +28,16 @@ MAGIC CREATIONS is an original Sri Lankan digital-invitation website and dashboa
 - Event agenda, seating tables, local guest gallery, sample guestbook and budget tracker
 - Sample invitation link and public invitation preview with countdown, agenda, venue directions, optional video/audio URLs, approved sample wishes and WhatsApp RSVP buttons
 
+## Secure Guest Search and RSVP backend foundation
+
+The repository now includes:
+- `supabase/migrations/202611060001_guest_tokens_rsvp.sql` — hashed personal guest tokens, table capacity enforcement, token issuance, guest-table assignment and an idempotent RSVP history writer.
+- `supabase/functions/guest-lookup` — validates a personal token and returns only that guest's permitted details.
+- `supabase/functions/guest-rsvp` — validates a personal token and records Accept / Decline through a server-side database function.
+- `SUPABASE-GUEST-INTEGRATION.md` — deployment and verification steps.
+
+**Not live yet:** These backend files have not been applied to a Supabase project or deployed. The existing GitHub Pages event workspace still stores customer event and guest data in browser localStorage. Organizer login, cloud data migration, token issue buttons in Guest Management, and automatic dashboard RSVP synchronization are still pending. Do not use the current prototype links for confidential guest data.
+
 ## Important limitations
 
 This is a static GitHub Pages prototype, not the finished production platform.
