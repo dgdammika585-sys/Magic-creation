@@ -23,6 +23,10 @@ This repository currently hosts a static website. The SQL schema below prepares 
 - Admin access is not enabled automatically. After creating your own account and confirming the profile row exists, use the SQL Editor to promote only your own profile to admin. Do not make this change for customer accounts.
 - Review policies before accepting real customer information or payments.
 
+## Secure guest links and RSVP
+
+After applying `supabase-schema.sql`, follow [`SUPABASE-GUEST-INTEGRATION.md`](SUPABASE-GUEST-INTEGRATION.md): run `supabase/migrations/202611060001_guest_tokens_rsvp.sql`, then deploy the `guest-lookup` and `guest-rsvp` Edge Functions. These endpoints are token-protected and do not expose the guests table to anonymous browser queries.
+
 ## Current limitations
 
-The SQL creates the backend tables and access rules; it does **not** by itself add signup/login forms or connect the existing website pages. Those frontend integration steps are next. Supabase Free includes usage limits and projects may pause after a week of inactivity, so it is suitable for a first prototype, not a guarantee of uninterrupted production hosting. See the official [Supabase pricing](https://supabase.com/pricing) and [Auth docs](https://supabase.com/docs/guides/auth).
+The SQL and Edge Function files prepare the backend, but they do **not** automatically migrate existing browser `localStorage` event data, add organizer signup/login to the current pages, or issue personal tokens from the current Guest Management screen. The frontend integration is a separate next step. Supabase Free has usage limits and project pausing rules that may change; check the current [Supabase pricing](https://supabase.com/pricing) and [Auth docs](https://supabase.com/docs/guides/auth) before launch.
