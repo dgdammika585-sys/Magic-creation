@@ -25,7 +25,7 @@ This repository currently hosts a static website. The SQL schema below prepares 
 
 ## Secure guest links and RSVP
 
-After applying `supabase-schema.sql`, follow [`SUPABASE-GUEST-INTEGRATION.md`](SUPABASE-GUEST-INTEGRATION.md): run `supabase/migrations/202611060001_guest_tokens_rsvp.sql`, then deploy the `guest-lookup` and `guest-rsvp` Edge Functions. These endpoints are token-protected and do not expose the guests table to anonymous browser queries.
+After applying `supabase-schema.sql`, run both migrations in order: `supabase/migrations/202611060001_guest_tokens_rsvp.sql` and `supabase/migrations/202611060002_auth_profile_trigger.sql`. The second migration automatically creates a customer profile after signup and never trusts user metadata for admin access. Then follow [`SUPABASE-GUEST-INTEGRATION.md`](SUPABASE-GUEST-INTEGRATION.md) to deploy the `guest-lookup` and `guest-rsvp` Edge Functions. These endpoints are token-protected and do not expose the guests table to anonymous browser queries.
 
 ## Current limitations
 
