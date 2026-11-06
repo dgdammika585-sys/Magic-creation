@@ -1,0 +1,17 @@
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+supabase/functions/.env
+supabase/functions/.env.*
+!supabase/functions/.env.example
+
+# Supabase local state
+.supabase/
+supabase/.temp/
+
+# Tooling / build output
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
