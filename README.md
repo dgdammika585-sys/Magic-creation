@@ -62,4 +62,7 @@ This is a static GitHub Pages prototype, not the finished production platform.
 ### Nil Manel Heritage preview
 
 - The Template Gallery in the event workspace now labels the video-inspired Sinhala design as **Nil Manel Heritage**. Its full-preview action opens `professional-invitation-preview.html` and passes the current event names, date, time, venue, address and family names.
-- The standalone page is a visual and interaction demo. Its guest-search/seating records and RSVP responses are sample data stored only in the current browser; they are not connected to the event database.
+- The standalone page is retained as a static design sample. The Template Gallery's full preview now opens the event-workspace invitation renderer with the selected event's current details, uploaded hero/story/gallery media, agenda, family information and Invitation Layout settings. Personal guest links show only the invited guest name and, when the organizer has enabled table display and the guest is accepted, that guest's assigned table. RSVP accept/decline actions open a prefilled WhatsApp message to the host; they do not automatically update the dashboard. The Add to Calendar button downloads an `.ics` calendar file. Global guest-name lookup and automatic RSVP synchronization still require the secure database/API integration.
+
+
+**Guest-link privacy note:** Current GitHub Pages links are static client-side previews. Guest-specific values are included in the invitation link payload and are not encrypted or protected by a server. Do not include confidential guest details in these prototype links. Production guest lookup, seating access and RSVP storage must be implemented with server-validated, unguessable guest tokens and database access policies before public launch.
