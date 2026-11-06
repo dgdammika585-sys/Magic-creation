@@ -18,6 +18,43 @@ alter table public.guests
   add column if not exists table_id uuid references public.seating_tables(id) on delete set null,
   add column if not exists rsvp_responded_at timestamptz;
 
+-- Prevent a table from being moved to a different event or reduced below
+-- the number of seats already assigned.
+create or replace function public.validate_seating_table_update()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $
+declare
+  v_occupied integer;
+begin
+  if new.invitation_id <> old.invitation_id or new.owner_id <> old.owner_id then
+    raise exception 'A seating table cannot be moved to another event or owner.';
+  end if;
+
+  select coalesce(sum(g.guest_count), 0)::integer
+    into v_occupied
+    from public.guests g
+   where g.table_id = old.id;
+
+  if new.capacity < v_occupied then
+    raise exception 'Table capacity cannot be lower than its current assigned guest count.';
+  end if;
+
+  return new;
+end;
+$;
+
+drop trigger if exists seating_tables_validate_update on public.seating_tables;
+create trigger seating_tables_validate_update
+before update of invitation_id, owner_id, capacity
+on public.seating_tables
+for each row execute function public.validate_seating_table_update();
+
+revoke all on function public.validate_seating_table_update() from public, anon, authenticated;
+revoke all on function public.validate_guest_table_capacity() from public, anon, authenticated;
+
 alter table public.invitations
   add column if not exists show_guest_table boolean not null default false;
 
@@ -143,6 +180,8 @@ using (
   )
   or public.is_magic_creations_admin()
 );
+
+grant select on public.guest_rsvp_events to authenticated;
 
 grant select, insert, update, delete on public.seating_tables to authenticated;
 
