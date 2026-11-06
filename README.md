@@ -6,6 +6,7 @@ MAGIC CREATIONS is an original Sri Lankan digital-invitation website and dashboa
 
 - Website: https://dgdammika585-sys.github.io/Magic-creation/
 - Main dashboard / My Invitations: https://dgdammika585-sys.github.io/Magic-creation/dashboard.html
+- Nil Manel Heritage full invitation preview: https://dgdammika585-sys.github.io/Magic-creation/professional-invitation-preview.html
 
 ## Main dashboard — one-page flow
 
@@ -56,3 +57,9 @@ This is a static GitHub Pages prototype, not the finished production platform.
 5. Add secure media storage, QR guest uploads and moderation.
 6. Finish protected admin, order and payment workflows.
 7. Test permissions, mobile layouts, performance, backups and deployment end to end.
+
+
+### Nil Manel Heritage preview
+
+- The Template Gallery in the event workspace now labels the video-inspired Sinhala design as **Nil Manel Heritage**. Its full-preview action opens `professional-invitation-preview.html` and passes the current event names, date, time, venue, address and family names.
+- The standalone page is a visual and interaction demo. Its guest-search/seating records and RSVP responses are sample data stored only in the current browser; they are not connected to the event database.
