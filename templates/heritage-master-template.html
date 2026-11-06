@@ -39,6 +39,7 @@ const params=new URLSearchParams(location.search),$=id=>document.getElementById(
 const get=(k,d)=>params.get(k)||d;
 const bride=get('bride','Nethmi'),groom=get('groom','Kavindu'),date=get('date','2027-08-14'),venue=get('venue','The Grand Ballroom'),address=get('address','Colombo, Sri Lanka'),time=get('time','8:30 AM onwards');
 const dateObj=new Date(date+'T08:30:00');
+document.querySelectorAll('.heart').forEach((b,i)=>{b.dataset.value=[String(dateObj.getDate()),dateObj.toLocaleDateString('en-US',{month:'short'}).toUpperCase(),String(dateObj.getFullYear()),'♡','∞'][i];});
 const fmt={day:'2-digit',month:'long',year:'numeric'};
 $('bride').textContent=bride;$('groom').textContent=groom;$('coupleNames').textContent=bride+' & '+groom;
 $('coverDate').textContent=dateObj.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
