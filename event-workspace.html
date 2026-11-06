@@ -854,21 +854,26 @@ function videoInspiredPoruwaInvite(data){
  var agenda=Array.isArray(data.agenda)?data.agenda:[];
  var gallery=Array.isArray(data.gallery)?data.gallery.filter(function(x){return x&&x.data;}).slice(0,20):[];
  var wishes=Array.isArray(data.wishes)?data.wishes.filter(function(x){return x&&x.name&&x.message;}).slice(0,8):[];
- var mapQuery=String(data.mapLocation||[data.venue||'',data.address||''].join(' ')).trim();
+ var mapSpecial=(((data.sectionSettings||{}).map||{}).special)||{}; var mapQuery=String(mapSpecial.locationValue||data.mapLocation||[data.venue||'',data.address||''].join(' ')).trim();
  var mapUrl='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(mapQuery||'Sri Lanka');
  function dual(en,si){var l=String(data.invitationLanguage||'English');if(l==='Sinhala')return si;if(l==='English & Sinhala')return en+' · '+si;return en;}
  function phoneLink(raw){var p=String(raw||'').replace(/\D/g,'');if(p.indexOf('00')===0)p=p.slice(2);if(p.indexOf('0')===0)p='94'+p.slice(1);else if(p.length===9&&p.indexOf('94')!==0)p='94'+p;return p;}
+ var contactSpecial=(((data.sectionSettings||{}).contactDetails||{}).special)||{};
  var contactRows=[
-  {name:data.contactPerson1Name,phone:data.contactPerson1Phone},
-  {name:data.contactPerson2Name,phone:data.contactPerson2Phone},
-  {name:data.contactPerson3Name,phone:data.contactPerson3Phone}
+  {name:contactSpecial.contact1Name||data.contactPerson1Name,phone:contactSpecial.contact1Phone||data.contactPerson1Phone},
+  {name:contactSpecial.contact2Name||data.contactPerson2Name,phone:contactSpecial.contact2Phone||data.contactPerson2Phone},
+  {name:contactSpecial.contact3Name||data.contactPerson3Name,phone:contactSpecial.contact3Phone||data.contactPerson3Phone}
  ].filter(function(x){return x.name||x.phone;});
+ var rsvpSpecial=(((data.sectionSettings||{}).rsvp||{}).special)||{};
+ var dressSpecial=(((data.sectionSettings||{}).dressCode||{}).special)||{};
+ var quoteSpecial=(((data.sectionSettings||{}).quote||{}).special)||{};
+ var customSpecial=(((data.sectionSettings||{}).custom1||{}).special)||{};
  var whatsappPhone=phoneLink(data.hostPhone)||(contactRows.length?phoneLink(contactRows[0].phone):'');
  function waButton(status){
   if(!whatsappPhone)return '<p class="mc-poruwa-note">'+dual('Please use the contact details below to confirm your attendance.','පැමිණීම තහවුරු කිරීමට පහත සම්බන්ධතා භාවිතා කරන්න.')+'</p>';
   var who=guest&&guest.name?guest.name:'Guest';
   var msg='Hello, '+who+'. '+(status==='yes'?'I am happy to ACCEPT':'I am sorry to DECLINE')+' the invitation for '+(data.names||'the wedding')+'. '+(guestCount?'Invited seats: '+guestCount+'. ':'')+'Please record my response.Thank you.';
-  return '<a class="mc-poruwa-rsvp-btn '+(status==='no'?'secondary':'')+'" href="https://wa.me/'+whatsappPhone+'?text='+encodeURIComponent(msg)+'" target="_blank" rel="noopener">'+(status==='yes'?dual('Accept invitation · පිළිගනිමි','පැමිණෙමි · ACCEPT'):dual('Decline invitation · නොපැමිණෙමි','පැමිණිය නොහැක · DECLINE'))+'</a>';
+  return '<a class="mc-poruwa-rsvp-btn '+(status==='no'?'secondary':'')+'" href="https://wa.me/'+whatsappPhone+'?text='+encodeURIComponent(msg)+'" target="_blank" rel="noopener">'+(status==='yes'?esc(rsvpSpecial.acceptLabel||dual('Accept invitation · පිළිගනිමි','පැමිණෙමි · ACCEPT')):esc(rsvpSpecial.declineLabel||dual('Decline invitation · නොපැමිණෙමි','පැමිණිය නොහැක · DECLINE')))+'</a>';
  }
  var heroMarkup=hero?'<img class="mc-poruwa-hero-photo" src="'+esc(hero)+'" alt="Couple photograph">':'<div class="mc-poruwa-photo-placeholder"><span>❦</span><small>OUR BEAUTIFUL BEGINNING</small></div>';
  var familyBlocks='';
@@ -895,10 +900,15 @@ function videoInspiredPoruwaInvite(data){
  var countdownMarkup=sections.countdown===false?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">බලාපොරොත්තුවෙන් · THE BIG DAY</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+dual('Counting the Moments','ඉතිරි කාලය')+'</h2><div class="mc-poruwa-countdown" data-date="'+esc(data.date||'')+'" data-time="'+esc(data.time||'09:00')+'"><div><b>00</b><span>Days</span></div><div><b>00</b><span>Hours</span></div><div><b>00</b><span>Minutes</span></div><div><b>00</b><span>Seconds</span></div></div></section>';
  var seatMarkup=guest&&guest.tableName?'<section class="mc-poruwa-section mc-poruwa-seat" id="mc-poruwa-seat"><div class="mc-poruwa-kicker">ඔබගේ ආසනය · YOUR PLACE</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+dual('Find My Seat','ඔබගේ ආසනය')+'</h2><div class="mc-poruwa-seat-card"><small>'+dual('WELCOME','සාදරයෙන් පිළිගනිමු')+'</small><strong>'+guestName+'</strong><b>'+esc(guest.tableName)+'</b><span>'+dual('Your table assignment','ඔබට වෙන් කළ මේසය')+'</span></div></section>':'';
  var guestMarkup=guest&&guest.name?'<section class="mc-poruwa-section mc-poruwa-personal"><div class="mc-poruwa-kicker">'+dual('A PERSONAL INVITATION','ඔබ වෙනුවෙන්ම වූ ආරාධනාව')+'</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+dual('Dear','ආදරණීය')+' '+guestName+'</h2><p>'+dual('This invitation is reserved for','ඔබ වෙනුවෙන් වෙන් කර ඇති ආරාධනාවකි')+' <strong>'+guestCount+'</strong> '+dual('seat(s).','ආසන.')+'</p></section>':'';
- var dressMarkup=sections.dressCode===false||(!data.dressCode&&!data.dressCodeColors?.length)?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">DRESS CODE</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+esc(data.dressCodeHeading||dual('Dress Code','ඇඳුම් පැළඳුම්'))+'</h2>'+(data.dressCode?'<p>'+esc(data.dressCode)+'</p>':'')+'<div class="mc-poruwa-colours">'+(data.dressCodeColors||[]).map(function(c){return '<span title="'+esc(c.name||c.color||'')+'" style="background:'+esc(c.hex||c.color||'#d9c4a0')+'"></span>';}).join('')+'</div></section>';
- var mapMarkup=sections.map===false?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">FIND US · අප සොයාගන්න</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+dual('Find the Venue','ස්ථානය සොයාගන්න')+'</h2><p>'+venue+'<br>'+address+'</p><a class="mc-poruwa-rsvp-btn" href="'+mapUrl+'" target="_blank" rel="noopener">'+dual('GET DIRECTIONS ↗','මාර්ගය බලන්න ↗')+'</a></section>';
- var quoteMarkup=sections.quote===false||!data.quote?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-flourish">❧</div><blockquote class="mc-poruwa-quote">“'+esc(data.quote)+'”</blockquote></section>';
- var customMarkup=sections.custom1===false||(!data.custom1Title&&!data.custom1Text)?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">A SPECIAL NOTE</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+esc(data.custom1Title||'A Special Note')+'</h2><p>'+esc(data.custom1Text||'')+'</p></section>';
+ var dressColors=(data.dressCodeColors||[]).slice(0,4).map(function(c){return c&&typeof c==='object'?c:{color:c,hex:c};});
+ ['dressColour0','dressColour1','dressColour2','dressColour3'].forEach(function(k){if(dressSpecial[k])dressColors.push({color:dressSpecial[k],hex:dressSpecial[k]});});
+ var dressText=dressSpecial.dressDescription||data.dressCode||'';
+ var dressMarkup=sections.dressCode===false||(!dressText&&!dressColors.length)?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">DRESS CODE</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+esc(data.dressCodeHeading||dual('Dress Code','ඇඳුම් පැළඳුම්'))+'</h2>'+(dressText?'<p>'+esc(dressText)+'</p>':'')+'<div class="mc-poruwa-colours">'+dressColors.slice(0,4).map(function(c){return '<span title="'+esc(c.name||c.color||'')+'" style="background:'+esc(c.hex||c.color||'#d9c4a0')+'"></span>';}).join('')+'</div></section>';
+ var mapMarkup=sections.map===false?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">FIND US · අප සොයාගන්න</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+dual('Find the Venue','ස්ථානය සොයාගන්න')+'</h2><p>'+venue+'<br>'+address+'</p><a class="mc-poruwa-rsvp-btn" href="'+mapUrl+'" target="_blank" rel="noopener">'+esc(mapSpecial.directionsLabel||dual('GET DIRECTIONS ↗','මාර්ගය බලන්න ↗'))+'</a></section>';
+ var quoteText=quoteSpecial.quoteText||data.quote||'';
+ var quoteMarkup=sections.quote===false||!quoteText?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-flourish">❧</div><blockquote class="mc-poruwa-quote">“'+esc(quoteText)+'”</blockquote>'+(quoteSpecial.quoteAuthor?'<p class="mc-poruwa-note">— '+esc(quoteSpecial.quoteAuthor)+'</p>':'')+'</section>';
+ var customTitle=customSpecial.customTitle||data.custom1Title||''; var customText=customSpecial.customContent||data.custom1Text||'';
+ var customMarkup=sections.custom1===false||(!customTitle&&!customText)?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">A SPECIAL NOTE</div><div class="mc-poruwa-flourish">❧ ✦ ❧</div><h2>'+esc(customTitle||'A Special Note')+'</h2><p>'+esc(customText)+'</p></section>';
  var wishesMarkup=sections.guestbook===false||!wishes.length?'':'<section class="mc-poruwa-section"><div class="mc-poruwa-kicker">GUEST BOOK · සුබ පැතුම්</div><h2>'+dual('Warm Wishes','සුබ පැතුම්')+'</h2><div class="mc-poruwa-wishes">'+wishes.map(function(w){return '<article><b>'+esc(w.name)+'</b><p>'+esc(w.message)+'</p></article>';}).join('')+'</div></section>';
  var contactsMarkup='';
  if(sections.contactDetails!==false&&contactRows.length){
