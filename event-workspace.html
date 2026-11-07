@@ -932,7 +932,7 @@ function videoInspiredPoruwaInvite(data){
  '</style><div class="mc-poruwa-shell"><section class="mc-poruwa-cover"><div class="mc-poruwa-kicker">ආදරයෙන් ආරාධනා කරමු · WITH LOVE WE INVITE YOU</div><div class="mc-poruwa-flourish">❧ ✦ ❦ ✦ ❧</div><div class="mc-poruwa-kicker">අපගේ ජීවිතයේ සුන්දරම දිනයට ඔබට ආරාධනා කරමු</div><h1>'+name+'</h1><div class="mc-poruwa-date">'+esc(date)+' · '+time+'</div>'+heroMarkup+'<button class="mc-poruwa-open" id="mcPoruwaOpen" type="button">'+dual('OPEN INVITATION ↗','ආරාධනාව විවෘත කරන්න ↗')+'</button></section><div class="mc-poruwa-content" id="mcPoruwaContent" hidden>'+guestMarkup+content+'<section class="mc-poruwa-section mc-poruwa-footer"><div class="mc-poruwa-flourish">❧ ✦ ❧</div><p>'+dual('We look forward to celebrating with you.','ඔබ සමඟ මේ සතුට බෙදාගැනීමට අපි බලාපොරොත්තු වෙමු.')+'</p><b>MAGIC CREATIONS</b></section></div></div>'+musicButton+safeMusic+'</main>';
 }
 function foreverStoryInvite(data){
- var foreverData=Object.assign({},data,{sectionOrder:['families','eventDetails','countdown','story','ourPromise','addToCalendar','agenda','gallery','map','seatFinder','guestbook','rsvp','contactDetails','quote','custom1']});
+ var foreverData=Object.assign({},data,{sectionOrder:['families','eventDetails','countdown','ourPromise','addToCalendar','agenda','gallery','dressCode','map','seatFinder','rsvp','guestGallery','guestbook','contactDetails','quote','custom1','footer']});
  var html=videoInspiredPoruwaInvite(foreverData);
  var names=esc(data.names||data.invitationTitle||'Your Names');
  var date=esc(data.date?niceDate(data.date):'Save the Date');
