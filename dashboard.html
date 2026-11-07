@@ -394,6 +394,7 @@ var templates=[
  {id:'sinhala-poruwa-story',name:'Sinhala Poruwa Story',type:'Traditional Wedding',tone:'sinhala-poruwa',desc:'Video-inspired · Full wedding story'},
  {id:'heritage-master',name:'Sri Lankan Heritage Master',type:'Traditional Wedding',tone:'heritage-gold',desc:'Complete invitation · Five-heart reveal · RSVP · Story · Gallery'},
  {id:'forever-story',name:'Forever Story',type:'Traditional Wedding',tone:'cream',desc:'Wax-seal envelope · Three-heart date reveal · Romantic story · Gallery · RSVP · Guest Book'},
+ {id:'blush-romance',name:'Blush Romance',type:'Traditional Wedding',tone:'rose',desc:'Blush envelope · 3D heart seal · Antique-gold florals · Full wedding story · RSVP · Gallery'},
  {id:'custom-blank',name:'Custom Studio',type:'Custom',tone:'cream',desc:'Start from a blank canvas'}
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
@@ -619,7 +620,7 @@ function bindPageEvents(){
  document.querySelectorAll('[data-open]').forEach(function(b){b.onclick=function(){openWorkspace(b.dataset.open,'overview');};});
  document.querySelectorAll('[data-preview]').forEach(function(b){b.onclick=function(){previewEvent(b.dataset.preview);};});
  document.querySelectorAll('[data-publish]').forEach(function(b){b.onclick=function(){publishEvent(b.dataset.publish);};});
- document.querySelectorAll('[data-preview-template]').forEach(function(b){b.onclick=function(){var id=b.dataset.previewTemplate;if(id==='heritage-master'){window.open('templates/heritage-master-template.html','_blank','noopener,noreferrer');return;}if(id==='forever-story'){window.open('templates/forever-story-wedding-template.html','_blank','noopener,noreferrer');return;}window.open('event-workspace.html?fulltemplate='+encodeURIComponent(id),'_blank','noopener,noreferrer');};});
+ document.querySelectorAll('[data-preview-template]').forEach(function(b){b.onclick=function(){var id=b.dataset.previewTemplate;if(id==='heritage-master'){window.open('templates/heritage-master-template.html','_blank','noopener,noreferrer');return;}if(id==='forever-story'){window.open('templates/forever-story-wedding-template.html','_blank','noopener,noreferrer');return;}if(id==='blush-romance'){window.open('templates/blush-romance-wedding-template.html','_blank','noopener,noreferrer');return;}window.open('event-workspace.html?fulltemplate='+encodeURIComponent(id),'_blank','noopener,noreferrer');};});
  document.querySelectorAll('[data-use-template]').forEach(function(b){b.onclick=function(){useTemplate(b.dataset.useTemplate);};});
  document.querySelectorAll('[data-open-guests]').forEach(function(b){b.onclick=function(){var e=current();if(e)openWorkspace(e.id,'guests');else openModal();};});
  document.querySelectorAll('[data-preview-first]').forEach(function(b){b.onclick=function(){var e=current();if(e)previewEvent(e.id);else openModal();};});
