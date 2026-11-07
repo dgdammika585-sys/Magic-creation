@@ -134,8 +134,27 @@ document.getElementById('contactOne').textContent=get('contact1',"Bride's Family
 document.getElementById('phoneOne').textContent=get('phone1','Contact details to be added');document.getElementById('phoneTwo').textContent=get('phone2','Contact details to be added');
 const mapQ=encodeURIComponent(get('address',get('venue','Colombo, Sri Lanka')));document.getElementById('mapLink').href='https://www.google.com/maps/search/?api=1&query='+mapQ;
 const clearedHearts=new Set();
-const revealHeart=(button,index)=>{if(clearedHearts.has(index))return;clearedHearts.add(index);button.classList.add('erased');button.setAttribute('aria-pressed','true');if(clearedHearts.size===3){document.getElementById('heartInstruction').textContent='Our special day is revealed';document.getElementById('dateReveal').classList.add('show');document.getElementById('dateReveal').setAttribute('aria-hidden','false');}};
-document.querySelectorAll('.heart').forEach((heart,index)=>{heart.addEventListener('pointerenter',()=>{if(matchMedia('(hover: hover) and (pointer: fine)').matches)revealHeart(heart,index)});heart.addEventListener('click',()=>revealHeart(heart,index));heart.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();revealHeart(heart,index)}});});
+const heartNS='http://www.w3.org/2000/svg';
+const heartButtons=[...document.querySelectorAll('.heart')];
+const revealDate=()=>{document.getElementById('heartInstruction').textContent='Our special day is revealed';const panel=document.getElementById('dateReveal');panel.classList.add('show');panel.setAttribute('aria-hidden','false');};
+const finishHeart=(button,index)=>{if(clearedHearts.has(index))return;clearedHearts.add(index);button.classList.add('erased');button.setAttribute('aria-pressed','true');if(clearedHearts.size===heartButtons.length)revealDate();};
+heartButtons.forEach((button,index)=>{
+ const svg=button.querySelector('svg'),fill=button.querySelector('.heart-fill');
+ const defs=document.createElementNS(heartNS,'defs'),mask=document.createElementNS(heartNS,'mask'),base=document.createElementNS(heartNS,'rect');
+ const maskId='heart-scratch-mask-'+(index+1);mask.setAttribute('id',maskId);mask.setAttribute('maskUnits','userSpaceOnUse');mask.setAttribute('maskContentUnits','userSpaceOnUse');mask.setAttribute('x','0');mask.setAttribute('y','0');mask.setAttribute('width','100');mask.setAttribute('height','92');
+ base.setAttribute('x','0');base.setAttribute('y','0');base.setAttribute('width','100');base.setAttribute('height','92');base.setAttribute('fill','white');mask.appendChild(base);defs.appendChild(mask);svg.insertBefore(defs,svg.firstChild);fill.setAttribute('mask','url(#'+maskId+')');
+ const outline=button.querySelector('.heart-outline');const samplePoints=[];for(let y=8;y<=88;y+=5){for(let x=5;x<=95;x+=5){const p=svg.createSVGPoint();p.x=x;p.y=y;if(fill.isPointInFill(p))samplePoints.push({x,y});}}
+ const erasedPoints=[];let drawing=false,last=null,progress=0;
+ const localPoint=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());};
+ const addScratch=e=>{if(clearedHearts.has(index))return;const p=localPoint(e);if(last&&Math.hypot(p.x-last.x,p.y-last.y)<2.5)return;last={x:p.x,y:p.y};erasedPoints.push({x:p.x,y:p.y});const c=document.createElementNS(heartNS,'circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r','10.5');c.setAttribute('fill','black');mask.appendChild(c);let erased=0;for(const s of samplePoints){if(erasedPoints.some(q=>Math.hypot(q.x-s.x,q.y-s.y)<11.5))erased++;}progress=samplePoints.length?erased/samplePoints.length:0;if(progress>=0.70)finishHeart(button,index);};
+ button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){drawing=true;last=null;addScratch(e);}});
+ button.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){drawing=true;last=null;button.setPointerCapture(e.pointerId);addScratch(e);}});
+ button.addEventListener('pointermove',e=>{if(drawing)addScratch(e);});
+ const stop=e=>{drawing=false;last=null;if(e&&button.hasPointerCapture&&button.hasPointerCapture(e.pointerId))button.releasePointerCapture(e.pointerId);};
+ button.addEventListener('pointerup',stop);button.addEventListener('pointercancel',stop);button.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')stop(e);});
+ button.addEventListener('click',e=>{if(e.detail===0)finishHeart(button,index);});
+ button.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();finishHeart(button,index);}});
+});
 const envelope=document.getElementById('envelopeScreen'),intro=document.getElementById('introScreen');
 const enterInvitation=()=>{document.body.classList.remove('invitation-locked');intro.classList.add('leaving');window.setTimeout(()=>{intro.classList.remove('active','leaving');intro.setAttribute('aria-hidden','true');envelope.classList.add('closed');window.scrollTo({top:0,behavior:'smooth'});},650);};
 document.getElementById('envelopeOpen').onclick=()=>{document.getElementById('envelopeOpen').classList.add('opening');window.setTimeout(()=>{envelope.classList.add('closed');intro.classList.add('active');intro.setAttribute('aria-hidden','false');},650);};
