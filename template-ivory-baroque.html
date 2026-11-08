@@ -28,6 +28,15 @@
 .envelope-paper.opened .env-seal{animation:mcSealRelease .7s ease forwards}
 @keyframes mcSealRelease{to{opacity:0;transform:scale(1.65) rotate(16deg)}}
 
+
+/* Full-height welcome transition and the reference-style Skip control. */
+.welcome{min-height:76svh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.intro-skip{position:fixed;right:23px;bottom:22px;z-index:27;display:none;align-items:center;gap:9px;padding:11px 17px;border:1px solid #d9bf98;border-radius:30px;background:#fffaf2ee;color:#806344;font:9px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;box-shadow:0 5px 18px #58402720;cursor:pointer}
+.intro-skip.visible{display:inline-flex;animation:mcSkipEnter .55s cubic-bezier(.2,.7,.2,1) both}
+.intro-skip:after{content:"→";font-size:13px}
+@keyframes mcSkipEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:520px){.welcome{min-height:74svh}.intro-skip{right:17px;bottom:17px}}
+
 </style>
 </head>
 <body>
@@ -50,6 +59,7 @@
 <section class="section whenwhere" id="gallery"><div class="eyebrow">A few memories</div><h2 class="script" style="font-size:30px;font-weight:400;margin:10px 0">Our moments</h2><div class="gallery"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=85&w=400&auto=format&fit=crop" alt="Wedding memory"><img src="https://images.unsplash.com/photo-1529636798458-92182e662485?q=85&w=400&auto=format&fit=crop" alt="Wedding memory"><img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=85&w=400&auto=format&fit=crop" alt="Wedding memory"></div><label class="action alt" for="photoUpload" style="display:inline-block">SHARE YOUR PHOTOS</label><input id="photoUpload" type="file" accept="image/*" multiple hidden><p class="info-copy" id="photoNote">Your selected photos preview on this device only.</p></section>
 <section class="section" id="contact"><div class="eyebrow">Get in touch</div><h2 class="script" style="font-size:30px;font-weight:400;margin:10px 0">We would love to hear from you</h2><p class="copy">For any questions about the celebration, please contact our families.</p><div class="families"><div class="family"><small>CONTACT PERSON 01</small><strong>Bride's Family</strong><div class="parents">Add contact number<br>in invitation settings</div></div><div class="family"><small>CONTACT PERSON 02</small><strong>Groom's Family</strong><div class="parents">Add contact number<br>in invitation settings</div></div></div></section><footer class="footer"><div class="rule">❧ ❦ ❧</div><h2>With love and gratitude</h2><p id="footerNames">BRIDE NAME & GROOM NAME</p><div class="bottom-note">MADE WITH LOVE · MAGIC CREATIONS</div></footer>
 </article></div>
+<button class="intro-skip" id="skipWelcome" type="button">Skip introduction</button>
 <div id="envelope"><div class="envelope-paper"><span class="env-orn a">❧</span><span class="env-orn b">❧</span><span class="env-orn c">❧</span><span class="env-orn d">❧</span><div class="env-fold"></div><button class="env-seal" id="openEnvelope" aria-label="Open invitation">♡</button><div class="env-instruction"><b>TAP TO</b>OPEN THE INVITATION</div><div class="env-hint">A BEAUTIFUL DAY · A LIFETIME OF LOVE</div></div></div>
 <div class="dialog-back" id="rsvpDialog"><div class="dialog"><h3>Kindly Respond</h3><div class="field"><label>Your name</label><input id="guestName" placeholder="Full name"></div><div class="field"><label>Will you attend?</label><select id="guestAttend"><option>Joyfully Accept</option><option>Regretfully Decline</option></select></div><div class="field"><label>Number of guests</label><input id="guestCount" type="number" min="1" max="10" value="1"></div><div class="dialog-actions"><button class="action alt" data-close>Cancel</button><button class="action" id="sendRsvp">Send RSVP</button></div></div></div>
 <div class="dialog-back" id="wishDialog"><div class="dialog"><h3>Send Good Wishes</h3><div class="field"><label>Your name</label><input id="wishName" placeholder="Your name"></div><div class="field"><label>Your message</label><textarea id="wishMessage" rows="4" placeholder="Write a few kind words"></textarea></div><div class="dialog-actions"><button class="action alt" data-close>Cancel</button><button class="action" id="sendWish">Send wishes</button></div></div></div>
@@ -75,7 +85,9 @@ function startReferenceMotion(){
 }
 
 startReferenceMotion();
-$('openEnvelope').addEventListener('click',()=>{const paper=document.querySelector('.envelope-paper');paper.classList.add('opened');setTimeout(()=>{$('envelope').classList.add('hide');document.body.style.overflow='auto';setTimeout(()=>$('welcome').scrollIntoView({behavior:'smooth'}),250)},720);});
+$('openEnvelope').addEventListener('click',()=>{const paper=document.querySelector('.envelope-paper');paper.classList.add('opened');setTimeout(()=>{$('envelope').classList.add('hide');document.body.style.overflow='auto';$('skipWelcome').classList.add('visible');setTimeout(()=>$('welcome').scrollIntoView({behavior:'smooth'}),250)},720);});
+$('skipWelcome').addEventListener('click',()=>{$('skipWelcome').classList.remove('visible');$('hero').scrollIntoView({behavior:'smooth'});});
+if('IntersectionObserver' in window){const heroWatch=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)$('skipWelcome').classList.remove('visible');});},{threshold:.25});heroWatch.observe($('hero'));}
 document.querySelectorAll('[data-dialog]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.dialog).classList.add('open')));
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('.dialog-back').classList.remove('open')));
 document.querySelectorAll('.dialog-back').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.classList.remove('open')}));
