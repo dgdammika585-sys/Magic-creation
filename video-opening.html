@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17140f">
+<title>MAGIC CREATIONS | Heritage Video Opening</title>
+<style>
+:root{--gold:#c7a66b;--ivory:#fff8ec;--ink:#211b16;--muted:#b9aa96}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;background:#17140f;color:var(--ivory)}
+button,input{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:350px 1fr}
+.panel{padding:26px 24px;background:#211d18;border-right:1px solid #514332;overflow:auto}
+.brand{font:600 12px Georgia,serif;letter-spacing:.22em;color:var(--gold)}
+h1{font:400 29px/1.15 Georgia,serif;margin:22px 0 8px}
+.intro{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 24px}
+.group{border-top:1px solid #514332;padding:19px 0}
+.group h2{font-size:10px;letter-spacing:.17em;color:var(--gold);text-transform:uppercase;margin:0 0 13px}
+.templates{display:grid;gap:9px}
+.template{display:flex;gap:12px;align-items:center;text-align:left;width:100%;padding:10px;border:1px solid #5a4b39;background:#2b251e;color:var(--ivory)}
+.template.active{border-color:var(--gold);background:#3a3024}
+.thumb{width:66px;height:54px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,#473c2d,#9b7950);color:#f7e6c5;font:22px Georgia,serif}
+.template strong{display:block;font-size:12px;font-weight:500}.template small{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+.upload{display:block;border:1px dashed #92774c;padding:15px;text-align:center;color:#e9d7b8;font-size:11px;line-height:1.7}
+.upload input{display:block;width:100%;margin-top:10px;font-size:10px}
+.field{display:grid;gap:7px;margin:12px 0}.field label{font-size:11px;color:#d7c8b2}.field input{width:100%;padding:10px;border:1px solid #5a4b39;background:#17140f;color:white}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{padding:11px 14px;border:1px solid var(--gold);background:var(--gold);color:#211b16;font-size:11px;font-weight:700}.btn.secondary{background:transparent;color:var(--ivory);border-color:#766347}
+.note{font-size:10px;line-height:1.6;color:#a99a85;margin:12px 0 0}
+.stage{position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(ellipse at center,#5d4a30,#17140f 70%);display:grid;place-items:center}
+.screen{position:absolute;inset:0;overflow:hidden;background:#241c13}
+.screen video{width:100%;height:100%;object-fit:cover;display:block}
+.screen:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#09080635,#09080618 42%,#09080691);pointer-events:none}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(ellipse at 50% 38%,#a68759 0%,#58452e 32%,#1b1711 76%);padding:25px}
+.fallback:before,.fallback:after{content:"";position:absolute;width:68vw;height:68vw;border:1px solid #d8bd8655;border-radius:50%;max-width:700px;max-height:700px}
+.fallback:after{width:54vw;height:54vw;border-color:#d8bd8633}
+.fallback-inner{position:relative;z-index:1}
+.lamp{font-size:48px;color:#e5c98d;text-shadow:0 0 30px #f0c77788}
+.fallback h2{font:italic 36px Georgia,serif;margin:14px 0 8px;color:#fff2d9}
+.fallback p{font:11px Georgia,serif;letter-spacing:.2em;color:#e1cda9}
+.cover-copy{position:absolute;z-index:3;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;pointer-events:none}
+.kicker{font:10px Georgia,serif;letter-spacing:.32em;color:#f2dfb8;text-transform:uppercase;text-shadow:0 1px 8px #000}
+.names{font:italic clamp(40px,6vw,78px)/1.1 Georgia,serif;color:#fff8e9;margin:18px 0 10px;text-shadow:0 2px 20px #0009}
+.subline{font:11px Georgia,serif;letter-spacing:.2em;color:#f1dfc0;text-transform:uppercase;text-shadow:0 1px 8px #000}
+.open{pointer-events:auto;margin-top:36px;padding:15px 25px;border:1px solid #f0d8a2;background:#c5a36b;color:#21180e;font:11px Georgia,serif;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 8px 30px #0005}
+.open:hover{background:#f0d8a2}
+.hint{position:absolute;z-index:3;bottom:22px;left:0;right:0;text-align:center;color:#fff0d0;font-size:9px;letter-spacing:.17em;text-shadow:0 1px 7px #000}
+.preview-next{position:absolute;z-index:5;inset:0;background:#fbf5eb;color:#4b3828;display:none;place-items:center;text-align:center;padding:25px}
+.preview-next.show{display:grid;animation:fade .8s ease}
+.preview-next h2{font:italic clamp(35px,6vw,64px) Georgia,serif;margin:0 0 12px}
+.preview-next p{font:11px Arial,sans-serif;letter-spacing:.15em}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(max-width:850px){.app{grid-template-columns:1fr}.panel{order:2;border-right:0;border-top:1px solid #514332}.stage{order:1;min-height:72vh}.screen{position:absolute}.names{font-size:clamp(37px,9vw,62px)}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="panel">
+<div class="brand">MAGIC CREATIONS</div>
+<h1>Sri Lankan Heritage<br>Video Opening</h1>
+<p class="intro">Choose a built-in heritage video or upload your own clip. Preview the full-screen guest experience before connecting it to an invitation.</p>
+<section class="group">
+<h2>Built-in video collection</h2>
+<div class="templates">
+<button class="template active" data-theme="poruwa"><span class="thumb">♨</span><span><strong>Poruwa Ceremony</strong><small>Traditional ceremony • Gold tones</small></span></button>
+<button class="template" data-theme="pahana"><span class="thumb">✧</span><span><strong>Brass Pahana & Flowers</strong><small>Oil lamps • Nil Manel details</small></span></button>
+<button class="template" data-theme="garden"><span class="thumb">❀</span><span><strong>Heritage Garden</strong><small>Floral setting • Warm daylight</small></span></button>
+<button class="template" data-theme="evening"><span class="thumb">☾</span><span><strong>Golden Evening</strong><small>Warm lights • Cinematic mood</small></span></button>
+</div>
+<p class="note">Built-in video slots are prepared here. Add the approved video files to the website's assets folder to make each preset playable.</p>
+</section>
+<section class="group">
+<h2>Upload your own video</h2>
+<label class="upload">Choose an MP4 or WebM video
+<input id="videoFile" type="file" accept="video/mp4,video/webm">
+</label>
+<p class="note" id="fileNote">Your selected video is previewed in this browser only. Permanent customer uploads require cloud storage.</p>
+</section>
+<section class="group">
+<h2>Opening text</h2>
+<div class="field"><label for="coupleNames">Couple names</label><input id="coupleNames" value="Bride & Groom" maxlength="70"></div>
+<div class="field"><label for="tagline">Small line</label><input id="tagline" value="TOGETHER WITH OUR FAMILIES" maxlength="90"></div>
+<div class="actions"><button class="btn" id="apply">Update preview</button><button class="btn secondary" id="reset">Reset sample</button></div>
+</section>
+<section class="group">
+<h2>Video behaviour</h2>
+<p class="note">Autoplay muted • Loop enabled • Full-screen cover crop • Open Invitation button • Mobile responsive. Sound is not started automatically.</p>
+<div class="actions" style="margin-top:14px"><button class="btn secondary" id="playPause">Pause video</button><button class="btn secondary" id="muteToggle">Unmute</button></div>
+</section>
+</aside>
+<main class="stage" aria-label="Full-screen invitation preview">
+<div class="screen" id="screen">
+<div class="fallback" id="fallback"><div class="fallback-inner"><div class="lamp">✧</div><h2>Sri Lankan Heritage</h2><p>PORUWA · FLOWERS · TRADITION</p></div></div>
+<video id="openingVideo" autoplay muted loop playsinline></video>
+</div>
+<div class="cover-copy" id="coverCopy">
+<div class="kicker">A celebration of love</div>
+<div class="names" id="previewNames">Bride & Groom</div>
+<div class="subline" id="previewTagline">TOGETHER WITH OUR FAMILIES</div>
+<button class="open" id="openInvitation">Open Invitation</button>
+</div>
+<div class="hint">A NEW CHAPTER BEGINS</div>
+<div class="preview-next" id="nextScreen"><div><h2>With love, we invite you</h2><p>THE INVITATION EXPERIENCE CONTINUES</p><button class="btn secondary" id="backToCover">Back to opening</button></div></div>
+</main>
+</div>
+<script>
+(function(){
+const video=document.getElementById('openingVideo'),fallback=document.getElementById('fallback');
+const themes={
+ poruwa:{label:'Poruwa Ceremony',file:'assets/videos/heritage-poruwa.mp4'},
+ pahana:{label:'Brass Pahana & Flowers',file:'assets/videos/heritage-pahana.mp4'},
+ garden:{label:'Heritage Garden',file:'assets/videos/heritage-garden.mp4'},
+ evening:{label:'Golden Evening',file:'assets/videos/heritage-evening.mp4'}
+};
+let selected='poruwa',objectUrl=null;
+function loadPreset(key){
+ selected=key;
+ if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
+ video.pause();video.removeAttribute('src');video.load();
+ video.src=themes[key].file;video.muted=true;video.loop=true;
+ fallback.style.display='grid';
+ video.play().then(()=>{fallback.style.display='none';}).catch(()=>{fallback.style.display='grid';});
+ document.getElementById('fileNote').textContent='Selected preset: '+themes[key].label+'. Add its video file at '+themes[key].file+' to activate this built-in clip.';
+}
+document.querySelectorAll('.template').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b===btn));
+ document.getElementById('videoFile').value='';
+ loadPreset(btn.dataset.theme);
+}));
+document.getElementById('videoFile').addEventListener('change',e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!file.type.startsWith('video/')){alert('Please choose an MP4 or WebM video.');return;}
+ if(objectUrl)URL.revokeObjectURL(objectUrl);
+ objectUrl=URL.createObjectURL(file);video.src=objectUrl;video.muted=true;video.loop=true;
+ video.play().then(()=>fallback.style.display='none').catch(()=>fallback.style.display='grid');
+ document.querySelectorAll('.template').forEach(b=>b.classList.remove('active'));
+ document.getElementById('fileNote').textContent='Previewing '+file.name+'. This upload is temporary and stays in this browser session only.';
+});
+document.getElementById('apply').addEventListener('click',()=>{
+ document.getElementById('previewNames').textContent=document.getElementById('coupleNames').value.trim()||'Bride & Groom';
+ document.getElementById('previewTagline').textContent=document.getElementById('tagline').value.trim()||'TOGETHER WITH OUR FAMILIES';
+});
+document.getElementById('reset').addEventListener('click',()=>{
+ document.getElementById('coupleNames').value='Bride & Groom';document.getElementById('tagline').value='TOGETHER WITH OUR FAMILIES';
+ document.getElementById('apply').click();document.getElementById('videoFile').value='';loadPreset('poruwa');
+ document.querySelectorAll('.template').forEach(b=>b.classList.toggle('active',b.dataset.theme==='poruwa'));
+});
+document.getElementById('playPause').addEventListener('click',e=>{
+ if(video.paused){video.play();e.target.textContent='Pause video';}else{video.pause();e.target.textContent='Play video';}
+});
+document.getElementById('muteToggle').addEventListener('click',e=>{
+ video.muted=!video.muted;e.target.textContent=video.muted?'Unmute':'Mute';
+});
+document.getElementById('openInvitation').addEventListener('click',()=>{
+ document.getElementById('nextScreen').classList.add('show');document.getElementById('coverCopy').style.display='none';
+});
+document.getElementById('backToCover').addEventListener('click',()=>{
+ document.getElementById('nextScreen').classList.remove('show');document.getElementById('coverCopy').style.display='flex';
+});
+loadPreset('poruwa');
+})();
+</script>
+</body>
+</html>
