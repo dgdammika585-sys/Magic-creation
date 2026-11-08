@@ -11,10 +11,28 @@
 .dialog-back{position:fixed;inset:0;background:#2e2019a8;z-index:60;display:none;align-items:center;justify-content:center;padding:16px}.dialog-back.open{display:flex}.dialog{background:#fffaf3;width:min(480px,100%);padding:24px;border:1px solid #d8c19c;max-height:90vh;overflow:auto}.dialog h3{font:italic 26px Georgia;font-weight:400;margin:0 0 15px}.field{display:grid;gap:5px;margin:11px 0;text-align:left}.field label{font:10px Arial;color:#8a7159}.field input,.field textarea{width:100%;padding:10px;border:1px solid #deccb2;background:#fffdf9;color:#4c3d30;font:12px Arial}.dialog-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:15px}.toast{position:fixed;z-index:90;bottom:20px;left:50%;transform:translateX(-50%);background:#49382b;color:#fff7eb;padding:11px 16px;font:11px Arial;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1}
 @media(max-width:520px){.outer{padding:0}.invite:before{inset:6px}.invite:after{inset:11px}.section{padding:42px 23px}.welcome{padding-top:55px}.hero-photo{height:305px}.hero h2{font-size:36px}.welcome h1{font-size:30px}.promise{padding:62px 28px}.story-item{grid-template-columns:100px 1fr;gap:12px}.story-item:nth-child(even){grid-template-columns:1fr 100px}.story-img{width:100px;height:100px}.music{right:17px;top:14px}.gallery img{height:100px}.families{gap:8px}.family{padding:12px 4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+
+.motion-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
+.motion-petal{position:absolute;left:var(--x);top:var(--y);font:var(--size) Georgia,serif;color:#b68b56;opacity:0;animation:mcPetalFloat var(--duration) ease-in-out var(--delay) infinite}
+@keyframes mcPetalFloat{0%{opacity:0;transform:translate3d(0,35px,0) rotate(0deg) scale(.72)}18%{opacity:.22}75%{opacity:.16}100%{opacity:0;transform:translate3d(var(--drift),-120px,0) rotate(95deg) scale(1.08)}}
+.motion-reveal{opacity:0;transform:translate3d(0,30px,0) scale(.99);filter:blur(2px);transition:opacity .82s ease,transform .9s cubic-bezier(.2,.7,.2,1),filter .82s ease;will-change:opacity,transform}
+.motion-reveal.motion-visible{opacity:1;transform:none;filter:none}
+.motion-item{opacity:0;transform:translate3d(0,20px,0) scale(.985);transition:opacity .7s ease,transform .78s cubic-bezier(.2,.7,.2,1);transition-delay:var(--motion-delay,0ms)}
+.motion-item.motion-visible{opacity:1;transform:none}
+.story-img,.gallery img,.venue-photo,.hero-photo{transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s ease}
+.story-item:hover .story-img,.gallery img:hover{transform:scale(1.035);filter:saturate(1.08)}
+.action,.pill-link,.open-btn{transition:transform .22s ease,box-shadow .22s ease,background .22s ease}
+.action:hover,.pill-link:hover,.open-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px #6e4d2930}
+.env-seal{animation:mcSealPulse 2.7s ease-in-out infinite}
+@keyframes mcSealPulse{0%,100%{box-shadow:0 4px 14px #6b4c2a40,0 0 0 0 #c3a06a00;transform:scale(1)}50%{box-shadow:0 5px 20px #6b4c2a52,0 0 0 9px #c3a06a22;transform:scale(1.045)}}
+.envelope-paper.opened .env-seal{animation:mcSealRelease .7s ease forwards}
+@keyframes mcSealRelease{to{opacity:0;transform:scale(1.65) rotate(16deg)}}
+
 </style>
 </head>
 <body>
 <div class="outer"><article class="invite">
+<div class="motion-particles" aria-hidden="true"></div>
 <div class="orn tl">❧</div><div class="orn tr">❧</div><div class="orn bl">❧</div><div class="orn br">❧</div>
 <div class="topline"><span>MAGIC CREATIONS · WEDDING INVITATION</span></div>
 <button class="music" id="musicButton" aria-label="Choose or play invitation music" title="Invitation music">♫</button><input type="file" id="musicFile" accept="audio/*" hidden>
@@ -41,6 +59,22 @@
 (function(){
 const $=id=>document.getElementById(id);let audioUrl=null,photoUrl=null;
 const showToast=t=>{const x=$('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2600)};
+
+function startReferenceMotion(){
+ const invite=document.querySelector('.invite');if(!invite)return;
+ const layer=invite.querySelector('.motion-particles');
+ if(layer){for(let i=0;i<18;i++){const p=document.createElement('span');p.className='motion-petal';p.textContent=i%3===0?'✧':i%3===1?'❀':'·';p.style.setProperty('--x',(4+((i*37)%92))+'%');p.style.setProperty('--y',(18+((i*29)%76))+'%');p.style.setProperty('--size',(9+(i%4)*3)+'px');p.style.setProperty('--duration',(8+(i%6)*2)+'s');p.style.setProperty('--delay',(-1*(i%9))+'s');p.style.setProperty('--drift',((i%2?1:-1)*(12+(i%5)*7))+'px');layer.appendChild(p);}}
+ const sections=Array.from(invite.querySelectorAll('.section')).filter(s=>!['welcome','hero'].includes(s.id));
+ const items=Array.from(invite.querySelectorAll('.story-item,.timeline-item,.agenda-row,.agenda-item,.gallery img,.family,.family-card,.heart-unit'));
+ sections.forEach(s=>s.classList.add('motion-reveal'));
+ items.forEach((el,i)=>{el.classList.add('motion-item');el.style.setProperty('--motion-delay',(i%6)*90+'ms');});
+ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){sections.concat(items).forEach(el=>el.classList.add('motion-visible'));return;}
+ if(!('IntersectionObserver' in window)){sections.concat(items).forEach(el=>el.classList.add('motion-visible'));return;}
+ const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('motion-visible');observer.unobserve(entry.target);}});},{threshold:.12,rootMargin:'0px 0px -5% 0px'});
+ sections.concat(items).forEach(el=>observer.observe(el));
+}
+
+startReferenceMotion();
 $('openEnvelope').addEventListener('click',()=>{const paper=document.querySelector('.envelope-paper');paper.classList.add('opened');setTimeout(()=>{$('envelope').classList.add('hide');document.body.style.overflow='auto';setTimeout(()=>$('welcome').scrollIntoView({behavior:'smooth'}),250)},720);});
 document.querySelectorAll('[data-dialog]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.dialog).classList.add('open')));
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('.dialog-back').classList.remove('open')));
