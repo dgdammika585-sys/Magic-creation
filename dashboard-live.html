@@ -390,6 +390,8 @@ var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,crea
 var templates=[
  {id:'golden-heritage',name:'Golden Heritage',type:'Traditional',tone:'heritage-gold',desc:'Warm Sinhala ceremonial elegance · Gold ornaments'},
  {id:'sinhala-poruwa-story',name:'Sinhala Poruwa Story',type:'Traditional',tone:'sinhala-poruwa',desc:'Poruwa-inspired storybook invitation · Video-inspired design'},
+ {id:'ivory-baroque',name:'Ivory Baroque',type:'Wedding',tone:'cream',desc:'Ivory ornamental invitation · heart-seal opening · elegant story'},
+ {id:'golden-floral-reveal',name:'Golden Floral Reveal',type:'Wedding',tone:'cream',desc:'Golden floral invitation · three scratch-to-reveal date hearts'},
  {id:'custom-blank',name:'Custom Studio',type:'Custom',tone:'cream',desc:'Start from a blank canvas'}
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
@@ -642,7 +644,7 @@ function bindPageEvents(){
  document.getElementById('chooseTemplate').onclick=function(){closeModal();templateStartPending=true;setPage('templates');toast('Choose a design to continue.');};
  document.getElementById('chooseCustom').onclick=function(){startCustomInvitation();};
  document.getElementById('backToChoices').onclick=function(){if(creationMode==='template'&&selectedTemplateForCreate){showCreationStep('template-confirm');return;}if(document.getElementById('createForm'))document.getElementById('createForm').reset();creationMode=null;selectedTemplateForCreate=null;showCreationStep('choices');};
- document.getElementById('backToTemplateGallery').onclick=function(){document.getElementById('createModal').classList.remove('open');selectedTemplateForCreate=null;selectedInvitationTitle='';selectedInvitationSlug='';creationMode=null;templateStartPending=true;page='templates';render();};
+ document.getElementById('backToTemplateGallery').onclick=function(){closeModal();location.href='template-library.html';};
  document.getElementById('cancelTemplateSetup').onclick=closeModal;
  document.getElementById('templateConfirmForm').onsubmit=continueTemplateSetup;
  document.getElementById('invitationTitle').addEventListener('input',function(){if(!slugManuallyEdited){var sf=document.getElementById('invitationSlug');sf.value=slugify(this.value);updateSlugPreview();}});
@@ -664,6 +666,8 @@ window.addEventListener('message',function(ev){
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeModal();});
 state=readState();
 render();
+var requestedTemplate=(location.search.match(/[?&]createTemplate=([^&]+)/)||[])[1];
+if(requestedTemplate){try{requestedTemplate=decodeURIComponent(requestedTemplate);}catch(ignore){}if(templates.some(function(t){return t.id===requestedTemplate;})){try{history.replaceState(null,'',location.pathname);}catch(ignore){}openTemplateConfirmStep(requestedTemplate);toast('Selected invitation template. Add its title and unique link name to continue.');}}
 })();
 </script>
 </body>
