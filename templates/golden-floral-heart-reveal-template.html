@@ -30,4 +30,9 @@
 function reveal(el,value){el.classList.add('revealed');el.innerHTML=value+'<small>REVEALED</small>';if(document.querySelectorAll('.dateheart.revealed').length===3)document.getElementById('dateNote').textContent='18 MAY 2027 · Save the date!'}
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(x=>io.observe(x));
 document.getElementById('music').addEventListener('click',()=>alert('Music is manually started. Add your licensed music track in Invitation Layout → Music.'));
+const params=new URLSearchParams(location.search),couple=params.get('names'),eventDate=params.get('date'),eventTime=params.get('time'),eventVenue=params.get('venue');
+if(couple){const h=document.querySelector('.cover h1');if(h){const bits=couple.split(/\\s*&\\s*/);h.innerHTML=bits.map(x=>x.replace(/[<>]/g,'')).join('<br><span class="amp">&</span><br>');document.title=couple+' | MAGIC CREATIONS';}}
+if(eventDate){const d=new Date(eventDate+'T00:00:00');if(!isNaN(d)){const dateText=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const coverDate=document.querySelector('.cover-inner p:last-of-type');if(coverDate)coverDate.textContent=dateText+(eventTime?' · '+eventTime:'');const dateCard=document.querySelector('#details .cards .card:first-child b');if(dateCard)dateCard.textContent=dateText;}}
+if(eventVenue){const venueCard=document.querySelector('#details .cards .card:nth-child(2) b');if(venueCard)venueCard.textContent=eventVenue;}
+
 </script></body></html>
