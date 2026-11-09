@@ -36,4 +36,24 @@ try{const gallery=JSON.parse(read('gallery','[]'));if(Array.isArray(gallery)&&ga
 const hostPhone=read('hostPhone','').replace(/\D/g,'');
 document.getElementById('rsvpSend').addEventListener('click',()=>{const name=document.getElementById('rsvpName').value.trim(),status=document.getElementById('rsvpStatus');if(!name){status.textContent='Please enter your name.';return;}if(!hostPhone){status.textContent='Host WhatsApp contact is not configured yet.';return;}const message='RSVP for '+fullNames+'\nGuest: '+name+'\nMobile: '+document.getElementById('rsvpMobile').value+'\nResponse: '+document.getElementById('rsvpAttendance').value+'\nGuests: '+document.getElementById('rsvpCount').value;window.open('https://wa.me/'+hostPhone+'?text='+encodeURIComponent(message),'_blank','noopener');status.textContent='WhatsApp opened. Tap Send to deliver your RSVP.';});
 const musicUrl=read('music','');let invitationAudio=null;document.getElementById('musicButton').addEventListener('click',()=>{if(!musicUrl){document.getElementById('musicButton').title='No music added to this invitation';return;}if(!invitationAudio){invitationAudio=new Audio(musicUrl);invitationAudio.loop=true;}if(invitationAudio.paused){invitationAudio.play().catch(()=>{document.getElementById('musicButton').title='Unable to play this audio file';});}else invitationAudio.pause();});
+
+/* MAGIC CREATIONS: apply Invitation Layout section visibility */
+(function(){
+ const flags=(()=>{try{return JSON.parse(read('sections','{}'))||{}}catch(e){return {}}})();
+ const selectors={"hero":".hero","families":"#familyCards","eventDetails":"#venueName","story":"#storyTimeline","agenda":"#agendaList","gallery":".gallery","map":"#venueMap","rsvp":"#rsvpSend","quote":".quote-message"};
+ const headingTargets={"dressCode":"Dress Code"};
+ function sectionForHeading(label){
+   const nodes=Array.from(document.querySelectorAll('h1,h2,h3,.label,.eyebrow'));
+   const found=nodes.find(n=>(n.textContent||'').trim().toLowerCase()===String(label).toLowerCase());
+   return found?found.closest('section'):null;
+ }
+ Object.keys(flags).forEach(function(key){
+   if(flags[key]!==false)return;
+   let el=selectors[key]?document.querySelector(selectors[key]):null;
+   if(!el&&headingTargets[key])el=sectionForHeading(headingTargets[key]);
+   if(!el)return;
+   if(key==='map'||key==='addToCalendar'){el.hidden=true;return;}
+   (el.closest('section')||el).hidden=true;
+ });
+})();
 </script></body></html>
