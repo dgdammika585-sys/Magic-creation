@@ -500,6 +500,9 @@ var templates=[
 {id:'forever-story',name:'Forever Story',subtitle:'Blush envelope · antique gold · full wedding story',tone:'blush-romance',category:'Romantic'},
 {id:'ivory-baroque',name:'Ivory Baroque',subtitle:'Ivory ornamental invitation · heart-seal opening · classic wedding story',tone:'cream',category:'Wedding'},
 {id:'golden-floral-reveal',name:'Golden Floral Reveal',subtitle:'Golden floral invitation · three scratch-to-reveal date hearts',tone:'cream',category:'Wedding'},
+{id:'golden-heritage-video',name:'Golden Heritage',subtitle:'Real-photo Sri Lankan wedding · floral mandap and warm gold',tone:'heritage-gold',category:'Wedding'},
+{id:'dreamy-fairytale-video',name:'Dreamy Fairytale',subtitle:'Sunset storybook romance · whimsical floral atmosphere',tone:'fairytale',category:'Wedding'},
+{id:'golden-floral-heart-reveal',name:'Golden Floral Heart Reveal',subtitle:'Parchment gold · interactive heart date reveal · guest book',tone:'cream',category:'Wedding'},
 {id:'custom-blank',name:'Custom Studio',subtitle:'Build from a blank canvas',tone:'cream',category:'Custom'}
 ];
 function uid(){return 'mc-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);}
@@ -968,13 +971,13 @@ function foreverStoryInvite(data){
 }
 
 function referenceTemplateInvite(data){
- var id=String(data.template||''),file=id==='ivory-baroque'?'template-ivory-baroque.html':'template-golden-floral-reveal.html';
+ var id=String(data.template||''),file=id==='ivory-baroque'?'template-ivory-baroque.html':id==='golden-heritage-video'?'templates/golden-heritage-video-template.html':id==='dreamy-fairytale-video'?'templates/dreamy-fairytale-video-template.html':id==='golden-floral-heart-reveal'?'templates/golden-floral-heart-reveal-template.html':'template-golden-floral-reveal.html';
  var params=new URLSearchParams();params.set('embed','1');params.set('names',String(data.names||data.invitationTitle||''));params.set('date',String(data.date||''));params.set('time',String(data.time||'09:00'));params.set('venue',String(data.venue||''));params.set('address',String(data.address||''));if(data.sections)params.set('sections',JSON.stringify(data.sections));if(Array.isArray(data.agenda)&&data.agenda.length)params.set('agenda',JSON.stringify(data.agenda));params.set('hostPhone',String(data.hostPhone||''));
- var title=id==='ivory-baroque'?'Ivory Baroque wedding invitation':'Golden Floral Reveal wedding invitation';
+ var title=id==='ivory-baroque'?'Ivory Baroque wedding invitation':id==='golden-heritage-video'?'Golden Heritage wedding invitation':id==='dreamy-fairytale-video'?'Dreamy Fairytale wedding invitation':id==='golden-floral-heart-reveal'?'Golden Floral Heart Reveal wedding invitation':'Golden Floral Reveal wedding invitation';
  return '<main class="mc-reference-template-host" style="margin:0;padding:0;min-height:100vh;background:#f8efe4"><iframe title="'+esc(title)+'" src="'+esc(file+'?'+params.toString())+'" style="display:block;width:100%;height:100vh;min-height:850px;border:0;background:#f8efe4" loading="eager"></iframe></main>';
 }
 function publicInvite(data){
-if(data.template==='ivory-baroque'||data.template==='golden-floral-reveal')return referenceTemplateInvite(data);
+if(['ivory-baroque','golden-floral-reveal','golden-heritage-video','dreamy-fairytale-video','golden-floral-heart-reveal'].includes(data.template))return referenceTemplateInvite(data);
 if(tpl(data.template).id==='sinhala-poruwa-story')return videoInspiredPoruwaInvite(data);
 if(tpl(data.template).id==='forever-story')return foreverStoryInvite(data);
 if(tpl(data.template).id==='golden-heritage')return goldenHeritageInvite(data);
