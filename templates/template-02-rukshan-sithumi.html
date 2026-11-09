@@ -40,4 +40,14 @@ document.getElementById('venueName').textContent=read('venue','Venue to be confi
 document.getElementById('venueAddress').textContent=read('address','Location details will appear here');
 const mapUrl=read('mapLocation','');if(mapUrl){const map=document.getElementById('venueMap');map.href=mapUrl;map.hidden=false;}
 document.getElementById('calendarBtn').addEventListener('click',()=>{if(!eventDate){alert('Please add the wedding date in Event Details first.');return;}const start=new Date(eventDate+'T'+(eventTime||'09:00'));if(Number.isNaN(start.getTime())){alert('Please check the wedding date and time.');return;}const end=new Date(start.getTime()+4*60*60*1000);const fmt=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');const ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:'+fmt(start)+'\r\nDTEND:'+fmt(end)+'\r\nSUMMARY:'+groom+' & '+bride+' Wedding\r\nEND:VEVENT\r\nEND:VCALENDAR';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));a.download='wedding-invitation.ics';a.click();URL.revokeObjectURL(a.href);});
+const parseObj=(key)=>{try{return JSON.parse(read(key,'{}'))||{}}catch(e){return {}}};
+const groomFamily=parseObj('groomFamily'),brideFamily=parseObj('brideFamily');
+const familyLine=o=>[o.fatherName,o.motherName,o.parents,o.description].filter(Boolean).join(' · ')||'Family details';
+document.querySelector('.families .family:nth-child(1) h3').textContent=groomFamily.familyName||'Groom Family';
+document.querySelector('.families .family:nth-child(2) h3').textContent=brideFamily.familyName||'Bride Family';
+document.querySelector('.families .family:nth-child(1) p').textContent=familyLine(groomFamily);
+document.querySelector('.families .family:nth-child(2) p').textContent=familyLine(brideFamily);
+try{const agenda=JSON.parse(read('agenda','[]'));if(Array.isArray(agenda)&&agenda.length){document.querySelector('.timeline').innerHTML=agenda.map(item=>'<div><b>'+String(item.time||'').replace(/[<>]/g,'')+'</b> '+String(item.title||'').replace(/[<>]/g,'')+'</div>').join('');}}catch(e){}
+const heroImage=read('heroImageUrl','');if(/^https:\/\//i.test(heroImage)){document.querySelector('.portrait').src=heroImage;}
+try{const gallery=JSON.parse(read('gallery','[]'));if(Array.isArray(gallery)&&gallery.length){document.querySelector('.gallery').innerHTML=gallery.filter(url=>/^https:\/\//i.test(url)).slice(0,12).map(url=>'<img src="'+url.replace(/["<>]/g,'')+'" alt="Couple gallery photo">').join('');}}catch(e){}
 </script></body></html>
