@@ -71,7 +71,7 @@ const musicUrl=read('music','');let invitationAudio=null;document.getElementById
    let el=selectors[key]?document.querySelector(selectors[key]):null;
    if(!el&&headingTargets[key])el=sectionForHeading(headingTargets[key]);
    if(!el)return;
-   if(key==='map'||key==='addToCalendar'){el.hidden=true;return;}
+   if(key==='addToCalendar'){el.hidden=true;return;}
    (el.closest('section')||el).hidden=true;
  });
 })();
