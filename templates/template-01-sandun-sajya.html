@@ -63,6 +63,8 @@ const galleryItems=safeJson('gallery',[]);if(galleryItems.length){document.query
 const sectionFlags=safeJson('sections',{});const sectionSelectors={countdown:'#countdown',story:'.photo-round',agenda:'.timeline',gallery:'.gallery',map:'#mapLink',guestbook:'#guestWishForm',rsvp:'#rsvpForm',ourPromise:'.promise'};
 Object.keys(sectionFlags).forEach(key=>{if(sectionFlags[key]===false&&sectionSelectors[key]){const el=document.querySelector(sectionSelectors[key]);if(el){const section=el.closest('section');if(section)section.hidden=true}}});
 const hostPhone=read('hostPhone','').replace(/\\D/g,'');
+const heroImageUrl=read('heroImageUrl','');
+if(/^https:\\/\\//i.test(heroImageUrl)){document.querySelector('.hero').style.backgroundImage='linear-gradient(180deg,#1e1009a6,#1e1009b8),url("'+heroImageUrl.replace(/["<>]/g,'')+'")';}
 const countdown=document.getElementById('countdown');
 const parsedDate=dateValue?new Date(dateValue+'T'+(timeValue||'00:00')):null;
 if(parsedDate&&!Number.isNaN(parsedDate.getTime())){function updateCountdown(){const diff=Math.max(0,parsedDate-Date.now()),parts=[Math.floor(diff/86400000),Math.floor(diff/3600000)%24,Math.floor(diff/60000)%60,Math.floor(diff/1000)%60];countdown.querySelectorAll('strong').forEach((el,i)=>el.textContent=String(parts[i]).padStart(2,'0'))}updateCountdown();setInterval(updateCountdown,1000)}else{countdown.closest('.section').hidden=true}
