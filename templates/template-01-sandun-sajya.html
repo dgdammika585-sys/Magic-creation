@@ -28,8 +28,8 @@
 <section class="section cream reveal"><div class="eyebrow-dark">The celebration</div><h2>Order of the Day</h2><div class="timeline"><div class="timeline-item"><b>09:00 AM</b><span>Guest Arrival &amp; Welcome</span></div><div class="timeline-item"><b>09:30 AM</b><span>Poruwa Ceremony</span></div><div class="timeline-item"><b>10:30 AM</b><span>Family Photographs</span></div><div class="timeline-item"><b>11:30 AM</b><span>Reception &amp; Celebration</span></div></div></section>
 <section class="section reveal"><div class="eyebrow-dark">Our memories</div><h2>Our Moments</h2><div class="gallery"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=85" alt="Gallery photo placeholder"><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=85" alt="Gallery photo placeholder"><img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=600&q=85" alt="Gallery photo placeholder"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=85" alt="Gallery photo placeholder"></div></section>
 <section class="section cream reveal"><div class="eyebrow-dark">Where we celebrate</div><h2>The Venue</h2><h3 id="venueLabel" style="font:22px 'Playfair Display',serif">Venue details to be added</h3><p id="venueAddressLabel">Location details will appear here</p><a class="btn" id="mapLink" href="#" target="_blank" rel="noopener" hidden>View Location</a><p class="eyebrow-dark" id="mapUnavailable">Map link will be provided with the invitation details.</p></section>
-<section class="section reveal"><div class="eyebrow-dark">Leave your blessings</div><h2>Guest Book</h2><form class="form" onsubmit="event.preventDefault();alert('Demo only: connect Guest Book to the Magic Creations database before publishing.');"><input class="field" placeholder="Your name" required><textarea class="field" rows="4" placeholder="Write your wishes" required></textarea><button class="btn">Send Wishes</button></form></section>
-<section class="section cream reveal"><div class="eyebrow-dark">Kindly respond</div><h2>RSVP</h2><form class="form" onsubmit="event.preventDefault();alert('Demo only: connect RSVP to the Magic Creations database before publishing.');"><input class="field" placeholder="Your full name" required><input class="field" type="tel" placeholder="Mobile number"><select class="field"><option>Joyfully accept</option><option>Regretfully decline</option></select><input class="field" type="number" min="1" placeholder="Number of guests"><button class="btn">Confirm RSVP</button></form></section>
+<section class="section reveal"><div class="eyebrow-dark">Leave your blessings</div><h2>Guest Book</h2><form class="form" id="guestWishForm"><input class="field" name="guestName" placeholder="Your name" required maxlength="80"><textarea class="field" name="wish" rows="4" placeholder="Write your wishes" required maxlength="600"></textarea><button class="btn" type="submit">Send Wishes</button><p class="form-note" id="wishStatus" aria-live="polite"></p></form></section>
+<section class="section cream reveal"><div class="eyebrow-dark">Kindly respond</div><h2>RSVP</h2><form class="form" id="rsvpForm"><input class="field" name="guestName" placeholder="Your full name" required maxlength="100"><input class="field" name="mobile" type="tel" placeholder="Mobile number"><select class="field" name="attendance"><option value="attending">Joyfully accept</option><option value="not_attending">Regretfully decline</option></select><input class="field" name="guestCount" type="number" min="0" max="50" value="1" placeholder="Number of guests"><button class="btn" type="submit">Confirm RSVP</button><p class="form-note" id="rsvpStatus" aria-live="polite"></p></form></section>
 <section class="section reveal"><div class="eyebrow-dark">Capture the memories</div><h2>Share Your Photos</h2><p>Share the special moments you capture with us.</p><input class="field" type="file" accept="image/*" multiple><p style="font-size:9px">Photo uploads require the Magic Creations guest-gallery service to be connected.</p></section>
 <footer class="footer"><div class="eyebrow">With love</div><div class="names">Sandun &amp; Sajya</div><small>MAGIC CREATIONS · DIGITAL INVITATIONS</small></footer>
 </main>
@@ -38,21 +38,40 @@
 const params=new URLSearchParams(location.search);
 const supplied=window.MC_INVITATION_DATA||{};
 const read=(key,fallback='')=>params.get(key)||supplied[key]||fallback;
-const groom=read('groom','Sandun'),bride=read('bride','Sajya');
+const fullNames=read('names','Sandun & Sajya');
+const nameParts=fullNames.split(/\\s*&\\s*/);
+const groom=read('groomName',nameParts[0]||'Sandun'),bride=read('brideName',nameParts.slice(1).join(' & ')||'Sajya');
 document.querySelectorAll('.hero .names,.footer .names').forEach(el=>el.textContent=groom+' & '+bride);
 document.getElementById('venueLabel').textContent=read('venue','Venue details to be added');
 document.getElementById('venueAddressLabel').textContent=read('address','Location details will appear here');
-const mapUrl=read('maps','');if(mapUrl){const map=document.getElementById('mapLink');map.href=mapUrl;map.hidden=false;document.getElementById('mapUnavailable').hidden=true}
+const mapUrl=read('mapLocation','');if(mapUrl){const map=document.getElementById('mapLink');map.href=mapUrl;map.hidden=false;document.getElementById('mapUnavailable').hidden=true}
 const dateValue=read('date',''),timeValue=read('time','');
 document.getElementById('eventDateLabel').textContent=dateValue||'Wedding date to be announced';
 document.getElementById('eventTimeLabel').textContent=timeValue||'Time to be announced';
+const invitationMessage=read('message','');if(invitationMessage)document.querySelector('#invitation p').textContent=invitationMessage;
+const storyText=read('story','');if(storyText)document.querySelector('.photo-round').nextElementSibling.textContent=storyText;
+const promiseText=read('ourPromise','');if(promiseText)document.querySelector('.promise blockquote').textContent='“'+promiseText+'”';
+const safeJson=(key,fallback)=>{try{return JSON.parse(read(key,''))||fallback}catch(e){return fallback}};
+const groomFamily=safeJson('groomFamily',{}),brideFamily=safeJson('brideFamily',{});
+const familyText=obj=>[obj.fatherName,obj.motherName,obj.parents,obj.description].filter(Boolean).join(' · ');
+document.getElementById('groomFamilyLabel').textContent=groomFamily.familyName||'Groom’s Family';
+document.getElementById('brideFamilyLabel').textContent=brideFamily.familyName||'Bride’s Family';
+document.getElementById('groomParentsLabel').textContent=familyText(groomFamily)||'Family details';
+document.getElementById('brideParentsLabel').textContent=familyText(brideFamily)||'Family details';
+const agendaItems=safeJson('agenda',[]);if(agendaItems.length){document.querySelector('.timeline').innerHTML=agendaItems.map(item=>'<div class="timeline-item"><b>'+String(item.time||'').replace(/[<>]/g,'')+'</b><span>'+String(item.title||'').replace(/[<>]/g,'')+'</span></div>').join('')}
+const galleryItems=safeJson('gallery',[]);if(galleryItems.length){document.querySelector('.gallery').innerHTML=galleryItems.map(url=>'<img src="'+String(url).replace(/["<>]/g,'')+'" alt="Couple gallery photo">').join('')}
+const sectionFlags=safeJson('sections',{});const sectionSelectors={countdown:'#countdown',story:'.photo-round',agenda:'.timeline',gallery:'.gallery',map:'#mapLink',guestbook:'#guestWishForm',rsvp:'#rsvpForm',ourPromise:'.promise'};
+Object.keys(sectionFlags).forEach(key=>{if(sectionFlags[key]===false&&sectionSelectors[key]){const el=document.querySelector(sectionSelectors[key]);if(el){const section=el.closest('section');if(section)section.hidden=true}}});
+const hostPhone=read('hostPhone','').replace(/\\D/g,'');
 const countdown=document.getElementById('countdown');
 const parsedDate=dateValue?new Date(dateValue+'T'+(timeValue||'00:00')):null;
 if(parsedDate&&!Number.isNaN(parsedDate.getTime())){function updateCountdown(){const diff=Math.max(0,parsedDate-Date.now()),parts=[Math.floor(diff/86400000),Math.floor(diff/3600000)%24,Math.floor(diff/60000)%60,Math.floor(diff/1000)%60];countdown.querySelectorAll('strong').forEach((el,i)=>el.textContent=String(parts[i]).padStart(2,'0'))}updateCountdown();setInterval(updateCountdown,1000)}else{countdown.closest('.section').hidden=true}
+document.getElementById('guestWishForm').addEventListener('submit',function(ev){ev.preventDefault();const f=new FormData(ev.currentTarget);const msg='Guest Book wish for '+fullNames+'\\nName: '+f.get('guestName')+'\\nWish: '+f.get('wish');if(!hostPhone){document.getElementById('wishStatus').textContent='Host WhatsApp contact is not configured yet.';return}window.open('https://wa.me/'+hostPhone+'?text='+encodeURIComponent(msg),'_blank','noopener');document.getElementById('wishStatus').textContent='WhatsApp opened. Send the message to deliver your wish to the hosts.'});
+document.getElementById('rsvpForm').addEventListener('submit',function(ev){ev.preventDefault();const f=new FormData(ev.currentTarget);const status=f.get('attendance')==='attending'?'Attending':'Unable to attend';const msg='RSVP for '+fullNames+'\\nGuest: '+f.get('guestName')+'\\nMobile: '+(f.get('mobile')||'Not provided')+'\\nResponse: '+status+'\\nGuests: '+f.get('guestCount');if(!hostPhone){document.getElementById('rsvpStatus').textContent='Host WhatsApp contact is not configured yet.';return}window.open('https://wa.me/'+hostPhone+'?text='+encodeURIComponent(msg),'_blank','noopener');document.getElementById('rsvpStatus').textContent='WhatsApp opened. Send the message to confirm your RSVP with the hosts.'});
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 document.getElementById('musicButton').addEventListener('click',()=>{const audioUrl=read('music','');if(!audioUrl){alert('Music has not been added to this invitation yet.');return}let audio=document.getElementById('invitationAudio');if(!audio){audio=new Audio(audioUrl);audio.loop=true;audio.id='invitationAudio'}if(audio.paused){audio.play().catch(()=>alert('Unable to play this audio file.'))}else{audio.pause()}});
 
-document.getElementById('musicButton').addEventListener('click',()=>alert('Add your licensed audio track in Invitation Layout → Music. Music starts only after the guest taps this icon.'));
+
 </script>
 </body></html>
