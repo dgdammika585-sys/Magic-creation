@@ -35,14 +35,17 @@
 - [ ] Establish a repeatable preview/test procedure.
 
 ### Phase 1 — Security and data foundation
-- [ ] Review every table, RLS policy, trigger, RPC, and Edge Function.
-- [ ] Ensure users can read/write only their own profiles, events, orders, guests, and media.
-- [ ] Make order price/status/admin fields server-controlled; never trust client-supplied totals or approval state.
-- [ ] Secure guest tokens and RSVP endpoints; add validation, abuse protection, and rate limits.
+- [x] Complete first-pass source review of the base schema, both existing migrations, and guest lookup/RSVP functions.
+- [x] Identify order-field privilege, guest reassignment, and guest-book moderation gaps.
+- [x] Draft a hardening migration for order column privileges, guest ownership checks, guest-book moderation, and per-token RSVP throttling.
+- [x] Update the RSVP Edge Function to return HTTP 429 for throttled requests.
+- [ ] Review the remaining storage policies, grants, triggers, RPC edge cases, and deployment settings.
+- [ ] Apply the migration to a non-production/test Supabase project and run authenticated/anonymous security tests.
 - [ ] Define storage buckets and policies for customer uploads and guest gallery content.
-- [ ] Apply migrations to a non-production/test Supabase project and verify them.
 
 **Exit criteria:** Security tests pass; unauthorised cross-user access is denied; secrets are not present in client code or Git history.
+
+**Important migration prerequisite:** The repository's base schema is in root-level `supabase-schema.sql`, not in the `supabase/migrations/` sequence. The existing 20261106 migrations and the new 20261118 hardening migration depend on that schema already being applied. Do not run `supabase db push` on a fresh project until the baseline schema has been converted into a properly ordered migration or applied and recorded safely. The new hardening migration has not yet been executed against a Supabase database.
 
 ### Phase 2 — Identity and customer dashboard
 - [ ] Implement sign-up, sign-in, sign-out, password recovery, and profile management.
@@ -107,7 +110,7 @@
 
 ## Current next task
 
-**Phase 1, Task 1:** Read and review the complete Supabase SQL schema, both existing migrations, and every guest Edge Function. Produce a table-by-table RLS/security review before modifying production schema.
+**Phase 1, Task 2:** Apply the new hardening migration to a disposable/test Supabase project after confirming the base schema and existing migrations are in place. Test customer order inserts, cross-event guest reassignment, guest-book owner moderation, and the RSVP 8-attempt/15-minute limit. Then finish the storage policy and deployment review.
 
 ## Decisions that require owner input before irreversible or paid actions
 
