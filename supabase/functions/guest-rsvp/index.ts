@@ -34,6 +34,10 @@ Deno.serve(async (req: Request) => {
       p_request_id: requestId,
     });
 
+    if (data?.rate_limited) {
+      return jsonResponse(req, { error: "Too many RSVP attempts. Please wait 15 minutes and try again." }, 429);
+    }
+
     if (error || !data?.saved) {
       return jsonResponse(req, { error: "Your RSVP could not be saved. Please check your invitation link and try again." }, 400);
     }
