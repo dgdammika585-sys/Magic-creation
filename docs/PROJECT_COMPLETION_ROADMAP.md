@@ -126,3 +126,19 @@
 - `In progress`: implementation exists but acceptance tests are incomplete.
 - `Verified`: tested against stated exit criteria.
 - `Blocked`: requires credentials, account access, a business decision, or external service setup.
+
+
+## Live Supabase integration checkpoint — 2026-11-19
+
+- Connected project ref: `yidsydqmiodolhgftypv` (region `ap-southeast-2`); project restored to `ACTIVE_HEALTHY`.
+- Read-only audit found two legacy `mc_events` / `mc_guests` tables (both empty) in addition to the Supabase-managed schemas. No auth users or customer records existed at the time of audit.
+- Applied and recorded five database migrations: baseline schema, guest token/seating/RSVP, auth profile trigger, security hardening, and function-access/RLS tuning. Database migration versions are mirrored by filenames in `supabase/migrations/` on this branch.
+- The guest token migration had a statement-order defect (revoking a function before its creation). Corrected the migration before applying; failed attempt rolled back.
+- Verified column-level order INSERT privileges: customers may set `customer_note`, but cannot set `amount_lkr`, `status`, or `admin_note`.
+- Verified `anon` cannot execute the admin helper or secure RSVP writer; `service_role` can execute the RSVP writer.
+- Guestbook owner moderation and published-invitation submission policies are installed.
+- Remaining security warnings include intentional legacy public guest-code RPCs (`mc_get_public_invitation`, `mc_submit_rsvp`), authenticated SECURITY DEFINER RPCs used for seating/token issuance, and RLS-enabled server-only tables with no direct client policies. Review each in context; do not blanket-revoke required RPC access.
+- Performance advisories: missing FK indexes and unused indexes in an empty database; address only after query patterns exist. Legacy `mc_*` RLS policy auth lookup performance was tuned.
+- Storage bucket `mc-invitation-media` is public and currently has no configured file-size or MIME-type restrictions. Decide the upload policy before enabling customer uploads.
+- **Not yet complete:** frontend still reads/writes dashboard and event workspace state through browser `localStorage`; Supabase Auth/cloud persistence has not yet been wired into the UI. No Edge Functions are deployed. Customer login, cross-device sync, media upload workflow, and end-to-end multi-user authorization tests remain open.
+- No customer data was migrated; database tables were empty. No production website deployment was performed.
