@@ -182,7 +182,8 @@ document.getElementById('shareBtn').onclick=async()=>{try{await navigator.clipbo
 const safeMediaUrl=(value)=>{try{const u=new URL(value,location.href);return u.protocol==='https:'?u.href:''}catch{return ''}};
 const videoUrl=safeMediaUrl(get('video',''));
 const openingVideo=document.getElementById('openingVideo');
-if(videoUrl){openingVideo.src=videoUrl;openingVideo.hidden=false;document.getElementById('cover').classList.add('has-opening-video');}
+const prefersReducedMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(videoUrl&&!prefersReducedMotion){openingVideo.src=videoUrl;openingVideo.hidden=false;document.getElementById('cover').classList.add('has-opening-video');}
 const musicUrl=safeMediaUrl(get('music',''));
 const musicButton=document.getElementById('musicBtn');
 let invitationAudio=null;
