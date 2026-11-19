@@ -27,7 +27,13 @@ Source-level verification only. No browser screenshot, runtime iframe, CSP/heade
 ## Editor handoff
 11 of the 12 catalogue "Use this template" links pass a template ID that exists in the dashboard template registry. The first card, **Blush Romance**, links only to `dashboard-live.html` without a `createTemplate` parameter. It therefore does not preselect its corresponding template. This is a confirmed handoff defect.
 
-The dashboard has 11 selectable template IDs (plus Custom Studio). The workspace has its own template registry and separate render paths; not every standalone HTML page is automatically an editor-connected template. In particular, a successful catalogue preview must not be described as proof that customer edits, media upload, or publishing are connected to that standalone page.
+There are also preview-to-editor identity mismatches that need correction before calling the library fully integrated:
+- **Forever Story** preview opens `templates/forever-story-wedding-template.html`, but its Use action selects `ivory-baroque`, which routes to the separate `template-ivory-baroque.html` renderer. The workspace has a `forever-story` renderer ID, but the dashboard registry currently does not expose that ID.
+- **Five Hearts Date Reveal** preview opens `templates/five-hearts-date-reveal.html`, while its Use action selects `golden-floral-reveal`, whose workspace renderer points to `template-golden-floral-reveal.html`.
+- **Heritage Master** preview opens `templates/heritage-master-template.html`, while its Use action selects `golden-heritage`, which uses a dedicated workspace renderer.
+- **Poruwa Floral Story** preview opens `templates/poruwa-floral-story.html`, while its Use action selects `sinhala-poruwa-story`, which uses the workspace's separate Poruwa renderer.
+
+The remaining direct handoffs use matching IDs/pages for Dreamy Fairytale, Golden Floral Heart Reveal, Golden Heritage Video, and the four numbered reference templates. The dashboard has 11 selectable template IDs (plus Custom Studio). The workspace has its own template registry and separate render paths; not every standalone HTML page is automatically an editor-connected template. A successful catalogue preview must not be described as proof that customer edits, media upload, or publishing are connected to that standalone page.
 
 ## Next implementation tasks
 1. Correct Blush Romance's editor handoff by adding a matching, supported template ID and renderer mapping, or clearly mark it as preview-only until that integration exists.
