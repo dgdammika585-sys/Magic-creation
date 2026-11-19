@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f3ee">
+<title>Customer Account | MAGIC CREATIONS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+:root{--paper:#fffdf9;--cream:#f7f1eb;--ink:#282523;--muted:#786f68;--rose:#ad7475;--line:#e8ddd4;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans','Noto Sans Sinhala','Nirmala UI',Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(130deg,#f8f1eb,#fffdf9 55%,#eee0dc);font-family:var(--sans);color:var(--ink);display:grid;place-items:center;padding:22px}
+a{color:#8b6260;text-decoration:none}.shell{width:min(100%,980px);min-height:610px;background:#fffdf9;border:1px solid var(--line);box-shadow:0 24px 80px #4a342318;display:grid;grid-template-columns:.9fr 1.1fr}
+.brand-panel{background:linear-gradient(145deg,#efe0d9,#fbf4ed 60%,#dce1d5);padding:55px 44px;display:flex;flex-direction:column;justify-content:space-between}.brand{font-size:11px;letter-spacing:.2em;font-weight:700}.monogram{font:42px var(--serif);color:var(--rose);margin-top:65px}.brand-panel h1{font:400 clamp(38px,5vw,58px)/1.1 var(--serif);margin:14px 0}.brand-panel p{font-size:12px;color:#756b64;line-height:1.9;max-width:300px}.brand-foot{font-size:9px;color:#887b72;letter-spacing:.08em}
+.form-panel{padding:48px clamp(24px,5vw,58px);display:flex;flex-direction:column;justify-content:center}.eyebrow{font-size:9px;letter-spacing:.2em;color:#98766d;font-weight:700}.form-panel h2{font:400 36px var(--serif);margin:10px 0 5px}.intro{font-size:11px;color:var(--muted);margin:0 0 24px;line-height:1.7}.tabs{display:flex;border-bottom:1px solid var(--line);gap:22px;margin-bottom:22px}.tabs button{border:0;background:none;padding:0 0 11px;color:#8a7d74;font-size:11px}.tabs button.active{color:var(--ink);border-bottom:2px solid var(--rose);font-weight:700}.field{display:flex;flex-direction:column;gap:6px;margin:12px 0}.field label{font-size:10px;color:#655a53;font-weight:600}.field input,.field select{width:100%;padding:12px;border:1px solid #ded2c9;background:#fffefa;font:11px var(--sans);outline:none}.field input:focus,.field select:focus{border-color:#b18a7e;box-shadow:0 0 0 2px #b18a7e18}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.submit{width:100%;border:0;background:var(--ink);color:white;padding:14px;font-size:11px;font-weight:700;margin-top:14px}.submit:disabled{opacity:.6;cursor:wait}.message{display:none;padding:11px 12px;margin:14px 0 0;font-size:10px;line-height:1.7;border:1px solid #e5d6c8;background:#faf4ed;color:#65554b}.message.show{display:block}.message.error{background:#fbefed;border-color:#e8c8c2;color:#934d46}.minor{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:10px;margin-top:14px;color:var(--muted)}.minor button{border:0;background:none;color:#8b6260;font-size:10px}.hidden{display:none!important}.back{font-size:10px;margin-top:24px}
+@media(max-width:700px){.shell{grid-template-columns:1fr;min-height:0}.brand-panel{padding:25px 27px}.monogram{margin-top:25px;font-size:30px}.brand-panel h1{font-size:36px}.brand-panel p{margin-bottom:0}.brand-foot{display:none}.form-panel{padding:30px 25px 36px}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="brand-panel">
+    <div class="brand">MAGIC CREATIONS</div>
+    <div><div class="monogram">M C ✦</div><h1>Your moments,<br><em>beautifully invited.</em></h1><p>Create and manage your digital invitations in one elegant place.</p></div>
+    <div class="brand-foot">DIGITAL INVITATIONS · SRI LANKA</div>
+  </section>
+  <section class="form-panel">
+    <div class="eyebrow">CUSTOMER ACCOUNT</div>
+    <h2 id="heading">Welcome back</h2>
+    <p class="intro" id="intro">Sign in to continue to your invitation dashboard.</p>
+    <div class="tabs"><button type="button" class="active" id="loginTab">Sign in</button><button type="button" id="signupTab">Create account</button></div>
+    <form id="authForm">
+      <div id="nameFields" class="hidden">
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" autocomplete="name" maxlength="100" placeholder="Your full name"></div>
+        <div class="row">
+          <div class="field"><label for="phone">Phone</label><input id="phone" autocomplete="tel" maxlength="20" placeholder="+94 7X XXX XXXX"></div>
+          <div class="field"><label for="language">Language</label><select id="language"><option value="en">English</option><option value="si">සිංහල</option></select></div>
+        </div>
+      </div>
+      <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required minlength="8" maxlength="72" placeholder="At least 8 characters"></div>
+      <div id="confirmField" class="field hidden"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="72" placeholder="Enter password again"></div>
+      <button class="submit" id="submitButton" type="submit">Sign in</button>
+    </form>
+    <div class="minor"><span id="minorText">Forgot your password?</span><button type="button" id="resetButton">Reset password</button></div>
+    <div class="message" id="message" role="status" aria-live="polite"></div>
+    <a class="back" href="./index.html">← Back to MAGIC CREATIONS website</a>
+  </section>
+</main>
+<script type="module">
+import { supabase } from './assets/js/supabase-client.js';
+const $ = (id) => document.getElementById(id);
+let mode = 'login';
+function showMessage(text, error=false){$('message').textContent=text;$('message').className='message show'+(error?' error':'');}
+function setMode(next){
+  mode=next;const signup=mode==='signup';
+  $('loginTab').classList.toggle('active',!signup);$('signupTab').classList.toggle('active',signup);
+  $('nameFields').classList.toggle('hidden',!signup);$('confirmField').classList.toggle('hidden',!signup);
+  $('heading').textContent=signup?'Create your account':'Welcome back';
+  $('intro').textContent=signup?'Create a secure customer account to manage your invitations.':'Sign in to continue to your invitation dashboard.';
+  $('submitButton').textContent=signup?'Create account':'Sign in';
+  $('minorText').textContent=signup?'Already have an account?':'Forgot your password?';
+  $('resetButton').classList.toggle('hidden',signup);
+  $('password').autocomplete=signup?'new-password':'current-password';
+  $('message').className='message';
+}
+$('loginTab').addEventListener('click',()=>setMode('login'));
+$('signupTab').addEventListener('click',()=>setMode('signup'));
+$('authForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();$('submitButton').disabled=true;$('message').className='message';
+  try{
+    const email=$('email').value.trim().toLowerCase(),password=$('password').value;
+    if(mode==='signup'){
+      const fullName=$('fullName').value.trim(),phone=$('phone').value.trim();
+      if(!fullName){showMessage('Please enter your full name.',true);return;}
+      if(password!==$('confirmPassword').value){showMessage('Passwords do not match.',true);return;}
+      const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:new URL('./dashboard.html',window.location.href).href,data:{full_name:fullName,phone,preferred_language:$('language').value}}});
+      if(error)throw error;
+      if(data.session){showMessage('Account created. Opening your dashboard…');window.location.href='./dashboard.html';}
+      else showMessage('Account created. Please check your email and confirm your address before signing in.');
+    }else{
+      const {data,error}=await supabase.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      if(data.session)window.location.href='./dashboard.html';
+    }
+  }catch(err){showMessage(err.message||'Unable to complete the request. Please try again.',true);}
+  finally{$('submitButton').disabled=false;}
+});
+$('resetButton').addEventListener('click',async()=>{
+  const email=$('email').value.trim().toLowerCase();
+  if(!email){showMessage('Enter your email address first.',true);return;}
+  $('resetButton').disabled=true;
+  try{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL('./login.html?reset=1',window.location.href).href});if(error)throw error;showMessage('If an account exists for this email, a password reset link has been sent.');}
+  catch(err){showMessage(err.message||'Could not send reset email.',true);}
+  finally{$('resetButton').disabled=false;}
+});
+const {data:{session}}=await supabase.auth.getSession();
+if(session&&!new URLSearchParams(location.search).has('reset'))window.location.replace('./dashboard.html');
+if(new URLSearchParams(location.search).has('reset'))showMessage('Open the password reset email link to continue.');
+</script>
+</body>
+</html>
