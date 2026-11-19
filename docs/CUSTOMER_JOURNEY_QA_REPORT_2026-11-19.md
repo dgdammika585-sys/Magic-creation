@@ -57,8 +57,15 @@ Do not publish this as a production customer account system until P0/P1 items ar
 
 ## Next implementation sequence
 1. Browser-test the new auth guard on dashboard, iframe workspace, direct workspace URL, public guest invitation link, and full-template preview.
-2. Complete password recovery flow.
+2. Password recovery UI and update flow implemented; live email/browser test remains.
 3. Confirm/verify Supabase redirect configuration and run browser auth tests.
 4. Obtain explicit approval for workspace_data migration; only then migrate schema.
 5. Integrate cloud invitation CRUD, sync status and explicit local-draft import.
 6. Complete module QA and run regression tests on desktop/mobile.
+
+
+## Password recovery implementation update (2026-11-19)
+- `login.html` now handles Supabase `PASSWORD_RECOVERY` auth events and reset-link sessions.
+- Added new-password and confirmation inputs; validates minimum length and matching values; updates the signed-in recovery session with `supabase.auth.updateUser({ password })`.
+- Successful update redirects to the customer dashboard. Reset-email response remains non-enumerating.
+- Static source verification only. Supabase redirect allowlist, actual email delivery, link expiry/reuse, password update and mobile browser behavior still require live testing.
