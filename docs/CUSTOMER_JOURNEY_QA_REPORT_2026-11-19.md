@@ -2,18 +2,19 @@
 Date: 2026-11-19
 Branch: ceo/project-completion-2026-11-18
 Scope: Static source review of login.html, dashboard.html, event-workspace.html and mc-cloud-store.js.
-Status: Review only. No database migration, user creation, merge, or deployment performed.
+Status: Static implementation update completed on the development branch. No database migration, user creation, merge, or deployment performed.
 
 ## Executive result
 The customer journey is visually present, but it is not yet safe or complete for real customer use. The current implementation is still a browser-local prototype. Authentication UI and a cloud repository helper exist, but they are not connected end-to-end.
 
 ## Findings (priority order)
 
-### P0 — Dashboard and workspace do not enforce authentication
-- dashboard.html loads and renders without checking Supabase session.
-- event-workspace.html also loads and renders without checking Supabase session.
-- A signed-out visitor can access these pages and create/read data in that browser's localStorage.
-- Required: add a session guard to both entry points, redirect signed-out users to login.html, and re-check session on auth state changes. Do not treat a client-side guard as a replacement for database RLS.
+### P0 — Dashboard and workspace authentication guard (implemented; browser QA pending)
+- Added `assets/js/mc-auth-guard.js` and included it in `dashboard.html` and `event-workspace.html`.
+- Dashboard and the private workspace now check for a Supabase session and a valid authenticated user before revealing the page; signed-out/invalid sessions are redirected to `login.html`.
+- A Sign out control is added to protected pages; `SIGNED_OUT` auth events redirect to login.
+- Public guest invitation links using the `#invite=` payload and full-template previews are deliberately excluded from the private workspace guard.
+- This is a client-side navigation guard only; database RLS remains the actual data security boundary. Browser verification is still required.
 
 ### P0 — Customer invitation data is not cloud-backed
 - dashboard.html uses localStorage key magic_creations_workspace_v1 for readState/saveState.
@@ -55,7 +56,7 @@ The customer journey is visually present, but it is not yet safe or complete for
 Do not publish this as a production customer account system until P0/P1 items are fixed and browser-tested. Keep the development branch separate from main. No merge or deploy is authorized by this report.
 
 ## Next implementation sequence
-1. Implement shared auth guard and sign-out handling for dashboard and workspace.
+1. Browser-test the new auth guard on dashboard, iframe workspace, direct workspace URL, public guest invitation link, and full-template preview.
 2. Complete password recovery flow.
 3. Confirm/verify Supabase redirect configuration and run browser auth tests.
 4. Obtain explicit approval for workspace_data migration; only then migrate schema.
