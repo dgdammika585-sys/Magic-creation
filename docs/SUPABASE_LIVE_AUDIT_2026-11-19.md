@@ -67,3 +67,12 @@ Read-only inspection of the connected MAGIC CREATIONS Supabase project. No schem
 ## Important note
 
 This report records observed live state at the audit timestamp. It does not certify that all application paths are production-ready.
+
+## Frontend integration check
+
+A static scan of the four main HTML entry points (`index.html`, `dashboard.html`, `dashboard-live.html`, and `event-workspace.html`) found:
+- `localStorage` references in all four files.
+- No `@supabase/supabase-js` import or `createClient` usage.
+- No references to the deployed database RPC names checked in this audit.
+
+This confirms that the current browser experience is still primarily a local prototype and is not yet connected to Supabase authentication/data persistence through those entry points. The next implementation task is to add a shared Supabase client using only the publishable key, implement customer sign-in/session handling, then replace local-only event/dashboard persistence with owner-scoped database calls. Never expose a service-role key in browser code.
