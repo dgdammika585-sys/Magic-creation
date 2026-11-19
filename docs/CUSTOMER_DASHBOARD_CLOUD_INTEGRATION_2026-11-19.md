@@ -16,7 +16,7 @@
 - The repository maps the existing event object to the flat invitation columns and a future `workspace_data` JSONB column.
 - Large embedded data-URL media is rejected rather than silently truncated or stored in a database row. Media must move to the Storage bucket first.
 
-## Required additive database migration (not applied)
+## Applied additive database migration (verified)
 
 Before this repository can be used, add a nullable-safe JSONB column with a default:
 
@@ -25,11 +25,13 @@ alter table public.invitations
   add column if not exists workspace_data jsonb not null default '{}'::jsonb;
 ```
 
-This is intentionally documented only. It has NOT been executed against the live Supabase database and is NOT yet a committed migration file.
+Applied successfully to the live Supabase project on 19 November 2026. Migration history entry: `20261119065409` / `add_private_invitation_workspace_data`.
+
+Security companion: `REVOKE SELECT ON TABLE public.invitations FROM anon;` was included because the existing anonymous published-invitation SELECT policy would otherwise expose the new private workspace JSONB column. Authenticated owner/admin access remains governed by the existing RLS policies. The current front end does not use anonymous direct table reads for invitations; public invitation retrieval must use a future explicitly scoped public payload/RPC or safe-column design.
 
 ## Integration plan
 
-1. Apply and verify the additive migration in a controlled development step.
+1. Migration is applied and verified; continue with the shared authenticated session guard.
 2. Add a shared authenticated session guard to dashboard and event-workspace pages; redirect unauthenticated visitors to login.
 3. Replace dashboard localStorage reads with an owner-scoped cloud load, while preserving an explicit local-draft migration prompt (never auto-upload old browser data).
 4. Update event-workspace save operations to persist the active event through `saveMyInvitation`; debounce frequent editor changes and surface save/error status.
