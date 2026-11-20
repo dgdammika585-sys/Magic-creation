@@ -108,11 +108,25 @@ export async function hydrateLocalState(state, onStatus) {
     // Existing local drafts without a cloud ID are imported using their stable
     // invitation slug; the demo seed is deliberately excluded.
     for (const event of merged.events) {
-      if (!event || event.id === 'event-demo' || event._cloudId) continue;
+      if (!event || event.id === 'event-demo') continue;
       if (!slugOf(event) || !(event.names || event.title || event.invitationTitle)) continue;
+      if (event._cloudId) {
+        const remoteRow = remote.find((row) => row._cloudId === event._cloudId);
+        if (!remoteRow) continue;
+        const localTime = (event._localUpdatedAt ? Date.parse(event._localUpdatedAt) : 0) || 0;
+        const cloudTime = (remoteRow._cloudUpdatedAt ? Date.parse(remoteRow._cloudUpdatedAt) : 0) || 0;
+        if (event._cloudUpdatedAt && event._cloudUpdatedAt !== remoteRow._cloudUpdatedAt) {
+          event._syncConflict = true;
+          if (typeof onStatus === 'function') onStatus('conflict', event);
+          continue;
+        }
+        if (localTime <= cloudTime) continue;
+      }
       const saved = await saveMyInvitation(event);
       event._cloudId = saved._cloudId;
       event._cloudUpdatedAt = saved._cloudUpdatedAt;
+      delete event._syncConflict;
+      delete event._localUpdatedAt;
     }
     persistLocal(merged);
     if (typeof onStatus === 'function') onStatus('saved', merged);
