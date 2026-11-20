@@ -4,7 +4,7 @@ const page = location.pathname.split('/').pop() || '';
 const isDashboard = page === 'dashboard.html';
 const params = new URLSearchParams(location.search);
 const isPublicWorkspacePreview = page === 'event-workspace.html' &&
-  (params.has('fulltemplate') || location.hash.startsWith('#invite='));
+  (params.has('fulltemplate') || params.has('public') || location.hash.startsWith('#invite='));
 const requiresAuth = isDashboard || (page === 'event-workspace.html' && !isPublicWorkspacePreview);
 
 if (requiresAuth) {
