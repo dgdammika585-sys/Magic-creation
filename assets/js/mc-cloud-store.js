@@ -58,6 +58,7 @@ function rowToEvent(row) {
     ...saved,
     id: saved.id || row.id,
     _cloudId: row.id,
+    _cloudUpdatedAt: row.updated_at || null,
     invitationTitle: row.couple_or_host_names || saved.invitationTitle || '',
     invitationSlug: row.slug,
     names: row.couple_or_host_names || saved.names || '',
@@ -87,6 +88,8 @@ function eventToRow(event, ownerId) {
 
   const workspaceData = { ...event };
   delete workspaceData._cloudId;
+  delete workspaceData._cloudUpdatedAt;
+  delete workspaceData._localUpdatedAt;
 
   return {
     owner_id: ownerId,
@@ -139,11 +142,19 @@ export async function saveMyInvitation(event) {
       .select('*')
       .single();
   } else {
-    query = supabase
+    // The customer-selected, immutable slug is the stable migration key.
+    // This avoids creating a second row if a browser closes after a successful
+    // insert but before its returned cloud ID is written to localStorage.
+    const existing = await supabase
       .from(TABLE)
-      .insert(row)
-      .select('*')
-      .single();
+      .select('id')
+      .eq('owner_id', user.id)
+      .eq('slug', row.slug)
+      .maybeSingle();
+    if (existing.error) throw existing.error;
+    query = existing.data
+      ? supabase.from(TABLE).update(row).eq('id', existing.data.id).eq('owner_id', user.id).select('*').single()
+      : supabase.from(TABLE).insert(row).select('*').single();
   }
 
   const { data, error } = await query;
