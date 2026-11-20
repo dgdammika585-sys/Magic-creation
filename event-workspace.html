@@ -756,7 +756,7 @@ function bindEventDetailsLayoutEvents(){
  var e=current();if(!e)return;
  function changed(){var x=document.getElementById('eventDetailsSaveState');if(x)x.textContent='Unsaved changes';}
  document.querySelectorAll('#root input,#root textarea,#root select').forEach(function(x){if(x.id!=='eventSwitcher'&&x.id!=='langToggle'){x.addEventListener('input',changed);x.addEventListener('change',changed);}});
- function savePage(){var d=collectEventDetailsLayoutForm();if(!d)return;d.isConfigured=true;e.eventDetails=d;if(e.link){e.link=makePublicLink(e);e.published=true;}save();render();toast('Event Details settings saved on this device.');}
+ function savePage(){var d=collectEventDetailsLayoutForm();if(!d)return;d.isConfigured=true;e.eventDetails=d;if(e.published&&e.invitationSlug){e.link=makeCanonicalPublicLink(e);}save();render();toast('Event Details settings saved on this device.');}
  ['saveEventDetailsLayout','saveEventDetailsLayoutBottom'].forEach(function(id){var b=document.getElementById(id);if(b)b.addEventListener('click',savePage);});
  var add=document.getElementById('eventDetailsAddCard');if(add)add.addEventListener('click',function(){collectEventDetailsLayoutForm();var d=e.eventDetails||{};d.cards=Array.isArray(d.cards)?d.cards:[];if(d.cards.length>=8){toast('You can add up to eight event cards.');return;}d.cards.push({id:uid(),title:'',date:e.date||'',time:e.time||'',endTime:e.endTime||'',venue:'',venueLine:'',address:'',photo:null});save();render();});
  document.querySelectorAll('[data-event-card-remove]').forEach(function(b){b.addEventListener('click',function(){collectEventDetailsLayoutForm();e.eventDetails.cards.splice(Number(b.dataset.eventCardRemove),1);save();render();});});
