@@ -36,7 +36,8 @@
 - Anonymous resolver smoke test for an unknown slug returned `null`.
 - Security Advisor after the change did not report the new resolver. Existing unrelated warnings remain for older SECURITY DEFINER RPCs and two RLS tables without policies; these were not changed in this scoped task.
 - The project currently has no invitation rows, so a real published-record test could not be run.
-- No browser visual or cross-device test was performed.
+- JavaScript parse checks passed for both inline scripts in `event-workspace.html`, both inline scripts in `dashboard.html`, `mc-cloud-store.js`, `mc-cloud-sync.js`, `mc-auth-guard.js`, and the `404.html` fallback script.
+- No browser visual, real authenticated publish, mobile rendering, or cross-device test was performed.
 - Changes are on the working branch only. GitHub Pages production is not deployed from this branch, so a live public URL is not available yet.
 - The SQL was applied directly using Supabase SQL execution; this report preserves the exact SQL. No formal Supabase CLI migration-history entry was generated.
 
