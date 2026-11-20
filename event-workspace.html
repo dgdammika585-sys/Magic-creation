@@ -1821,7 +1821,7 @@ function makePublicLink(e,guest){
 function makeCanonicalPublicLink(e){
  var slug=String(e&&e.invitationSlug||e&&e.invitationTitle||e&&e.names||e&&e.title||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60).replace(/-+$/g,'');
  if(!slug)throw new Error('Add a valid invitation link name before publishing.');
- e.invitationSlug=slug;var base=location.pathname.replace(/event-workspace\\.html$/,'');
+ e.invitationSlug=slug;var base=location.pathname.slice(0, location.pathname.lastIndexOf('/') + 1);
  return location.origin+base+'i/'+encodeURIComponent(slug);
 }
 function publishCurrentInvitation(e){
