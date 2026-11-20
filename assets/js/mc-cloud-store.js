@@ -60,7 +60,7 @@ function buildPublicInvitationData(event) {
   }
   for (const key of ['videoUrl', 'musicUrl', 'welcomeMediaUrl', 'heroImageUrl',
     'finishBackgroundUrl', 'finishBackgroundVideoUrl']) {
-    if (output[key] && !/^https:\\/\\//i.test(String(output[key]))) delete output[key];
+    if (output[key] && !String(output[key]).toLowerCase().startsWith('https://')) delete output[key];
   }
   return output;
 }
