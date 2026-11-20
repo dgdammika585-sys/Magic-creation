@@ -7,6 +7,64 @@ import { supabase } from './supabase-client.js';
 const TABLE = 'invitations';
 const INLINE_MEDIA_LIMIT = 150_000;
 
+const PUBLIC_DATA_KEYS = [
+  'invitationTitle', 'invitationSlug', 'invitationLanguage', 'groomName', 'brideName',
+  'names', 'date', 'time', 'endTime', 'venue', 'address', 'mapLocation', 'message',
+  'story', 'storyMilestones', 'template', 'type', 'sections', 'sectionOrder',
+  'sectionSettings', 'designSettings', 'typographySettings', 'animationSettings',
+  'musicSettings', 'agenda', 'gallery', 'venuePhotos', 'videoUrl', 'musicUrl',
+  'welcomeMediaUrl', 'welcomeMediaName', 'welcomeMediaType', 'heroImageUrl',
+  'heroImageData', 'heroImageName', 'finishBackgroundUrl', 'finishBackgroundData',
+  'finishBackgroundVideoUrl', 'finishBackgroundName', 'sectionPhotos',
+  'countdownDesign', 'eventDetails', 'ownSections', 'groomFamily', 'brideFamily',
+  'ourPromise', 'dressCode', 'dressCodeHeading', 'dressCodeColors', 'quote',
+  'custom1Title', 'custom1Text', 'contactEmail', 'contactPerson1Name',
+  'contactPerson1Phone', 'contactPerson2Name', 'contactPerson2Phone',
+  'contactPerson3Name', 'contactPerson3Phone', 'wishes'
+];
+const PRIVATE_NESTED_KEY = /^(?:host_?phone|phone|email|guest|guests|guest_?list|guest_?invite|tables?|expenses?|budget|owner(?:_?id)?|token|secret|password|private|seat_?assignment|total_?attendees|event_?id)$/i;
+
+function cleanPublicValue(value, depth = 0) {
+  if (depth > 9 || value == null) return value == null ? null : undefined;
+  if (typeof value === 'string') return value.length > 120_000 ? undefined : value;
+  if (typeof value === 'number' || typeof value === 'boolean') return value;
+  if (Array.isArray(value)) return value.slice(0, 50)
+    .map((item) => cleanPublicValue(item, depth + 1))
+    .filter((item) => item !== undefined);
+  if (typeof value !== 'object') return undefined;
+  const output = {};
+  for (const [key, child] of Object.entries(value)) {
+    if (PRIVATE_NESTED_KEY.test(key)) continue;
+    const cleaned = cleanPublicValue(child, depth + 1);
+    if (cleaned !== undefined) output[key] = cleaned;
+  }
+  return output;
+}
+
+function buildPublicInvitationData(event) {
+  const source = event && typeof event === 'object' ? event : {};
+  const output = { publicVersion: 1 };
+  for (const key of PUBLIC_DATA_KEYS) {
+    if (source[key] === undefined) continue;
+    if (key === 'wishes') {
+      output.wishes = Array.isArray(source.wishes)
+        ? source.wishes.filter((wish) => wish && wish.approved === true)
+          .slice(0, 100).map((wish) => ({
+            name: String(wish.name || '').slice(0, 80),
+            message: String(wish.message || '').slice(0, 600)
+          }))
+        : [];
+      continue;
+    }
+    output[key] = cleanPublicValue(source[key]);
+  }
+  for (const key of ['videoUrl', 'musicUrl', 'welcomeMediaUrl', 'heroImageUrl',
+    'finishBackgroundUrl', 'finishBackgroundVideoUrl']) {
+    if (output[key] && !/^https:\\/\\//i.test(String(output[key]))) delete output[key];
+  }
+  return output;
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -107,6 +165,7 @@ function eventToRow(event, ownerId) {
     video_url: String(event.videoUrl || '').slice(0, 2000),
     audio_url: String(event.musicUrl || '').slice(0, 2000),
     published: Boolean(event.published),
+    public_data: event.published ? buildPublicInvitationData(event) : {},
     show_guest_table: Boolean(event.showGuestTable),
     workspace_data: workspaceData,
     updated_at: new Date().toISOString()
