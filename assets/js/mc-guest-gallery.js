@@ -49,11 +49,3 @@ export async function reviewGuestGallerySubmission(submissionId, decision) {
   if (error) throw error;
   return data;
 }
-
-export async function deleteGuestGallerySubmission(submissionId) {
-  assert(typeof submissionId === 'string' && submissionId, 'Photo submission is missing.');
-  await signedInOwner();
-  // Database/storage deletion is intentionally not exposed in this first owner
-  // module. A trusted cleanup function must remove the object and row together.
-  throw new Error('Permanent removal is not enabled yet. Reject the photo or contact MAGIC CREATIONS support.');
-}
