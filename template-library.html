@@ -3,18 +3,29 @@
 <style>
 :root{--paper:#fbf7f1;--ink:#332b25;--muted:#7e7064;--gold:#b6905b;--line:#e7d9c7;--serif:Georgia,serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,sans-serif}a{text-decoration:none;color:inherit}.top{background:#fffdf9;border-bottom:1px solid var(--line);padding:18px clamp(18px,5vw,70px);display:flex;align-items:center;justify-content:space-between}.brand{font:600 12px Georgia,serif;letter-spacing:.22em}.top small{display:block;font:9px Arial;letter-spacing:.15em;color:#998878;margin-top:5px}.back{font-size:10px;color:#806e5c;border-bottom:1px solid #cbb79a;padding-bottom:4px}.wrap{max-width:1240px;margin:auto;padding:48px 22px 80px}.kicker{font-size:9px;letter-spacing:.23em;color:#a78359;font-weight:bold}.intro{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}.intro h1{font:400 clamp(34px,5vw,55px)/1.08 var(--serif);margin:12px 0}.intro p{max-width:470px;font:12px/1.8 Arial;color:var(--muted);margin:0 0 5px}.count{font:10px Arial;color:#806e5c;letter-spacing:.1em;margin:0 0 18px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.card{background:#fffdf9;border:1px solid var(--line);min-width:0;box-shadow:0 9px 26px #46321c0b}.visual{height:270px;display:grid;place-items:center;position:relative;overflow:hidden;padding:20px}.visual:before{content:"";position:absolute;inset:17px;border:1px solid #fff8e4;outline:1px solid #b58a56;outline-offset:-7px;pointer-events:none}.v1{background:radial-gradient(ellipse at 50% 48%,#fffaf2,#ead8c1 70%,#c6a77b)}.v2{background:radial-gradient(ellipse at 50% 48%,#fff9ed,#e9d1ad 68%,#bb9160)}.v3{background:radial-gradient(ellipse at 50% 48%,#fffaf0,#e9dfc9 68%,#c9b58e)}.v4{background:linear-gradient(145deg,#edc3a4,#b66f56 48%,#473c43)}.mini{width:160px;min-height:215px;position:relative;z-index:1;background:#fffaf2;border:1px solid #c7a77b;box-shadow:0 12px 25px #51381e30;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;color:#74583e;outline:1px solid #ead9bd;outline-offset:-8px}.mini small{font:7px Arial;letter-spacing:.17em}.mini .symbol{font:30px Georgia;color:#b98f5d;margin:12px}.mini strong{font:italic 21px Georgia;font-weight:400;line-height:1.15}.mini .date{font:7px Arial;letter-spacing:.12em;margin-top:14px;color:#967653}.v4 .mini{background:#2e292b;color:#fff2e2;border-color:#d6a67c}.v4 .mini .symbol{color:#eab88e}.tag{position:absolute;left:14px;top:14px;background:#fffdf1e8;border:1px solid #e5d1af;padding:7px 10px;font:8px Arial;letter-spacing:.12em;color:#795f43;z-index:2}.details{padding:18px}.no{font:8px Arial;letter-spacing:.17em;color:#a1835d}.details h2{font:400 22px/1.2 Georgia;margin:8px 0;color:#554333}.details p{font:11px/1.75 Arial;color:var(--muted);min-height:78px;margin:0 0 14px}.features{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 16px}.features span{border:1px solid #eadfce;padding:6px 8px;font:8px Arial;color:#816d58}.actions{display:flex;gap:8px}.btn{flex:1;text-align:center;padding:12px 8px;font:9px Arial;letter-spacing:.05em;border:1px solid #c6aa80;color:#755a3d;background:#fffdf9;display:flex;align-items:center;justify-content:center}.btn.primary{background:#49392c;border-color:#49392c;color:#fff8ec}.btn:hover{filter:brightness(.97)}.foot{margin-top:30px;border-top:1px solid var(--line);padding-top:18px;font:9px/1.8 Arial;color:#968777;text-align:center}@media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.intro{display:block}.intro p{margin-top:12px}.grid{grid-template-columns:1fr}.visual{height:280px}.details p{min-height:0}.wrap{padding:34px 14px 55px}.top{padding:15px 16px}.back{font-size:9px}.actions{flex-direction:column}}
 
-/* REAL TEMPLATE PREVIEWS — render the actual invitation page inside each catalogue preview */
-.visual{height:340px;display:block;position:relative;overflow:hidden;background:#f5edf2}
-.visual .template-live-frame{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;background:#fff}
-.visual:after{content:"";position:absolute;inset:auto 0 0;height:42px;background:linear-gradient(transparent,#241d2b22);pointer-events:none}
-.visual .tag{z-index:2;position:absolute;top:12px;left:12px;background:#fffdf2e8;color:#4d3c52;padding:7px 10px;font-size:10px;letter-spacing:.1em}
-@media(max-width:680px){.visual{height:300px}}
-
+/* FULL-SIZE REAL INVITATION PREVIEWS — avoid miniature mockup cards */
+.grid{grid-template-columns:1fr;gap:34px}
+.card{border:0;background:transparent;box-shadow:none}
+.visual{height:min(88vh,900px);min-height:620px;display:block;position:relative;overflow:hidden;padding:0;background:#f5edf2;border:1px solid var(--line)}
+.visual:before,.visual:after{display:none}
+.visual .template-live-frame{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:auto;background:#fff}
+.visual .tag{z-index:2;position:absolute;top:12px;left:12px;background:#fffdf2e8;color:#4d3c52;padding:7px 10px;font-size:10px;letter-spacing:.1em;pointer-events:none}
+.details{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:18px 2px 26px;border-bottom:1px solid var(--line)}
+.details .no,.details h2,.details p,.details .features{grid-column:1}
+.details h2{margin:0}
+.details p{min-height:0;max-width:760px}
+.details .actions{grid-column:2;grid-row:1 / span 4;min-width:260px}
+@media(max-width:680px){
+ .grid{grid-template-columns:1fr;gap:22px}
+ .visual{height:76vh;min-height:520px}
+ .details{display:block}
+ .details p{min-height:0}
+ .details .actions{min-width:0;display:flex;flex-direction:column;margin-top:14px}
+}
 </style></head><body>
 <header class="top"><div><div class="brand">MAGIC CREATIONS</div><small>THE DIGITAL INVITATION COLLECTION</small></div><a class="back" href="dashboard.html">← BACK TO DASHBOARD</a></header>
-<main class="wrap"><div class="intro"><div><div class="kicker">THE TEMPLATE LIBRARY · 01—12</div><h1>Choose your invitation.</h1></div><p>Explore twelve invitation designs. Open a full template preview, then choose the matching design to start your invitation. Artwork shown here is a catalogue preview, not a screenshot of the full invitation.</p></div>
-<p class="count">12 DESIGNS · WEDDINGS & SRI LANKAN TRADITIONAL CELEBRATIONS</p>
-<section class="grid" aria-label="Available invitation templates">
+<main class="wrap"><div class="intro"><div><div class="kicker">THE TEMPLATE LIBRARY · 01—12</div><h1>Explore the real invitations.</h1></div><p>Each design below loads its actual invitation page at a large preview size. Scroll inside a preview to explore the complete invitation, or open it separately before choosing it for your event.</p></div>
+<p class="count">12 FULL INVITATION DESIGNS · WEDDINGS & SRI LANKAN TRADITIONAL CELEBRATIONS</p><section class="grid" aria-label="Available invitation templates">
 <article class="card">
  <a class="visual v1" href="templates/blush-romance-wedding-template.html" target="_blank" rel="noopener" aria-label="Preview Blush Romance">
   <span class="tag">01 · WEDDING INVITATION</span>
@@ -126,7 +137,7 @@
 </section>
 <div class="foot">MAGIC CREATIONS · DIGITAL WEDDING INVITATIONS<br>Template previews use sample names and content. Replace all sample details, images and media with the customer's approved content before publishing. Interactive RSVP, guest and media services depend on the connected workspace features.</div></main>
 <script>
-/* Replace decorative mockups with the real invitation template pages. */
+/* Load the real invitation pages directly into large, scrollable previews. */
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.card .visual[href]').forEach(function (link) {
     var src = link.getAttribute('href');
@@ -136,8 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     frame.src = src;
     frame.title = label + ' — live template preview';
     frame.loading = 'lazy';
-    frame.setAttribute('sandbox', 'allow-scripts');
-    frame.setAttribute('aria-hidden', 'true');
+    frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups');
     link.querySelectorAll('.mini, .symbol').forEach(function (el) { el.remove(); });
     link.appendChild(frame);
   });
