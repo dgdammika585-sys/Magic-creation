@@ -134,7 +134,7 @@ function rowToEvent(row) {
   };
 }
 
-function eventToRow(event, ownerId) {
+function eventToRow(event, ownerId, shouldPublish) {
   assert(event && typeof event === 'object', 'Invitation details are missing.');
   const names = String(event.names || event.title || event.invitationTitle || '').trim();
   const slug = makeSlug(event.invitationSlug || event.invitationTitle || names);
@@ -164,8 +164,8 @@ function eventToRow(event, ownerId) {
     message: String(event.message || '').slice(0, 5000),
     video_url: String(event.videoUrl || '').slice(0, 2000),
     audio_url: String(event.musicUrl || '').slice(0, 2000),
-    published: Boolean(event.published),
-    public_data: event.published ? buildPublicInvitationData(event) : {},
+    published: Boolean(shouldPublish),
+    public_data: shouldPublish ? buildPublicInvitationData(event) : {},
     show_guest_table: Boolean(event.showGuestTable),
     workspace_data: workspaceData,
     updated_at: new Date().toISOString()
@@ -187,33 +187,37 @@ export async function listMyInvitations() {
   return (data || []).map(rowToEvent);
 }
 
-export async function saveMyInvitation(event) {
+export async function saveMyInvitation(event, options = {}) {
   const user = await currentUser();
-  const row = eventToRow(event, user.id);
-  let query;
+  assert(event && typeof event === 'object', 'Invitation details are missing.');
+  const slug = makeSlug(event.invitationSlug || event.invitationTitle || event.names || event.title);
+  assert(slug, 'Add a valid invitation link name before saving.');
 
+  let existing = null;
   if (event._cloudId) {
-    query = supabase
-      .from(TABLE)
-      .update(row)
-      .eq('id', event._cloudId)
-      .eq('owner_id', user.id)
-      .select('*')
-      .single();
+    const lookup = await supabase.from(TABLE).select('id,published')
+      .eq('id', event._cloudId).eq('owner_id', user.id).maybeSingle();
+    if (lookup.error) throw lookup.error;
+    existing = lookup.data;
   } else {
-    // The customer-selected, immutable slug is the stable migration key.
-    // This avoids creating a second row if a browser closes after a successful
-    // insert but before its returned cloud ID is written to localStorage.
-    const existing = await supabase
-      .from(TABLE)
-      .select('id')
-      .eq('owner_id', user.id)
-      .eq('slug', row.slug)
-      .maybeSingle();
-    if (existing.error) throw existing.error;
-    query = existing.data
-      ? supabase.from(TABLE).update(row).eq('id', existing.data.id).eq('owner_id', user.id).select('*').single()
-      : supabase.from(TABLE).insert(row).select('*').single();
+    const lookup = await supabase.from(TABLE).select('id,published')
+      .eq('owner_id', user.id).eq('slug', slug).maybeSingle();
+    if (lookup.error) throw lookup.error;
+    existing = lookup.data;
+  }
+
+  // A stale local prototype flag must never publish a new record. Only the
+  // explicit Publish action can make a record public; existing live records
+  // remain live on ordinary saves unless the owner explicitly unpublishes.
+  const shouldPublish = options.publish === true ||
+    (existing && existing.published === true && options.unpublish !== true);
+  const row = eventToRow(event, user.id, shouldPublish);
+  let query;
+  if (existing) {
+    query = supabase.from(TABLE).update(row).eq('id', existing.id)
+      .eq('owner_id', user.id).select('*').single();
+  } else {
+    query = supabase.from(TABLE).insert(row).select('*').single();
   }
 
   const { data, error } = await query;
