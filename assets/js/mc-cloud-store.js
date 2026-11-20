@@ -130,6 +130,7 @@ function rowToEvent(row) {
     videoUrl: row.video_url || saved.videoUrl || '',
     musicUrl: row.audio_url || saved.musicUrl || '',
     published: Boolean(row.published),
+    link: row.published ? String(saved.link || '') : '',
     language: row.language || 'en'
   };
 }
