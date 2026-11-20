@@ -29,7 +29,8 @@ create index if not exists guest_gallery_invitation_status_created_idx
 alter table public.guest_gallery_submissions enable row level security;
 
 revoke all on table public.guest_gallery_submissions from anon, authenticated;
-grant select, update on table public.guest_gallery_submissions to authenticated;
+grant select on table public.guest_gallery_submissions to authenticated;
+grant update (status, reviewed_at) on table public.guest_gallery_submissions to authenticated;
 
 drop policy if exists "guest gallery owner read" on public.guest_gallery_submissions;
 create policy "guest gallery owner read"
