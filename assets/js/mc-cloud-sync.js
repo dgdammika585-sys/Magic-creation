@@ -2,6 +2,10 @@
 import { getSignedInCustomer, listMyInvitations, saveMyInvitation } from './mc-cloud-store.js';
 
 const STORAGE_KEY = 'magic_creations_workspace_v1';
+const OWNER_KEY = 'magic_creations_workspace_owner_v1';
+const ACCOUNT_STORAGE_PREFIX = STORAGE_KEY + ':account:';
+const LEGACY_STORAGE_KEY = STORAGE_KEY + ':legacy-unassigned';
+let activeOwnerId = null;
 let pendingState = null;
 let pendingTimer = null;
 let syncInProgress = false;
@@ -9,14 +13,49 @@ let syncInProgress = false;
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
+
+// The old prototype used one shared localStorage key for every signed-in user.
+// Never import that shared state into a different customer's cloud account.
+function stateForSignedInOwner(currentState, ownerId) {
+  let storedOwner = null;
+  try { storedOwner = localStorage.getItem(OWNER_KEY); } catch (error) {}
+  if (storedOwner === ownerId) return currentState;
+
+  try {
+    if (currentState && Array.isArray(currentState.events) && currentState.events.length) {
+      const backupKey = storedOwner
+        ? ACCOUNT_STORAGE_PREFIX + storedOwner
+        : LEGACY_STORAGE_KEY;
+      localStorage.setItem(backupKey, JSON.stringify(currentState));
+    }
+    const scoped = localStorage.getItem(ACCOUNT_STORAGE_PREFIX + ownerId);
+    if (scoped) {
+      const parsed = JSON.parse(scoped);
+      if (parsed && Array.isArray(parsed.events)) return parsed;
+    }
+  } catch (error) {
+    // If account-scoped storage cannot be read, fail closed with an empty state.
+  }
+  return { active: null, events: [] };
+}
+
+function bindLocalStateToOwner(ownerId) {
+  activeOwnerId = ownerId;
+  try { localStorage.setItem(OWNER_KEY, ownerId); } catch (error) {}
+}
 function slugOf(event) {
   return String(event && (event.invitationSlug || event.invitationTitle || event.names || event.title) || '')
     .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
 }
 function persistLocal(state) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; }
-  catch (error) { return false; }
+  if (!activeOwnerId) return false;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(ACCOUNT_STORAGE_PREFIX + activeOwnerId, JSON.stringify(state));
+    localStorage.setItem(OWNER_KEY, activeOwnerId);
+    return true;
+  } catch (error) { return false; }
 }
 function mergeRemoteIntoLocal(localState, remoteEvents) {
   const state = localState && Array.isArray(localState.events) ? localState : { active: null, events: [] };
@@ -63,7 +102,10 @@ async function syncSnapshot(snapshot, onStatus) {
   }
   syncInProgress = true;
   try {
-    await getSignedInCustomer();
+    const user = await getSignedInCustomer();
+    if (!activeOwnerId || activeOwnerId !== user.id) {
+      throw new Error('Customer account changed. Reload before syncing invitation data.');
+    }
     const remote = await listMyInvitations();
     const next = mergeRemoteIntoLocal(snapshot, remote);
     for (const event of next.events) {
@@ -104,6 +146,8 @@ async function syncSnapshot(snapshot, onStatus) {
 
 export async function publishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
+  const user = await getSignedInCustomer();
+  if (!activeOwnerId || activeOwnerId !== user.id) throw new Error('Customer account changed. Reload before publishing.');
   const saved = await saveMyInvitation({ ...event, published: true }, { publish: true });
   if (!saved || !saved._cloudId || !saved.published) throw new Error('The invitation was not confirmed as published.');
   return saved;
@@ -111,14 +155,18 @@ export async function publishInvitation(event) {
 
 export async function unpublishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
+  const user = await getSignedInCustomer();
+  if (!activeOwnerId || activeOwnerId !== user.id) throw new Error('Customer account changed. Reload before unpublishing.');
   return saveMyInvitation({ ...event, published: false }, { unpublish: true });
 }
 
 export async function hydrateLocalState(state, onStatus) {
   try {
-    await getSignedInCustomer();
+    const user = await getSignedInCustomer();
+    const ownerState = stateForSignedInOwner(state, user.id);
+    bindLocalStateToOwner(user.id);
     const remote = await listMyInvitations();
-    const merged = mergeRemoteIntoLocal(clone(state), remote);
+    const merged = mergeRemoteIntoLocal(clone(ownerState), remote);
     // Existing local drafts without a cloud ID are imported using their stable
     // invitation slug; the demo seed is deliberately excluded.
     for (const event of merged.events) {
@@ -154,6 +202,7 @@ export async function hydrateLocalState(state, onStatus) {
 }
 
 export function queueLocalStateSync(state, onStatus) {
+  if (!activeOwnerId) return;
   pendingState = clone(state);
   if (pendingTimer) clearTimeout(pendingTimer);
   pendingTimer = setTimeout(() => {
