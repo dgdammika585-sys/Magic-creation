@@ -615,9 +615,10 @@ function publishEvent(id){
    cloudSync.unpublishInvitation(e).then(function(saved){Object.assign(e,saved);e.published=false;e.link='';saveState();render();toast('Invitation unpublished.');}).catch(function(err){toast('Could not unpublish: '+String(err&&err.message||'Please try again.'));});
   }else{
    e.invitationSlug=e.invitationSlug||slugify(e.invitationTitle||e.names||e.title);
+   var base=location.pathname.slice(0,location.pathname.lastIndexOf('/')+1);
+   e.link=location.origin+base+'i/'+encodeURIComponent(e.invitationSlug);
    cloudSync.publishInvitation(e).then(function(saved){
     Object.assign(e,saved);e.published=true;
-    var base=location.pathname.slice(0,location.pathname.lastIndexOf('/')+1);
     e.link=location.origin+base+'i/'+encodeURIComponent(e.invitationSlug);
     saveState();render();toast('Invitation published. Public link is ready.');
    }).catch(function(err){toast('Could not publish: '+String(err&&err.message||'Please try again.'));});
