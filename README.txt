@@ -1,25 +1,50 @@
-MAGIC CREATIONS — Website Starter
+MAGIC CREATIONS — Project Status & Setup
 
-WHAT THIS IS
-A responsive front-end starter for a Sinhala/English digital invitation business.
-Includes sample template gallery, category filters, basic invitation details editor,
-live preview, and WhatsApp order-message preparation.
+PROJECT
+MAGIC CREATIONS is a Sri Lankan digital-invitation platform project. The repository contains a public marketing page, a customer dashboard/workspace, twelve invitation template routes, Supabase integration code, and supporting database proposals/migrations.
 
-IMPORTANT LIMITATIONS
-This is NOT yet a full production platform. Customer login/accounts, a secure database,
-persistent order storage, admin authentication/dashboard, payments, file uploads and
-automatic animated/MP4 video rendering are not connected. Sample templates and prices
-are placeholders and should be reviewed before public launch.
+IMPORTANT RELEASE STATUS (20 NOVEMBER 2026)
+- The enhanced implementation is on branch: ceo/project-completion-2026-11-18
+- Pull request #1 targets main: https://github.com/dgdammika585-sys/Magic-creation/pull/1
+- The branch is NOT merged into main.
+- The public GitHub Pages site is NOT verified as running this branch.
+- Do not treat the public site as a production-ready customer platform.
+- The template library now uses large live previews of the actual invitation HTML pages on this branch; verify after deployment.
+- Customer auth/cloud save/public invitation routing have source implementations, but complete real-customer browser/device acceptance tests are outstanding.
 
-HOW TO USE WITH GITHUB
-1. Download and extract the ZIP file.
-2. Open your GitHub repository (magic-creations).
-3. Choose Add file > Upload files.
-4. Upload index.html and README.txt to the repository root.
-5. Commit changes.
-6. Open Settings > Pages. Under Build and deployment, select Deploy from a branch.
-7. Select branch main and folder /(root), then Save.
-8. Wait for GitHub Pages to publish. The public URL is shown in Settings > Pages.
+CURRENTLY IMPLEMENTED IN SOURCE (NOT ALL PRODUCTION-VERIFIED)
+- Sinhala/English public marketing page and WhatsApp contact.
+- Customer login/dashboard and event workspace source.
+- Twelve invitation template pages and template-to-workspace routing.
+- Supabase client/auth/cloud-save integration source.
+- Public invitation slug resolver and publish/unpublish source.
+- Owner invitation-media upload UI/source for the existing public media bucket.
+- Private guest-gallery moderation source preparation only.
 
-WhatsApp order destination is set to 0759579143 (international form +94 75 957 9143).
-Do not publish secrets or private keys in this repository.
+KNOWN GAPS / RELEASE BLOCKERS
+- Cloudflare Workers Build previously failed; deployment configuration and logs must be checked before release.
+- No verified production deployment of the current branch.
+- No complete end-to-end customer journey test across sign-up, create, save, publish, public open, unpublish and a second account.
+- Guest Gallery is NOT complete: private bucket, storage policies, guest upload Edge Function, QR/guest verification, owner UI integration and end-to-end tests remain outstanding.
+- Guest Book approval, full RSVP dashboard synchronization, orders/payments and protected admin workflows require further implementation/verification.
+- Existing public invitation media bucket is public; never use it for unapproved guest photos or private data.
+- Database migration proposal files are not automatically applied to production. Do not run unreviewed SQL against the live project.
+- Never place Supabase service-role/secret keys in browser code or Git.
+
+HOW TO PREVIEW THE DEVELOPMENT BRANCH
+1. Open the repository and switch to branch `ceo/project-completion-2026-11-18`.
+2. For local preview, serve the repository root with a static HTTP server (not file://) so relative routes and scripts work.
+3. Open `index.html`, then use the full invitation library and dashboard links.
+4. Verify the public invitation route `/i/{slug}` only after a real published test invitation exists.
+5. Do not merge or deploy until build, security, mobile and customer-journey checks pass.
+
+REPOSITORY
+https://github.com/dgdammika585-sys/Magic-creation
+
+PUBLIC SITE (DEPLOYMENT MAY BE OUT OF DATE)
+https://dgdammika585-sys.github.io/Magic-creation/
+
+CUSTOMER SUPPORT CONTACT
+WhatsApp: 0759579143 (+94 75 957 9143)
+
+Do not publish secrets, customer personal data, or private storage paths.
