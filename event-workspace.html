@@ -994,7 +994,7 @@ if(tpl(data.template).id==='golden-heritage')return goldenHeritageInvite(data);
 var t=tpl(data.template),sections=data.sections||{countdown:true,story:true,agenda:true,map:true,rsvp:true};
 var name=esc(data.names||data.invitationTitle||'Our special day'),venue=esc(data.venue||'Venue to be confirmed'),guestInvite=data.guestInvite||null;
 var welcomeUrl=String(data.welcomeMediaUrl||'');if(!/^https:\/\//i.test(welcomeUrl)&&!/^blob:/i.test(welcomeUrl))welcomeUrl='';var welcomeMediaKind=data.welcomeMediaKind||'video';
-var phone=String(data.hostPhone||'').replace(/\D/g,'');
+var phone=String(data.hostPhone||data.contactPerson1Phone||data.contactPerson2Phone||data.contactPerson3Phone||'').replace(/\D/g,'');
 var uiLang=data.invitationLanguage||'English';
 function uiText(en,si){return uiLang==='Sinhala'?si:uiLang==='English & Sinhala'?en+' / '+si:en;}
 function publicDate(value){if(!value)return 'Date to be confirmed';var d=new Date(value+'T00:00:00');return isNaN(d)?value:d.toLocaleDateString(uiLang==='Sinhala'?'si-LK':'en-GB',{day:'numeric',month:'long',year:'numeric'});}
