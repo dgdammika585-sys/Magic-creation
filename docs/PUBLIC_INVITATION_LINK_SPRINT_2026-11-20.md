@@ -47,3 +47,10 @@ After the branch is deployed and an authenticated customer saves an invitation, 
 2. The correct full invitation template and media render on mobile.
 3. Unpublish makes the same URL return “Invitation unavailable”.
 4. Direct anonymous reads of private columns remain denied.
+
+## Follow-up source QA fix (20 November 2026)
+- Found legacy preview-link generation in Event Details, Countdown, Editor, and overview actions that could overwrite a canonical published slug link with a Base64 hash URL or mark a local draft as published.
+- Updated those save/share controls to preserve the canonical `/i/{slug}` URL and route publish/regenerate actions through the explicit cloud publish operation.
+- Opening the welcome-media preview now uses a temporary preview URL without overwriting the saved public URL.
+- Follow-up commits: `2a553a6461a9e6235fe8879e935790c27923cc0d`, `9af4fc8a0b159446e071cc8da96743f40a3ce5a1`, `508b0ef55498c96a5f1b2801eb6cfd05e6a2c931`.
+- Source inspection confirms the canonical-link handlers are present. Browser-level regression testing remains outstanding; do not treat this as production-verified.
