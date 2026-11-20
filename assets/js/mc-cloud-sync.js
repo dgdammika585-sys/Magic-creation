@@ -167,8 +167,9 @@ export async function hydrateLocalState(state, onStatus) {
     bindLocalStateToOwner(user.id);
     const remote = await listMyInvitations();
     const merged = mergeRemoteIntoLocal(clone(ownerState), remote);
-    // Existing local drafts without a cloud ID are imported using their stable
-    // invitation slug; the demo seed is deliberately excluded.
+    // Only drafts already bound to this same customer account can reach this
+    // point. Unassigned legacy drafts are kept in a separate local backup and
+    // are never silently uploaded to whichever account signs in first.
     for (const event of merged.events) {
       if (!event || event.id === 'event-demo') continue;
       if (!slugOf(event) || !(event.names || event.title || event.invitationTitle)) continue;
