@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>if(!new URLSearchParams(location.search).has('fulltemplate')&&!location.hash.startsWith('#invite='))document.documentElement.style.visibility='hidden';</script>
+<script>if(!new URLSearchParams(location.search).has('fulltemplate')&&!new URLSearchParams(location.search).has('public')&&!location.hash.startsWith('#invite='))document.documentElement.style.visibility='hidden';</script>
 <script type="module" src="./assets/js/mc-auth-guard.js"></script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MAGIC CREATIONS | Workspace</title>
@@ -1533,7 +1533,7 @@ function finishBackgroundPicker(e){
 }
 function wizardFinishView(){
  var e=current();if(!e)return '<div class="panel">No invitation found.</div>';
- var t=tpl(e.template),latestLink=makePublicLink(e),linkReady=!!(e.link&&e.published&&e.link===latestLink);
+ var t=tpl(e.template),latestLink=makeCanonicalPublicLink(e),linkReady=!!(e.link&&e.published&&e.link===latestLink);
  var guestData=Object.assign({},e,{sections:Object.assign({},e.sections||{},{welcome:false})});
  var guestPreview='<section class="panel"><h2>FULL GUEST INVITATION PREVIEW</h2><p class="wizard-muted">This preview shows the invitation content guests will see after opening it.</p><div class="wizard-guest-preview">'+publicInvite(guestData)+'</div></section>';
  var defaultBg=defaultFinishBackground(e),previewImage=e.finishBackgroundData||e.finishBackgroundUrl||defaultBg.url;
@@ -1588,7 +1588,7 @@ function bindWizardEvents(){
  var backFinish=document.getElementById('wizardBackFinish');if(backFinish)backFinish.addEventListener('click',function(){go('wizardcontact');});
  var changeFinish=document.getElementById('wizardChangeFinish');if(changeFinish)changeFinish.addEventListener('click',function(){var e=current();if(!e)return;e.finishBackgroundPickerOpen=true;e.finishBackgroundSource='library';e.finishBackgroundFilter='all';save();render();});
  var keepFinish=document.getElementById('wizardKeepFinish');if(keepFinish)keepFinish.addEventListener('click',function(){var e=current();if(!e)return;if(!e.finishBackgroundUrl&&!e.finishBackgroundData&&!e.finishBackgroundVideoUrl){var d=defaultFinishBackground(e);e.finishBackgroundUrl=d.url;e.finishBackgroundName=d.title;}e.finishChoice='keep';e.finishBackgroundPickerOpen=false;e.link='';e.published=false;save();render();toast('Background kept. You can now create the invitation link.');});
- var publishFinish=document.getElementById('wizardPublishInvitation');if(publishFinish)publishFinish.addEventListener('click',function(){var e=current();if(!e)return;if(e.finishChoice!=='keep'){toast('Please choose “Keep it” before creating the invitation link.');return;}if(e.finishBackgroundMediaType==='local-video'&&!/^https:\/\//i.test(String(e.finishBackgroundVideoUrl||''))){toast('Add a public HTTPS video URL for guests, or choose a background image.');return;}if(!e.names||!e.date||!e.venue){toast('Please complete event basics before publishing the preview.');return;}if(!e.finishBackgroundUrl&&!e.finishBackgroundData&&!e.finishBackgroundVideoUrl){var defaultBg=defaultFinishBackground(e);e.finishBackgroundUrl=defaultBg.url;e.finishBackgroundName=defaultBg.title;}e.link=makePublicLink(e);e.published=true;if(save()){render();toast('Shareable invitation preview link created.');}});
+ var publishFinish=document.getElementById('wizardPublishInvitation');if(publishFinish)publishFinish.addEventListener('click',function(){var e=current();if(!e)return;if(e.finishChoice!=='keep'){toast('Please choose “Keep it” before publishing.');return;}if(e.finishBackgroundMediaType==='local-video'&&!/^https:\/\//i.test(String(e.finishBackgroundVideoUrl||''))){toast('Add a public HTTPS video URL for guests, or choose a background image.');return;}if(!e.names||!e.date||!e.venue){toast('Please complete event basics before publishing.');return;}if(!e.finishBackgroundUrl&&!e.finishBackgroundData&&!e.finishBackgroundVideoUrl){var defaultBg=defaultFinishBackground(e);e.finishBackgroundUrl=defaultBg.url;e.finishBackgroundName=defaultBg.title;}publishCurrentInvitation(e);});
  var copyFinish=document.getElementById('wizardCopyFinishLink');if(copyFinish)copyFinish.addEventListener('click',function(){var e=current();if(e&&e.link)copyText(e.link);});
  var previewFinish=document.getElementById('wizardPreviewFinishLink');if(previewFinish)previewFinish.addEventListener('click',function(){var e=current();if(e&&e.link)window.open(e.link,'_blank','noopener,noreferrer');});
  var shareFinish=document.getElementById('wizardShareFinishLink');if(shareFinish)shareFinish.addEventListener('click',function(){var e=current();if(e&&e.link)window.open('https://wa.me/?text='+encodeURIComponent('Here is our invitation: '+e.link),'_blank','noopener,noreferrer');});
@@ -1722,7 +1722,7 @@ var saveLayout=document.getElementById('mcSaveLayout');if(saveLayout)saveLayout.
 document.querySelectorAll('[data-mc-preview-mode]').forEach(function(b){b.addEventListener('click',function(){var v=document.getElementById('mcPreviewViewport');if(!v)return;v.dataset.mode=b.dataset.mcPreviewMode;document.querySelectorAll('[data-mc-preview-mode]').forEach(function(x){x.classList.toggle('active',x===b);});});});
 var refreshPreview=document.querySelector('[data-mc-preview-refresh]');if(refreshPreview)refreshPreview.addEventListener('click',refreshMcPreview);
 
-var makeOverviewLink=document.getElementById('overviewGenerateLink');if(makeOverviewLink)makeOverviewLink.addEventListener('click',function(){var e=current();e.link=makePublicLink(e);e.published=true;save();render();toast('Sample invitation link generated.');});
+var makeOverviewLink=document.getElementById('overviewGenerateLink');if(makeOverviewLink)makeOverviewLink.addEventListener('click',function(){publishCurrentInvitation(current());});
 var refreshOverviewLink=document.getElementById('overviewRegenerateLink');if(refreshOverviewLink)refreshOverviewLink.addEventListener('click',function(){var e=current();e.link=makePublicLink(e);e.published=true;save();render();toast('Sample invitation link refreshed.');});
 var copyOverview=document.getElementById('overviewCopyLink');if(copyOverview)copyOverview.addEventListener('click',function(){copyText(current().link);});
 var previewOverview=document.getElementById('overviewPreviewLink');if(previewOverview)previewOverview.addEventListener('click',function(){if(current().link)window.open(current().link,'_blank','noopener,noreferrer');});
@@ -1746,7 +1746,7 @@ document.querySelectorAll('[data-delete-guest]').forEach(function(b){b.addEventL
 document.querySelectorAll('[data-share-guest]').forEach(function(b){b.addEventListener('click',function(){shareGuestInvite(b.dataset.shareGuest);});});
 document.querySelectorAll('[data-message-guest]').forEach(function(b){b.addEventListener('click',function(){openGuestMessage(b.dataset.messageGuest);});});
 document.querySelectorAll('[data-copy-guest]').forEach(function(b){b.addEventListener('click',function(){copyGuestInvite(b.dataset.copyGuest);});});
-var unpublish=document.getElementById('overviewUnpublish');if(unpublish)unpublish.addEventListener('click',function(){var e=current();if(!e||!e.published)return;if(!confirm('Unpublish this invitation? The dashboard will return to Draft. Previously shared prototype links may still open.'))return;e.published=false;e.link='';save();render();toast('Invitation unpublished in this dashboard.');});
+var unpublish=document.getElementById('overviewUnpublish');if(unpublish)unpublish.addEventListener('click',function(){unpublishCurrentInvitation(current());});
 var guestCsv=document.getElementById('importGuestsFile');if(guestCsv)guestCsv.addEventListener('change',importGuestsCsv);
 document.querySelectorAll('[data-overview-link-action]').forEach(function(b){b.addEventListener('click',function(){var e=current();e.link=makePublicLink(e);e.published=true;save();render();toast(b.dataset.overviewLinkAction==='refresh'?'Sample invitation link refreshed.':'Sample invitation link generated.');});});
 
@@ -1817,7 +1817,24 @@ function makePublicLink(e,guest){
  if(guest){var assignedTable=(Array.isArray(e.tables)?e.tables:[]).find(function(t){return t.id===guest.table;});data.guestInvite={id:String(guest.id||''),name:String(guest.name||''),count:Math.max(1,Number(guest.count||1)),tableName:e.showTableOnInvite&&guest.status==='accepted'&&assignedTable?String(assignedTable.name||''):''};}
  var code=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
  return location.origin+location.pathname+(e.invitationSlug?'?slug='+encodeURIComponent(e.invitationSlug):'')+'#invite='+encodeURIComponent(code);
-}function copyText(value,successMessage){var text=String(value||'');function fallbackCopy(){var field=document.createElement('textarea');field.value=text;field.setAttribute('readonly','');field.style.position='fixed';field.style.left='-9999px';field.style.top='0';document.body.appendChild(field);field.focus();field.select();field.setSelectionRange(0,field.value.length);var ok=false;try{ok=document.execCommand('copy');}catch(err){ok=false;}field.remove();if(ok){toast(successMessage||'Copied to clipboard.');}else{var manual=prompt('Automatic copy was blocked. Please copy the text below:',text);if(manual!==null)toast('Please copy the selected invitation text.');}}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){toast(successMessage||'Copied to clipboard.');}).catch(fallbackCopy);}else{fallbackCopy();}}
+}
+function makeCanonicalPublicLink(e){
+ var slug=String(e&&e.invitationSlug||e&&e.invitationTitle||e&&e.names||e&&e.title||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60).replace(/-+$/g,'');
+ if(!slug)throw new Error('Add a valid invitation link name before publishing.');
+ e.invitationSlug=slug;var base=location.pathname.replace(/event-workspace\\.html$/,'');
+ return location.origin+base+'i/'+encodeURIComponent(slug);
+}
+function publishCurrentInvitation(e){
+ if(!e)return;if(!cloudSync||typeof cloudSync.publishInvitation!=='function'){toast('Cloud publishing is still connecting. Please try again in a moment.');return;}
+ var oldLink=e.link,oldPublished=!!e.published;try{makeCanonicalPublicLink(e);}catch(err){toast(err.message);return;}
+ cloudSync.publishInvitation(e).then(function(saved){Object.assign(e,saved);e.published=true;e.link=makeCanonicalPublicLink(e);save();render();toast('Invitation published. Your public link is ready.');}).catch(function(err){e.published=oldPublished;e.link=oldLink;save();render();toast('Could not publish to the cloud: '+String(err&&err.message||'Please try again.'));});
+}
+function unpublishCurrentInvitation(e){
+ if(!e||!e.published)return;if(!cloudSync||typeof cloudSync.unpublishInvitation!=='function'){toast('Cloud publishing is still connecting. Please try again in a moment.');return;}
+ if(!confirm('Unpublish this invitation? Its public link will stop displaying the invitation.'))return;
+ cloudSync.unpublishInvitation(e).then(function(saved){Object.assign(e,saved);e.published=false;e.link='';save();render();toast('Invitation unpublished.');}).catch(function(err){toast('Could not unpublish: '+String(err&&err.message||'Please try again.'));});
+}
+function copyText(value,successMessage){var text=String(value||'');function fallbackCopy(){var field=document.createElement('textarea');field.value=text;field.setAttribute('readonly','');field.style.position='fixed';field.style.left='-9999px';field.style.top='0';document.body.appendChild(field);field.focus();field.select();field.setSelectionRange(0,field.value.length);var ok=false;try{ok=document.execCommand('copy');}catch(err){ok=false;}field.remove();if(ok){toast(successMessage||'Copied to clipboard.');}else{var manual=prompt('Automatic copy was blocked. Please copy the text below:',text);if(manual!==null)toast('Please copy the selected invitation text.');}}if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){toast(successMessage||'Copied to clipboard.');}).catch(fallbackCopy);}else{fallbackCopy();}}
 function bindModalEvents(){document.querySelectorAll('[data-modal-close]').forEach(function(b){b.addEventListener('click',closeModal);});}
 function openModal(html){var back=document.getElementById('modalBack');document.getElementById('modalContent').innerHTML=html+'<div class="form-actions"><button class="btn outline" data-modal-close>Cancel</button></div>';back.classList.add('open');bindModalEvents();back.onclick=function(e){if(e.target===back)closeModal();};}
 function closeModal(){document.getElementById('modalBack').classList.remove('open');document.getElementById('modalContent').innerHTML='';}
@@ -1849,6 +1866,18 @@ window.open(makePublicLink(previewData),'_blank','noopener,noreferrer');
 });
 document.getElementById('useTemplateNow').addEventListener('click',function(){var e=current();e.template=id;e.sections=Object.assign({welcome:true,hero:true,families:true,eventDetails:true,countdown:true,story:true,ourPromise:true,addToCalendar:true,agenda:true,gallery:true,dressCode:true,map:true,guestbook:true,rsvp:true,contactDetails:true,quote:true,custom1:true,footer:true},e.sections||{});e.sections.eventDetails=true;e.sections.rsvp=true;e.sections.footer=true;save();closeModal();go('editor');});}
 var requestedTab=(location.search.match(/[?&]tab=([^&]+)/)||[])[1];var fullTemplateParam=(location.search.match(/[?&]fulltemplate=([^&]+)/)||[])[1];if(fullTemplateParam){var fullTemplateHandled=false;try{var fullTemplateId=decodeURIComponent(fullTemplateParam);if(templates.some(function(t){return t.id===fullTemplateId;})){var fullTemplateSource=current()||initial().events[0];var fullTemplateData=JSON.parse(JSON.stringify(fullTemplateSource));fullTemplateData.template=fullTemplateId;fullTemplateData.sections=Object.assign({},fullTemplateData.sections||{});['welcome','hero','families','eventDetails','countdown','story','ourPromise','addToCalendar','agenda','gallery','dressCode','map','guestbook','rsvp','contactDetails','quote','custom1','footer'].forEach(function(k){fullTemplateData.sections[k]=true;});renderPublic(fullTemplateData);fullTemplateHandled=true;}}catch(previewError){document.getElementById('root').innerHTML='<main style="max-width:680px;margin:12vh auto;padding:28px;font:16px Arial;color:#604b42;background:#fff8f5;border:1px solid #dfc9b4;border-radius:12px"><h2>Forever Story preview could not load</h2><p>Please return to the workspace and open the template preview again.</p><p style="font-size:12px;color:#8b7770">'+esc(previewError&&previewError.message||'Preview error')+'</p></main>';fullTemplateHandled=true;}if(fullTemplateHandled)return;}if(decodeURIComponent(requestedTab||'')==='animations'){var requestedEvent=current();if(requestedEvent){requestedEvent.activeLayoutTab='animations';save();}}
+
+var publicSlug=new URLSearchParams(location.search).get('public');
+if(publicSlug){
+ document.documentElement.style.visibility='';
+ import('./assets/js/supabase-client.js').then(function(api){return api.supabase.rpc('mc_resolve_public_invitation',{p_slug:publicSlug});}).then(function(result){
+  if(result.error)throw result.error;var data=result.data;
+  if(!data||data.publicVersion!==1)throw new Error('This invitation is not available. It may be unpublished or the link may be incorrect.');
+  var base=location.pathname.replace(/event-workspace\\.html$/,'');history.replaceState(null,'',base+'i/'+encodeURIComponent(publicSlug));
+  document.title=(data.names||data.invitationTitle||'Invitation')+' | MAGIC CREATIONS';renderPublic(data);
+ }).catch(function(error){document.documentElement.style.visibility='';document.getElementById('root').innerHTML='<main style="max-width:620px;margin:12vh auto;padding:30px 24px;text-align:center;font:15px Arial;color:#604b42;background:#fffaf6;border:1px solid #e7d8cc;border-radius:14px"><h1 style="font:32px Georgia">Invitation unavailable</h1><p>'+esc(error&&error.message||'This invitation could not be loaded.')+'</p><p style="font-size:12px;color:#8b7770">Please check the link or contact the event host.</p><a href="./index.html" style="color:#805c50">MAGIC CREATIONS</a></main>';});
+ return;
+}
 window.addEventListener('hashchange',function(){if(location.hash.indexOf('#invite=')===0){render();return;}var m=location.hash.match(/#app=([a-z]+)/);if(m)view=m[1];render();});
 if(location.hash.indexOf('#invite=')===0){render();}else{var match=location.hash.match(/#app=([a-z]+)/);if(match)view=match[1];render();}
 if(location.hash.indexOf('#invite=')!==0&&!new URLSearchParams(location.search).has('fulltemplate')){import('./assets/js/mc-cloud-sync.js').then(function(api){cloudSync=api;return api.hydrateLocalState(state,function(status){if(status==='error')toast('Saved on this device. Cloud sync needs attention.');});}).then(function(merged){if(merged){state=merged;save();render();}}).catch(function(){toast('Saved on this device. Cloud sync is unavailable right now.');});}
