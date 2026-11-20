@@ -403,7 +403,7 @@ body.workspace-open{overflow:hidden}
 (function(){
 'use strict';
 var KEY='magic_creations_workspace_v1';
-var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,creationMode=null,templateStartPending=false,selectedInvitationTitle='',selectedInvitationSlug='',slugManuallyEdited=false;
+var cloudSync=null;var page='dashboard',filter='all',state=null,selectedTemplateForCreate=null,creationMode=null,templateStartPending=false,selectedInvitationTitle='',selectedInvitationSlug='',slugManuallyEdited=false;
 var templates=[
  {id:'golden-heritage',name:'Golden Heritage',type:'Traditional Wedding',tone:'heritage-gold',desc:'Classic Sinhala ceremony · Gold & ivory'},
  {id:'sinhala-poruwa-story',name:'Sinhala Poruwa Story',type:'Traditional Wedding',tone:'sinhala-poruwa',desc:'Video-inspired · Full wedding story'},
@@ -418,7 +418,7 @@ function freshEvent(names,type,date,time,venue){
 }
 function defaultState(){return {active:null,events:[]};}
 function readState(){try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&Array.isArray(s.events)&&s.events.length){s.active=s.active||s.events[0].id;return s;}}}catch(e){}return defaultState();}
-function saveState(){try{localStorage.setItem(KEY,JSON.stringify(state));return true;}catch(e){toast('Browser storage is full. Please remove large uploaded images in the event workspace and try again.');return false;}}
+function saveState(){try{(state.events||[]).forEach(function(e){e._localUpdatedAt=new Date().toISOString();});localStorage.setItem(KEY,JSON.stringify(state));if(cloudSync)cloudSync.queueLocalStateSync(state,function(status){if(status==='error')toast('Saved on this device. Cloud sync needs attention.');});return true;}catch(e){toast('Browser storage is full. Please remove large uploaded images in the event workspace and try again.');return false;}}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function current(){return state.events.find(function(e){return e.id===state.active;})||state.events[0]||null;}
 function niceDate(d){if(!d)return 'Date to be confirmed';var x=new Date(d+'T00:00:00');if(isNaN(x.getTime()))return d;return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
@@ -664,6 +664,7 @@ window.addEventListener('message',function(ev){
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeModal();});
 state=readState();
 render();
+import('./assets/js/mc-cloud-sync.js').then(function(api){cloudSync=api;return api.hydrateLocalState(state,function(status){if(status==='error')toast('Saved on this device. Cloud sync needs attention.');});}).then(function(merged){if(merged){state=merged;render();}}).catch(function(){toast('Saved on this device. Cloud sync is unavailable right now.');});
 })();
 </script>
 </body>
