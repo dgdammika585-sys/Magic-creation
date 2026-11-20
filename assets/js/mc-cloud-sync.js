@@ -102,14 +102,14 @@ async function syncSnapshot(snapshot, onStatus) {
 
 export async function publishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
-  const saved = await saveMyInvitation({ ...event, published: true });
+  const saved = await saveMyInvitation({ ...event, published: true }, { publish: true });
   if (!saved || !saved._cloudId || !saved.published) throw new Error('The invitation was not confirmed as published.');
   return saved;
 }
 
 export async function unpublishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
-  return saveMyInvitation({ ...event, published: false });
+  return saveMyInvitation({ ...event, published: false }, { unpublish: true });
 }
 
 export async function hydrateLocalState(state, onStatus) {
