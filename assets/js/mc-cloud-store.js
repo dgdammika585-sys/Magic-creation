@@ -22,7 +22,7 @@ const PUBLIC_DATA_KEYS = [
   'contactPerson1Phone', 'contactPerson2Name', 'contactPerson2Phone',
   'contactPerson3Name', 'contactPerson3Phone', 'wishes'
 ];
-const PRIVATE_NESTED_KEY = /^(?:.*(?:phone|telephone|email).*|host_?phone|guest|guests|guest_?list|guest_?invite|tables?|expenses?|budget|owner(?:_?id)?|token|secret|password|private|seat_?assignment|total_?attendees|event_?id)$/i;
+const PRIVATE_NESTED_KEY = /^(?:.*(?:phone|telephone|email).*|host_?phone|guest|guests|guest_?list|guest_?invite|tables?|expenses?|budget|owner(?:_?id)?|token|secret|password|private|seat_?assignment|total_?attendees|event_?id|storage_?path|object_?path|path)$/i;
 
 function cleanPublicValue(value, depth = 0) {
   if (depth > 9 || value == null) return value == null ? null : undefined;
