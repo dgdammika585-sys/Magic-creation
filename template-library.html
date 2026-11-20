@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
     frame.src = src;
     frame.title = label + ' — live template preview';
     frame.loading = 'lazy';
-    frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups');
+    // First-party invitation templates need their normal same-origin browser behavior.
     link.querySelectorAll('.mini, .symbol').forEach(function (el) { el.remove(); });
     link.appendChild(frame);
   });
