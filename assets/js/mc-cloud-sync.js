@@ -39,7 +39,7 @@ function mergeRemoteIntoLocal(localState, remoteEvents) {
     const localTime = (event._localUpdatedAt ? Date.parse(event._localUpdatedAt) : 0) || 0;
     const cloudTime = (remote._cloudUpdatedAt ? Date.parse(remote._cloudUpdatedAt) : 0) || 0;
     if (localTime > cloudTime) {
-      merged.push({ ...event, _cloudId: remote._cloudId, _cloudUpdatedAt: remote._cloudUpdatedAt });
+      merged.push({ ...event, _cloudId: remote._cloudId, _cloudUpdatedAt: remote._cloudUpdatedAt, published: Boolean(remote.published), ...(remote.published ? {} : { link: '' }) });
     } else {
       merged.push({ ...remote, id: event.id || remote.id });
     }
@@ -82,6 +82,8 @@ async function syncSnapshot(snapshot, onStatus) {
       const saved = await saveMyInvitation(event);
       event._cloudId = saved._cloudId;
       event._cloudUpdatedAt = saved._cloudUpdatedAt;
+      event.published = Boolean(saved.published);
+      if (!event.published) event.link = '';
       delete event._localUpdatedAt;
     }
     persistLocal(next);
@@ -137,6 +139,8 @@ export async function hydrateLocalState(state, onStatus) {
       const saved = await saveMyInvitation(event);
       event._cloudId = saved._cloudId;
       event._cloudUpdatedAt = saved._cloudUpdatedAt;
+      event.published = Boolean(saved.published);
+      if (!event.published) event.link = '';
       delete event._syncConflict;
       delete event._localUpdatedAt;
     }
