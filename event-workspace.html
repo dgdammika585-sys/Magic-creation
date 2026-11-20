@@ -1873,10 +1873,14 @@ var requestedTab=(location.search.match(/[?&]tab=([^&]+)/)||[])[1];var fullTempl
 var publicSlug=new URLSearchParams(location.search).get('public');
 if(publicSlug){
  document.documentElement.style.visibility='';
+ // Establish the project-root base before resolving data so relative assets and
+ // fallback links still work when this page was opened through /i/{slug}.
+ var base=location.pathname.slice(0, location.pathname.lastIndexOf('/') + 1);
+ var baseTag=document.createElement('base');baseTag.href=base;document.head.prepend(baseTag);
  import('./assets/js/supabase-client.js').then(function(api){return api.supabase.rpc('mc_resolve_public_invitation',{p_slug:publicSlug});}).then(function(result){
   if(result.error)throw result.error;var data=result.data;
   if(!data||data.publicVersion!==1)throw new Error('This invitation is not available. It may be unpublished or the link may be incorrect.');
-  var base=location.pathname.slice(0, location.pathname.lastIndexOf('/') + 1);var baseTag=document.createElement('base');baseTag.href=base;document.head.prepend(baseTag);history.replaceState(null,'',base+'i/'+encodeURIComponent(publicSlug));
+  history.replaceState(null,'',base+'i/'+encodeURIComponent(publicSlug));
   document.title=(data.names||data.invitationTitle||'Invitation')+' | MAGIC CREATIONS';renderPublic(data);
  }).catch(function(error){document.documentElement.style.visibility='';document.getElementById('root').innerHTML='<main style="max-width:620px;margin:12vh auto;padding:30px 24px;text-align:center;font:15px Arial;color:#604b42;background:#fffaf6;border:1px solid #e7d8cc;border-radius:14px"><h1 style="font:32px Georgia">Invitation unavailable</h1><p>'+esc(error&&error.message||'This invitation could not be loaded.')+'</p><p style="font-size:12px;color:#8b7770">Please check the link or contact the event host.</p><a href="./index.html" style="color:#805c50">MAGIC CREATIONS</a></main>';});
  return;
