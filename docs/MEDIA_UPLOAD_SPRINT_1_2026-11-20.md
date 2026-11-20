@@ -12,6 +12,8 @@ Branch: `ceo/project-completion-2026-11-18`
   - Music: MP3, WAV, OGG; maximum 20 MB.
 - Uses non-overwriting object names and explicit content types.
 - Added Media Management controls for gallery photos, welcome MP4 video and invitation music.
+- Connected built-in section photos, custom-section photos and the welcome-media wizard upload to the same cloud Storage service.
+- Updated the welcome wizard guidance to match the supported formats and explain public URL visibility.
 - Added removal actions for owner-owned uploaded media.
 - Gallery now displays uploaded public URLs in the editor and in the public invitation renderer.
 - Public invitation allowlist now includes welcome media kind and music display name; internal Storage object paths are excluded from public snapshots.
@@ -47,3 +49,10 @@ Bucket: `mc-invitation-media`
 4. Connect section photos and remaining wizard media upload controls to the same Storage service.
 5. Implement private guest gallery upload, invited-mobile verification and owner moderation.
 6. Re-run Cloudflare build and full release QA before merge/deploy.
+
+## Additional read-only security advisor check
+The current Supabase Security Advisor still reports:
+- Two INFO findings: RLS-enabled internal tables `guest_invitation_tokens` and `guest_rsvp_rate_limits` have no policies.
+- Two WARN findings: legacy anonymous-callable SECURITY DEFINER RPCs `mc_get_public_invitation` and `mc_submit_rsvp`.
+- Five WARN findings: authenticated-callable SECURITY DEFINER functions `assign_guest_table`, `is_magic_creations_admin`, `issue_guest_invitation_token`, and the two legacy RPCs.
+These functions were not modified in this sprint because their current application callers and intended access model need tracing before changing permissions.
