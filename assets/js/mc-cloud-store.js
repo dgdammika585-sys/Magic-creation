@@ -13,7 +13,7 @@ const PUBLIC_DATA_KEYS = [
   'story', 'storyMilestones', 'template', 'type', 'sections', 'sectionOrder',
   'sectionSettings', 'designSettings', 'typographySettings', 'animationSettings',
   'musicSettings', 'agenda', 'gallery', 'venuePhotos', 'videoUrl', 'musicUrl',
-  'welcomeMediaUrl', 'welcomeMediaName', 'welcomeMediaType', 'heroImageUrl',
+  'welcomeMediaUrl', 'welcomeMediaName', 'welcomeMediaType', 'welcomeMediaKind', 'musicName', 'heroImageUrl',
   'heroImageData', 'heroImageName', 'finishBackgroundUrl', 'finishBackgroundData',
   'finishBackgroundVideoUrl', 'finishBackgroundName', 'sectionPhotos',
   'countdownDesign', 'eventDetails', 'ownSections', 'groomFamily', 'brideFamily',
