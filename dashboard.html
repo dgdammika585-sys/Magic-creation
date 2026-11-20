@@ -608,11 +608,22 @@ function previewEvent(id){
  var link=createPreview(e);window.open(link,'_blank','noopener,noreferrer');
 }
 function publishEvent(id){
- var e=state.events.find(function(x){return x.id===id;});if(!e)return;
- if(e.published){e.published=false;saveState();render();toast('Invitation moved to Draft. The sample link is retained.');}
- else{e.link=makePreviewLink(e);e.published=true;saveState();render();toast('Sample invitation marked Live in this browser.');}
-}
-function openWorkspace(id,section){
+  var e=state.events.find(function(x){return x.id===id;});if(!e)return;
+  if(!cloudSync||typeof cloudSync.publishInvitation!=='function'){toast('Cloud publishing is still connecting. Please try again.');return;}
+  if(e.published){
+   if(!confirm('Unpublish this invitation? Its public link will stop displaying the invitation.'))return;
+   cloudSync.unpublishInvitation(e).then(function(saved){Object.assign(e,saved);e.published=false;e.link='';saveState();render();toast('Invitation unpublished.');}).catch(function(err){toast('Could not unpublish: '+String(err&&err.message||'Please try again.'));});
+  }else{
+   e.invitationSlug=e.invitationSlug||slugify(e.invitationTitle||e.names||e.title);
+   cloudSync.publishInvitation(e).then(function(saved){
+    Object.assign(e,saved);e.published=true;
+    var base=location.pathname.slice(0,location.pathname.lastIndexOf('/')+1);
+    e.link=location.origin+base+'i/'+encodeURIComponent(e.invitationSlug);
+    saveState();render();toast('Invitation published. Public link is ready.');
+   }).catch(function(err){toast('Could not publish: '+String(err&&err.message||'Please try again.'));});
+  }
+ }
+ function openWorkspace(id,section){
  var e=state.events.find(function(x){return x.id===id;});if(!e)return;
  state.active=e.id;saveState();
  var frame=document.getElementById('workspaceFrame');
