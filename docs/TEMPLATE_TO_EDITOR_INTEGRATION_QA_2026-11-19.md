@@ -28,3 +28,7 @@
 - Changes are committed only to `ceo/project-completion-2026-11-18`.
 - No production deployment or merge was performed.
 - No Supabase schema, Storage bucket, or Storage policy was changed.
+
+## Follow-up data handoff refinement
+- Updated the shared template URL builder to prefer the couple's bride/groom names when the explicit `names` field is empty, using the invitation title only as a last fallback. This prevents a generic invitation title from replacing the couple's names in templates that consume the `names` parameter.
+- Source re-read confirms the updated fallback is present. This remains source-level verification, not a browser end-to-end test.
