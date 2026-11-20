@@ -1,0 +1,133 @@
+// MAGIC CREATIONS — shared local-first cloud sync for Dashboard and Event Workspace.
+import { getSignedInCustomer, listMyInvitations, saveMyInvitation } from './mc-cloud-store.js';
+
+const STORAGE_KEY = 'magic_creations_workspace_v1';
+let pendingState = null;
+let pendingTimer = null;
+let syncInProgress = false;
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+function slugOf(event) {
+  return String(event && (event.invitationSlug || event.invitationTitle || event.names || event.title) || '')
+    .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+}
+function persistLocal(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; }
+  catch (error) { return false; }
+}
+function mergeRemoteIntoLocal(localState, remoteEvents) {
+  const state = localState && Array.isArray(localState.events) ? localState : { active: null, events: [] };
+  const local = state.events.slice();
+  const merged = [];
+  const usedRemote = new Set();
+
+  local.forEach((event) => {
+    const slug = slugOf(event);
+    const index = remoteEvents.findIndex((remote, i) =>
+      !usedRemote.has(i) && ((event._cloudId && remote._cloudId === event._cloudId) ||
+      (slug && remote.invitationSlug === slug))
+    );
+    if (index < 0) {
+      merged.push(event);
+      return;
+    }
+    usedRemote.add(index);
+    const remote = remoteEvents[index];
+    const localTime = Date.parse(event._localUpdatedAt || 0) || 0;
+    const cloudTime = Date.parse(remote._cloudUpdatedAt || 0) || 0;
+    if (localTime > cloudTime) {
+      merged.push({ ...event, _cloudId: remote._cloudId, _cloudUpdatedAt: remote._cloudUpdatedAt });
+    } else {
+      merged.push({ ...remote, id: event.id || remote.id });
+    }
+  });
+
+  remoteEvents.forEach((event, index) => {
+    if (!usedRemote.has(index)) merged.push(event);
+  });
+  state.events = merged;
+  if (!state.active || !merged.some((event) => event.id === state.active)) {
+    state.active = merged[0] ? merged[0].id : null;
+  }
+  return state;
+}
+
+async function syncSnapshot(snapshot, onStatus) {
+  if (syncInProgress) {
+    pendingState = snapshot;
+    return;
+  }
+  syncInProgress = true;
+  try {
+    await getSignedInCustomer();
+    const remote = await listMyInvitations();
+    const next = mergeRemoteIntoLocal(snapshot, remote);
+    for (const event of next.events) {
+      if (!event || event.id === 'event-demo') continue;
+      const slug = slugOf(event);
+      if (!slug || !(event.names || event.title || event.invitationTitle)) continue;
+      const cloudMatch = remote.find((row) =>
+        (event._cloudId && row._cloudId === event._cloudId) || row.invitationSlug === slug
+      );
+      if (cloudMatch) {
+        const localTime = Date.parse(event._localUpdatedAt || 0) || 0;
+        const cloudTime = Date.parse(cloudMatch._cloudUpdatedAt || 0) || 0;
+        if (localTime <= cloudTime) continue;
+        event._cloudId = cloudMatch._cloudId;
+      }
+      const saved = await saveMyInvitation(event);
+      event._cloudId = saved._cloudId;
+      event._cloudUpdatedAt = saved._cloudUpdatedAt;
+      delete event._localUpdatedAt;
+    }
+    persistLocal(next);
+    if (typeof onStatus === 'function') onStatus('saved', next);
+    return next;
+  } catch (error) {
+    if (typeof onStatus === 'function') onStatus('error', error);
+    return null;
+  } finally {
+    syncInProgress = false;
+    if (pendingState) {
+      const latest = pendingState;
+      pendingState = null;
+      syncSnapshot(latest, onStatus);
+    }
+  }
+}
+
+export async function hydrateLocalState(state, onStatus) {
+  try {
+    await getSignedInCustomer();
+    const remote = await listMyInvitations();
+    const merged = mergeRemoteIntoLocal(clone(state), remote);
+    // Existing local drafts without a cloud ID are imported using their stable
+    // invitation slug; the demo seed is deliberately excluded.
+    for (const event of merged.events) {
+      if (!event || event.id === 'event-demo' || event._cloudId) continue;
+      if (!slugOf(event) || !(event.names || event.title || event.invitationTitle)) continue;
+      const saved = await saveMyInvitation(event);
+      event._cloudId = saved._cloudId;
+      event._cloudUpdatedAt = saved._cloudUpdatedAt;
+    }
+    persistLocal(merged);
+    if (typeof onStatus === 'function') onStatus('saved', merged);
+    return merged;
+  } catch (error) {
+    if (typeof onStatus === 'function') onStatus('error', error);
+    return state;
+  }
+}
+
+export function queueLocalStateSync(state, onStatus) {
+  pendingState = clone(state);
+  if (pendingTimer) clearTimeout(pendingTimer);
+  pendingTimer = setTimeout(() => {
+    const snapshot = pendingState;
+    pendingState = null;
+    syncSnapshot(snapshot, onStatus);
+  }, 1200);
+}
