@@ -36,8 +36,8 @@ function mergeRemoteIntoLocal(localState, remoteEvents) {
     }
     usedRemote.add(index);
     const remote = remoteEvents[index];
-    const localTime = Date.parse(event._localUpdatedAt || 0) || 0;
-    const cloudTime = Date.parse(remote._cloudUpdatedAt || 0) || 0;
+    const localTime = (event._localUpdatedAt ? Date.parse(event._localUpdatedAt) : 0) || 0;
+    const cloudTime = (remote._cloudUpdatedAt ? Date.parse(remote._cloudUpdatedAt) : 0) || 0;
     if (localTime > cloudTime) {
       merged.push({ ...event, _cloudId: remote._cloudId, _cloudUpdatedAt: remote._cloudUpdatedAt });
     } else {
@@ -49,6 +49,7 @@ function mergeRemoteIntoLocal(localState, remoteEvents) {
     if (!usedRemote.has(index)) merged.push(event);
   });
   state.events = merged;
+  if (state.active === 'event-demo' && remoteEvents.length) state.active = remoteEvents[0].id;
   if (!state.active || !merged.some((event) => event.id === state.active)) {
     state.active = merged[0] ? merged[0].id : null;
   }
@@ -74,7 +75,7 @@ async function syncSnapshot(snapshot, onStatus) {
       );
       if (cloudMatch) {
         const localTime = Date.parse(event._localUpdatedAt || 0) || 0;
-        const cloudTime = Date.parse(cloudMatch._cloudUpdatedAt || 0) || 0;
+        const cloudTime = (cloudMatch._cloudUpdatedAt ? Date.parse(cloudMatch._cloudUpdatedAt) : 0) || 0;
         if (localTime <= cloudTime) continue;
         event._cloudId = cloudMatch._cloudId;
       }
