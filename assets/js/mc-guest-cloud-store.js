@@ -16,8 +16,6 @@ async function signedInUser() {
 export async function syncInvitationGuests(invitation, guests, persistLocal) {
   assert(invitation?._cloudId && UUID.test(invitation._cloudId),
     'Save this invitation to your MAGIC CREATIONS account first.');
-  assert(invitation.published === true,
-    'Publish the invitation before syncing guest records for guest photo links.');
   assert(Array.isArray(guests), 'Guest list is unavailable.');
   const user = await signedInUser();
 
