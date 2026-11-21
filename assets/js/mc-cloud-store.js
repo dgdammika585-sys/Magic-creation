@@ -196,7 +196,7 @@ export async function saveMyInvitation(event, options = {}) {
 
   let existing = null;
   if (event._cloudId) {
-    const lookup = await supabase.from(TABLE).select('id,published')
+    const lookup = await supabase.from(TABLE).select('id,published,updated_at')
       .eq('id', event._cloudId).eq('owner_id', user.id).maybeSingle();
     if (lookup.error) throw lookup.error;
     existing = lookup.data;
@@ -212,11 +212,18 @@ export async function saveMyInvitation(event, options = {}) {
   // remain live on ordinary saves unless the owner explicitly unpublishes.
   const shouldPublish = options.publish === true ||
     (existing && existing.published === true && options.unpublish !== true);
+  if (options.expectedUpdatedAt) {
+    assert(existing && existing.updated_at === options.expectedUpdatedAt,
+      'This invitation changed in another session. Reload it before saving to avoid overwriting newer changes.');
+  }
+
   const row = eventToRow(event, user.id, shouldPublish);
   let query;
   if (existing) {
     query = supabase.from(TABLE).update(row).eq('id', existing.id)
-      .eq('owner_id', user.id).select('*').single();
+      .eq('owner_id', user.id);
+    if (options.expectedUpdatedAt) query = query.eq('updated_at', options.expectedUpdatedAt);
+    query = query.select('*').single();
   } else {
     query = supabase.from(TABLE).insert(row).select('*').single();
   }
