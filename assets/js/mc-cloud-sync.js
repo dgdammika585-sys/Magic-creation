@@ -40,6 +40,11 @@ function stateForSignedInOwner(currentState, ownerId) {
 }
 
 function bindLocalStateToOwner(ownerId) {
+  if (activeOwnerId && activeOwnerId !== ownerId) {
+    if (pendingTimer) clearTimeout(pendingTimer);
+    pendingTimer = null;
+    pendingState = null;
+  }
   activeOwnerId = ownerId;
   try { localStorage.setItem(OWNER_KEY, ownerId); } catch (error) {}
 }
