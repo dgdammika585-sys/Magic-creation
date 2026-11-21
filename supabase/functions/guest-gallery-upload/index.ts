@@ -76,31 +76,32 @@ Deno.serve(async (req: Request) => {
   try {
     const token = req.headers.get("x-guest-token") || "";
     if (!/^[0-9a-f]{64}$/i.test(token)) return json(req, { error: "This guest upload link is invalid or expired." }, 401);
-    const contentType = (req.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
-    if (!["image/jpeg","image/png","image/webp"].includes(contentType)) return json({ error: "Please upload a JPG, PNG, or WebP photo." }, 415);
-    const bytes = await readLimited(req);
-    const image = detectImage(bytes, contentType);
     const tokenHash = await sha256(token.toLowerCase());
     const admin = adminClient();
 
     const { data: tokenRow, error: tokenError } = await admin.from("guest_invitation_tokens")
       .select("invitation_id,guest_id,expires_at,revoked_at").eq("token_hash", tokenHash).maybeSingle();
     if (tokenError) throw tokenError;
-    if (!tokenRow || tokenRow.revoked_at || new Date(tokenRow.expires_at).getTime() <= Date.now()) return json({ error: "This guest upload link is invalid or expired." }, 401);
+    if (!tokenRow || tokenRow.revoked_at || new Date(tokenRow.expires_at).getTime() <= Date.now()) return json(req, { error: "This guest upload link is invalid or expired." }, 401);
 
     const { data: guest, error: guestError } = await admin.from("guests")
       .select("id,invitation_id,guest_name").eq("id", tokenRow.guest_id).eq("invitation_id", tokenRow.invitation_id).maybeSingle();
     if (guestError) throw guestError;
-    if (!guest) return json({ error: "This guest upload link is invalid or expired." }, 401);
+    if (!guest) return json(req, { error: "This guest upload link is invalid or expired." }, 401);
 
     const { data: invitation, error: invitationError } = await admin.from("invitations")
       .select("id,published").eq("id", tokenRow.invitation_id).maybeSingle();
     if (invitationError) throw invitationError;
-    if (!invitation || !invitation.published) return json({ error: "This invitation is not accepting uploads." }, 403);
+    if (!invitation || !invitation.published) return json(req, { error: "This invitation is not accepting uploads." }, 403);
 
     const { data: attempts, error: rateError } = await admin.rpc("mc_consume_guest_gallery_upload_attempt", { p_token_hash: tokenHash });
     if (rateError) throw rateError;
-    if (Number(attempts) > MAX_ATTEMPTS) return json({ error: "Upload limit reached. Please try again in 15 minutes." }, 429);
+    if (Number(attempts) > MAX_ATTEMPTS) return json(req, { error: "Upload limit reached. Please try again in 15 minutes." }, 429);
+
+    const contentType = (req.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+    if (!["image/jpeg","image/png","image/webp"].includes(contentType)) return json(req, { error: "Please upload a JPG, PNG, or WebP photo." }, 415);
+    const bytes = await readLimited(req);
+    const image = detectImage(bytes, contentType);
 
     const submissionId = crypto.randomUUID();
     const storagePath = tokenRow.invitation_id + "/" + submissionId + "/" + crypto.randomUUID() + "." + image.ext;
@@ -114,14 +115,14 @@ Deno.serve(async (req: Request) => {
       storage_path: storagePath, caption, status: "pending",
     });
     if (insertError) { await admin.storage.from(BUCKET).remove([storagePath]); throw insertError; }
-    return json({ ok: true, submission_id: submissionId, status: "pending" }, 201);
+    return json(req, { ok: true, submission_id: submissionId, status: "pending" }, 201);
   } catch (error) {
     const code = error instanceof Error ? error.message : "";
-    if (code === "FILE_TOO_LARGE") return json({ error: "Each photo must be 8 MB or smaller." }, 413);
-    if (code === "EMPTY_FILE") return json({ error: "Choose a photo before uploading." }, 400);
-    if (code === "UNSUPPORTED_IMAGE") return json({ error: "The photo content does not match a supported JPG, PNG, or WebP image." }, 415);
-    if (code === "SERVER_CONFIG") return json({ error: "Guest uploads are not configured yet." }, 503);
+    if (code === "FILE_TOO_LARGE") return json(req, { error: "Each photo must be 8 MB or smaller." }, 413);
+    if (code === "EMPTY_FILE") return json(req, { error: "Choose a photo before uploading." }, 400);
+    if (code === "UNSUPPORTED_IMAGE") return json(req, { error: "The photo content does not match a supported JPG, PNG, or WebP image." }, 415);
+    if (code === "SERVER_CONFIG") return json(req, { error: "Guest uploads are not configured yet." }, 503);
     console.error("guest-gallery-upload failed:", error);
-    return json({ error: "The photo could not be uploaded. Please try again." }, 500);
+    return json(req, { error: "The photo could not be uploaded. Please try again." }, 500);
   }
 });
