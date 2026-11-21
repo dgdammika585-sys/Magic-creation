@@ -103,3 +103,20 @@ Source changes committed on the development branch:
 Static source assertions passed for both lookup paths, revision comparison, conditional update, owner rechecks, revision propagation, and queue clearing. These are source-level checks only. They do not prove the behavior against live Supabase or multiple browser sessions.
 
 Still required: two-account browser test, two-tab/device concurrent-edit test (verify stale save is rejected), publish/unpublish tests, and end-to-end public link test. Do not mark cloud save as production-verified until those tests pass.
+
+
+## Login, dashboard and template-selection follow-up (21 November 2026)
+
+Source corrections committed:
+- `dashboard.html` now handles the `createTemplate` query parameter used by all 12 “Use this template” links in `template-library.html`. It validates the requested ID against the known template list, opens the invitation title/slug confirmation step after cloud hydration, and removes the one-time query parameter from browser history.
+- Updated stale dashboard/help copy that incorrectly said customer login and cloud database access did not exist. The wording now distinguishes local-first drafts, account cloud sync, public publishing and online guest RSVP (still not end-to-end verified).
+- `login.html` now routes successful sign-in, immediate sign-up, email-confirmation callback, existing-session redirect and password-recovery completion through one same-origin allowlisted post-auth destination. The current allowlist intentionally permits only `dashboard.html`; arbitrary external redirect URLs are rejected.
+
+Static cross-file assertions passed:
+- All 12 template-library use links map to a known dashboard template ID.
+- Dashboard consumes and removes `createTemplate` after selection.
+- Login uses the validated post-auth helper.
+- Previous optimistic-concurrency and account-switch source guards remain present.
+- Template library still loads full invitation HTML pages in real preview iframes.
+
+Not verified in a real browser: template selection handoff from each of the 12 links, email confirmation, password recovery, auth session persistence, cloud hydration timing, invitation editing and publication. Source checks do not establish live Supabase or deployed-site behavior.
