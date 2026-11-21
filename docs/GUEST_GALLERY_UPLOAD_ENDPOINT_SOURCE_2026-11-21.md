@@ -16,9 +16,10 @@ Status: source only; not deployed; migration not applied.
 1. Review and explicitly approve the SQL proposal in PRIVATE_GUEST_GALLERY_DATABASE_MIGRATION_PROPOSAL_2026-11-20.sql.
 2. Create mc-guest-gallery-private as a private bucket with 8 MiB maximum file size and MIME allowlist image/jpeg, image/png, image/webp.
 3. Apply the reviewed migration and run Supabase Security Advisors.
-4. Set and verify the Edge Function server-side secret key. The handler treats SUPABASE_SECRET_KEYS.default as the environment-variable name for the secret and reads that value server-side, or uses the legacy SUPABASE_SERVICE_ROLE_KEY fallback; neither value may be committed or sent to browsers.
-5. Deploy the function only after the database, bucket, and secrets are ready.
-6. Test valid, expired, revoked, wrong-guest, unpublished, oversized, MIME-spoofed, repeated, and cross-owner cases. Confirm private object access is denied to anon and non-owners and owner signed previews expire.
+4. In Supabase Data API settings, explicitly expose the new public table and RPC used by the Edge Function if they are not already exposed. New public-schema tables are no longer automatically exposed by default; keep the grants and RLS policies in this proposal in place.
+5. Set and verify the Edge Function server-side secret key. The handler treats SUPABASE_SECRET_KEYS.default as the environment-variable name for the secret and reads that value server-side, or uses the legacy SUPABASE_SERVICE_ROLE_KEY fallback; neither value may be committed or sent to browsers.
+6. Deploy the function only after the database, bucket, Data API exposure, and secrets are ready.
+7. Test valid, expired, revoked, wrong-guest, unpublished, oversized, MIME-spoofed, repeated, and cross-owner cases. Confirm private object access is denied to anon and non-owners and owner signed previews expire.
 
 ## Important limitations
 
