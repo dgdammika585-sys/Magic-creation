@@ -485,7 +485,7 @@ function emptyDashboardPage(){
  var main=dashboardWelcome(true)+
  '<section class="empty-main-state"><div class="empty-main-copy"><div class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 72 64" role="img" aria-label="Calendar and add invitation"><rect x="13" y="9" width="43" height="43" rx="6" fill="#eee8ff" stroke="#9d8ce1" stroke-width="2"/><path d="M13 21h43" stroke="#9d8ce1" stroke-width="3"/><path d="M24 5v10M44 5v10" stroke="#8e7bd4" stroke-width="4" stroke-linecap="round"/><rect x="21" y="28" width="7" height="7" rx="2" fill="#b8a8f2"/><rect x="32" y="28" width="7" height="7" rx="2" fill="#d6cafa"/><rect x="21" y="39" width="7" height="7" rx="2" fill="#d6cafa"/><circle cx="53" cy="48" r="13" fill="#db4d9d" stroke="#fffdf9" stroke-width="3"/><path d="M53 42v12M47 48h12" stroke="#fff" stroke-width="2.7" stroke-linecap="round"/></svg></div><h2>No invitations yet</h2><p>Create your first invitation and start sharing your special day with the people who matter most.</p><button class="primary-btn" data-create>＋ Create new invitation</button></div></section>'+
  '<section class="how-section"><div class="how-section-head"><h2>How it works</h2></div><div class="how-strip">'+how.map(function(x){return '<article class="how-step"><div class="how-step-icon">'+x.ico+'</div><h3><span>'+x.n+'</span> '+x.title+'</h3><p>'+x.desc+'</p></article>';}).join('')+'</div></section>'+
- '<p class="billing-note">Your drafts save on this device first. Sign in to sync invitations to your customer account.</p>';
+ '<p class="billing-note">Your drafts save on this device and sync to your signed-in customer account when cloud access is available. Publish an invitation to create its public sharing link.</p>';
  return dashboardLayout(main,railTemplates()+railInspiration());
 }
 function dashboardPage(){
@@ -501,7 +501,7 @@ function dashboardPage(){
  '<section class="invitation-section"><div class="invitations-title-row"><div><div class="eyebrow">YOUR CELEBRATIONS</div><h2>My Invitations</h2><p>All your celebrations in one place.</p></div><button class="primary-btn" data-create>＋ Create new invitation</button></div>'+
  '<div class="filters" role="group" aria-label="Filter invitations"><button class="filter '+(filter==='all'?'active':'')+'" data-filter="all">All <span>'+countFor('all')+'</span></button><button class="filter '+(filter==='live'?'active':'')+'" data-filter="live">Live <span>'+countFor('live')+'</span></button><button class="filter '+(filter==='draft'?'active':'')+'" data-filter="draft">Draft <span>'+countFor('draft')+'</span></button></div>'+
  '<div class="invitation-grid">'+cards+'</div></section>'+
- '<p class="billing-note">Drafts save on this device first and sync to your customer account when signed in. Large media uploads, public invitation publishing and automatic guest RSVPs are separate features.</p>';
+ '<p class="billing-note">Drafts save on this device first and sync to your customer account when cloud access is available. Publish creates a public invitation link. Online guest RSVP collection is not yet verified.</p>';
  var rail='<section class="rail-section"><div class="rail-section-head rail-section-head-row"><h2>Upcoming Event</h2>'+(upcoming?'<button class="rail-text-link" data-open="'+esc(upcoming.id)+'">View timeline ↗</button>':'')+'</div>'+upcomingCard(upcoming)+'</section>'+
  '<section class="rail-section rail-panel-section"><div class="rail-section-head rail-section-head-row"><div><h2>Recent RSVPs</h2><p>Latest responses from your guest list.</p></div><button class="rail-text-link" data-open-guests>View guests</button></div>'+recentRsvps(recent)+'</section>'+
  '<section class="tip-panel"><div><div class="tip-kicker">DESIGN TIP</div><h3>Make it feel like your story.</h3><p>A meaningful photo, clear typography and a warm colour palette can make your invitation personal.</p><button class="quiet-btn" data-page="templates">Explore ideas →</button></div><div class="tip-art" aria-hidden="true">❦</div></section>';
@@ -521,7 +521,7 @@ function upcomingCard(e){
 }
 function initials(name){return String(name||'?').trim().split(/\s+/).slice(0,2).map(function(s){return s.charAt(0);}).join('').toUpperCase();}
 function recentRsvps(rows){
- if(!rows.length)return '<div class="rsvp-empty"><div class="rsvp-empty-icon">♡</div><strong>No RSVPs yet.</strong><p>Guest responses will appear here when your event guest list contains recorded replies. The current prototype does not automatically sync public guest responses.</p></div>';
+ if(!rows.length)return '<div class="rsvp-empty"><div class="rsvp-empty-icon">♡</div><strong>No RSVPs yet.</strong><p>Guest responses will appear here when your event guest list contains recorded replies. Online guest RSVP collection is not yet verified; responses entered in the workspace are shown here.</p></div>';
  return '<div class="rsvp-rows">'+rows.map(function(x){var g=x.guest,cl=g.status==='declined'?'declined':g.status==='maybe'?'maybe':'';return '<div class="rsvp-row"><span class="rsvp-avatar">'+esc(initials(g.name))+'</span><div class="rsvp-row-main"><b>'+esc(g.name)+'</b><small>'+esc(x.event.names||x.event.title)+' · '+esc(g.group||'Guest')+'</small></div><span class="rsvp-pill '+cl+'">'+esc((g.status||'pending').charAt(0).toUpperCase()+(g.status||'pending').slice(1))+'</span></div>';}).join('')+'</div>';
 }
 function templatesPage(){
@@ -535,9 +535,9 @@ function guidePage(){
  {n:'01',title:'Create an invitation',desc:'Select “Create new invitation”, then add the occasion, names, date, time and venue.'},
  {n:'02',title:'Choose a design',desc:'Pick an original template concept and open the event workspace to refine your invitation.'},
  {n:'03',title:'Prepare your guests',desc:'Add guest details and manually maintain response statuses in the workspace. The prototype does not automatically collect online RSVPs.'},
- {n:'04',title:'Preview and share',desc:'Generate a sample invitation link, preview it and share it. Remember that invitation data is stored in your browser in this version.'}
+ {n:'04',title:'Preview and share',desc:'Generate a sample invitation link, preview it and share it. Your drafts are saved locally first and synced to your signed-in account when cloud access is available. Publish to create a public invitation link.'}
  ];
- return '<div class="section-head"><div><div class="eyebrow">GETTING STARTED</div><h2>Dashboard Guide</h2><p>A simple path from first details to a shareable invitation.</p></div></div><div class="guide-list">'+steps.map(function(s){return '<article class="guide-item"><div class="guide-no">'+s.n+'</div><div><h3>'+s.title+'</h3><p>'+s.desc+'</p></div><button class="outline-btn" '+(s.n==='01'?'data-create':s.n==='02'?'data-page="templates"':s.n==='03'?'data-open-guests':'data-preview-first')+'>'+(s.n==='01'?'Start ↗':s.n==='02'?'Browse ↗':s.n==='03'?'Guests ↗':'Preview ↗')+'</button></article>';}).join('')+'</div><p class="billing-note">For help, use the WhatsApp support button on the left. The current site is a prototype and does not yet include customer login, cloud database access or automatic live RSVP syncing.</p>';
+ return '<div class="section-head"><div><div class="eyebrow">GETTING STARTED</div><h2>Dashboard Guide</h2><p>A simple path from first details to a shareable invitation.</p></div></div><div class="guide-list">'+steps.map(function(s){return '<article class="guide-item"><div class="guide-no">'+s.n+'</div><div><h3>'+s.title+'</h3><p>'+s.desc+'</p></div><button class="outline-btn" '+(s.n==='01'?'data-create':s.n==='02'?'data-page="templates"':s.n==='03'?'data-open-guests':'data-preview-first')+'>'+(s.n==='01'?'Start ↗':s.n==='02'?'Browse ↗':s.n==='03'?'Guests ↗':'Preview ↗')+'</button></article>';}).join('')+'</div><p class="billing-note">For help, use the WhatsApp support button on the left. Customer login and owner-scoped cloud save are connected in the current source. Online guest RSVP collection still requires end-to-end verification.</p>';
 }
 function showCreationStep(step){
  var choices=document.getElementById('creationChoiceStep'),confirm=document.getElementById('createTemplateConfirmStep'),details=document.getElementById('createDetailsStep');
@@ -685,7 +685,19 @@ window.addEventListener('message',function(ev){
 document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeModal();});
 state=readState();
 render();
-import('./assets/js/mc-cloud-sync.js').then(function(api){cloudSync=api;return api.hydrateLocalState(state,function(status){if(status==='error')toast('Saved on this device. Cloud sync needs attention.');});}).then(function(merged){if(merged){state=merged;render();}}).catch(function(){toast('Saved on this device. Cloud sync is unavailable right now.');});
+function openRequestedTemplate(){
+ var params=new URLSearchParams(location.search),requested=params.get('createTemplate');
+ if(!requested)return;
+ var match=templates.find(function(t){return t.id===requested&&t.id!=='custom-blank';});
+ if(!match){toast('That invitation template could not be found. Please choose it again from the library.');return;}
+ params.delete('createTemplate');
+ var query=params.toString();
+ history.replaceState(null,'',location.pathname+(query?'?'+query:'')+location.hash);
+ templateStartPending=true;
+ openTemplateConfirmStep(match.id);
+ toast('Template selected. Add your invitation title and link name.');
+}
+import('./assets/js/mc-cloud-sync.js').then(function(api){cloudSync=api;return api.hydrateLocalState(state,function(status){if(status==='error')toast('Saved on this device. Cloud sync needs attention.');});}).then(function(merged){if(merged){state=merged;render();}openRequestedTemplate();}).catch(function(){toast('Saved on this device. Cloud sync is unavailable right now.');openRequestedTemplate();});
 })();
 </script>
 </body>
