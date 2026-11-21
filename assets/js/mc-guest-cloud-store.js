@@ -48,8 +48,8 @@ export async function syncInvitationGuests(invitation, guests, persistLocal) {
       invitation_id: invitation._cloudId,
       owner_id: user.id,
       guest_name: String(guest.name).trim().slice(0, 160),
-      guest_phone: String(guest.phone || '').trim().slice(0, 40) || null,
-      rsvp_status: ['pending', 'accepted', 'declined', 'maybe'].includes(guest.status) ? guest.status : 'pending',
+      guest_phone: String(guest.phone || '').trim().slice(0, 40),
+      rsvp_status: guest.status === 'accepted' ? 'attending' : guest.status === 'declined' ? 'not_attending' : 'pending',
       guest_count: Math.max(1, Math.min(20, Number(guest.count) || 1))
     };
 
