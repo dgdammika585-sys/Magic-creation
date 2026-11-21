@@ -201,7 +201,7 @@ export async function saveMyInvitation(event, options = {}) {
     if (lookup.error) throw lookup.error;
     existing = lookup.data;
   } else {
-    const lookup = await supabase.from(TABLE).select('id,published')
+    const lookup = await supabase.from(TABLE).select('id,published,updated_at')
       .eq('owner_id', user.id).eq('slug', slug).maybeSingle();
     if (lookup.error) throw lookup.error;
     existing = lookup.data;
