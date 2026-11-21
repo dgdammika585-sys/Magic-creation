@@ -207,6 +207,13 @@ export async function saveMyInvitation(event, options = {}) {
     existing = lookup.data;
   }
 
+  // A new local draft must never silently adopt and overwrite an existing cloud row
+  // merely because its slug happens to match. Hydration/merge assigns _cloudId
+  // when it has positively matched an existing invitation.
+  if (!event._cloudId && existing) {
+    throw new Error('This invitation link name already exists in your cloud account. Reload your invitations or choose a different link name.');
+  }
+
   // A stale local prototype flag must never publish a new record. Only the
   // explicit Publish action can make a record public; existing live records
   // remain live on ordinary saves unless the owner explicitly unpublishes.
