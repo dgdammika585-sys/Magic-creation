@@ -5,15 +5,24 @@ import { createClient } from "npm:@supabase/supabase-js@2.95.0";
 const BUCKET = "mc-guest-gallery-private";
 const MAX_BYTES = 8 * 1024 * 1024;
 const MAX_ATTEMPTS = 5;
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-guest-token, x-caption",
-  "Access-Control-Max-Age": "86400",
-  "Vary": "Origin",
-};
-function json(body: Record<string, unknown>, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+const ALLOWED_ORIGINS = new Set(["https://dgdammika585-sys.github.io", "http://localhost:5173", "http://127.0.0.1:5500"]);
+function corsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const headers: Record<string, string> = {
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-guest-token, x-caption",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+  if (ALLOWED_ORIGINS.has(origin)) headers["Access-Control-Allow-Origin"] = origin;
+  return headers;
+}
+function originAllowed(req: Request) {
+  const origin = req.headers.get("origin");
+  return !origin || ALLOWED_ORIGINS.has(origin);
+}
+function json(req: Request, body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders(req), "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
 }
 function hex(bytes: Uint8Array) { return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join(""); }
 async function sha256(value: string) {
@@ -52,9 +61,8 @@ function adminClient() {
   let key = "";
   if (secretMap) {
     try {
-      const names = JSON.parse(secretMap);
-      const envName = names.default || "";
-      key = envName ? Deno.env.get(envName) || "" : "";
+      const keys = JSON.parse(secretMap);
+      key = typeof keys.default === "string" ? keys.default : "";
     } catch { throw new Error("SERVER_CONFIG"); }
   }
   key = key || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -62,11 +70,12 @@ function adminClient() {
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
 }
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return json({ error: "Method not allowed." }, 405);
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(req) });
+  if (!originAllowed(req)) return json(req, { error: "Origin not allowed." }, 403);
+  if (req.method !== "POST") return json(req, { error: "Method not allowed." }, 405);
   try {
     const token = req.headers.get("x-guest-token") || "";
-    if (!/^[0-9a-f]{64}$/i.test(token)) return json({ error: "This guest upload link is invalid or expired." }, 401);
+    if (!/^[0-9a-f]{64}$/i.test(token)) return json(req, { error: "This guest upload link is invalid or expired." }, 401);
     const contentType = (req.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
     if (!["image/jpeg","image/png","image/webp"].includes(contentType)) return json({ error: "Please upload a JPG, PNG, or WebP photo." }, 415);
     const bytes = await readLimited(req);
