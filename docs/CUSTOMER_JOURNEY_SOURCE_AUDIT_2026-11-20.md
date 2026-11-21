@@ -125,3 +125,11 @@ Not verified in a real browser: template selection handoff from each of the 12 l
 ### Additional slug-collision protection
 
 A further cloud-save review found that an unhydrated local draft with a slug already present in the same customer's cloud account could be mistaken for that existing invitation and overwrite it. `mc-cloud-store.js` now rejects a slug match when the local event has no confirmed `_cloudId`. A legitimate existing invitation is first matched during cloud hydration/merge, which attaches its cloud ID; otherwise the user must reload or choose a different link name. This is a source-level safeguard and still needs offline/slow-network browser testing.
+
+
+### Workspace status and Guest Gallery copy correction
+
+- Updated the workspace status/help text to describe local-first saves and signed-in account sync rather than incorrectly claiming that all data is browser-only.
+- Updated Invitation Layout and Version History guidance: data is queued for account sync, but cross-device restore remains unverified.
+- Clarified that Guest Gallery is currently a setup preview only. QR generation, guest mobile verification, uploads and approval are not active; the interface no longer promises that guests can currently upload photos or that a working QR code is ready.
+- The private gallery owner-moderation module and proposed migration remain preparatory code only. No database migration, bucket, Storage policy or Edge Function was deployed.
