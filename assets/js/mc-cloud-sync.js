@@ -101,14 +101,17 @@ async function syncSnapshot(snapshot, onStatus) {
     return;
   }
   syncInProgress = true;
+  const ownerAtStart = activeOwnerId;
   try {
     const user = await getSignedInCustomer();
-    if (!activeOwnerId || activeOwnerId !== user.id) {
+    if (!ownerAtStart || activeOwnerId !== ownerAtStart || ownerAtStart !== user.id) {
       throw new Error('Customer account changed. Reload before syncing invitation data.');
     }
     const remote = await listMyInvitations();
+    if (activeOwnerId !== ownerAtStart) throw new Error('Customer account changed during sync. Reload before saving.');
     const next = mergeRemoteIntoLocal(snapshot, remote);
     for (const event of next.events) {
+      if (activeOwnerId !== ownerAtStart) throw new Error('Customer account changed during sync. Reload before saving.');
       if (!event || event.id === 'event-demo') continue;
       const slug = slugOf(event);
       if (!slug || !(event.names || event.title || event.invitationTitle)) continue;
@@ -121,13 +124,15 @@ async function syncSnapshot(snapshot, onStatus) {
         if (localTime <= cloudTime) continue;
         event._cloudId = cloudMatch._cloudId;
       }
-      const saved = await saveMyInvitation(event);
+      const saved = await saveMyInvitation(event, cloudMatch && cloudMatch._cloudUpdatedAt
+        ? { expectedUpdatedAt: cloudMatch._cloudUpdatedAt } : {});
       event._cloudId = saved._cloudId;
       event._cloudUpdatedAt = saved._cloudUpdatedAt;
       event.published = Boolean(saved.published);
       if (!event.published) event.link = '';
       delete event._localUpdatedAt;
     }
+    if (activeOwnerId !== ownerAtStart) throw new Error('Customer account changed before local sync could finish.');
     persistLocal(next);
     if (typeof onStatus === 'function') onStatus('saved', next);
     return next;
@@ -148,7 +153,10 @@ export async function publishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
   const user = await getSignedInCustomer();
   if (!activeOwnerId || activeOwnerId !== user.id) throw new Error('Customer account changed. Reload before publishing.');
-  const saved = await saveMyInvitation({ ...event, published: true }, { publish: true });
+  const saved = await saveMyInvitation({ ...event, published: true }, {
+    publish: true,
+    ...(event._cloudUpdatedAt ? { expectedUpdatedAt: event._cloudUpdatedAt } : {})
+  });
   if (!saved || !saved._cloudId || !saved.published) throw new Error('The invitation was not confirmed as published.');
   return saved;
 }
@@ -157,7 +165,10 @@ export async function unpublishInvitation(event) {
   if (!event || typeof event !== 'object') throw new Error('Invitation details are missing.');
   const user = await getSignedInCustomer();
   if (!activeOwnerId || activeOwnerId !== user.id) throw new Error('Customer account changed. Reload before unpublishing.');
-  return saveMyInvitation({ ...event, published: false }, { unpublish: true });
+  return saveMyInvitation({ ...event, published: false }, {
+    unpublish: true,
+    ...(event._cloudUpdatedAt ? { expectedUpdatedAt: event._cloudUpdatedAt } : {})
+  });
 }
 
 export async function hydrateLocalState(state, onStatus) {
@@ -166,11 +177,13 @@ export async function hydrateLocalState(state, onStatus) {
     const ownerState = stateForSignedInOwner(state, user.id);
     bindLocalStateToOwner(user.id);
     const remote = await listMyInvitations();
+    if (activeOwnerId !== user.id) throw new Error('Customer account changed during invitation loading. Reload the page.');
     const merged = mergeRemoteIntoLocal(clone(ownerState), remote);
     // Only drafts already bound to this same customer account can reach this
     // point. Unassigned legacy drafts are kept in a separate local backup and
     // are never silently uploaded to whichever account signs in first.
     for (const event of merged.events) {
+      if (activeOwnerId !== user.id) throw new Error('Customer account changed during invitation loading. Reload the page.');
       if (!event || event.id === 'event-demo') continue;
       if (!slugOf(event) || !(event.names || event.title || event.invitationTitle)) continue;
       if (event._cloudId) {
@@ -185,7 +198,8 @@ export async function hydrateLocalState(state, onStatus) {
         }
         if (localTime <= cloudTime) continue;
       }
-      const saved = await saveMyInvitation(event);
+      const saved = await saveMyInvitation(event, event._cloudId && event._cloudUpdatedAt
+        ? { expectedUpdatedAt: event._cloudUpdatedAt } : {});
       event._cloudId = saved._cloudId;
       event._cloudUpdatedAt = saved._cloudUpdatedAt;
       event.published = Boolean(saved.published);
@@ -193,6 +207,7 @@ export async function hydrateLocalState(state, onStatus) {
       delete event._syncConflict;
       delete event._localUpdatedAt;
     }
+    if (activeOwnerId !== user.id) throw new Error('Customer account changed before invitation loading could finish.');
     persistLocal(merged);
     if (typeof onStatus === 'function') onStatus('saved', merged);
     return merged;
