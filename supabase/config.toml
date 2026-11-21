@@ -6,3 +6,8 @@ verify_jwt = false
 [functions.guest-rsvp]
 # The function validates a guest token and writes through a server-only SQL RPC.
 verify_jwt = false
+
+[functions.guest-gallery-upload]
+# This endpoint authenticates with a per-guest 256-bit invitation token,
+# not a Supabase user JWT. The secret key is used only inside the Edge Function.
+verify_jwt = false
