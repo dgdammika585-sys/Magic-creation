@@ -120,3 +120,8 @@ Static cross-file assertions passed:
 - Template library still loads full invitation HTML pages in real preview iframes.
 
 Not verified in a real browser: template selection handoff from each of the 12 links, email confirmation, password recovery, auth session persistence, cloud hydration timing, invitation editing and publication. Source checks do not establish live Supabase or deployed-site behavior.
+
+
+### Additional slug-collision protection
+
+A further cloud-save review found that an unhydrated local draft with a slug already present in the same customer's cloud account could be mistaken for that existing invitation and overwrite it. `mc-cloud-store.js` now rejects a slug match when the local event has no confirmed `_cloudId`. A legitimate existing invitation is first matched during cloud hydration/merge, which attaches its cloud ID; otherwise the user must reload or choose a different link name. This is a source-level safeguard and still needs offline/slow-network browser testing.
