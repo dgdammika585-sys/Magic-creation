@@ -51,6 +51,12 @@ import { supabase } from './assets/js/supabase-client.js';
 const $ = (id) => document.getElementById(id);
 let mode = 'login';
 let recoveryMode = false;
+function postAuthPath(){
+  const requested = new URLSearchParams(location.search).get('next') || 'dashboard.html';
+  // Only permit known same-origin app destinations; never accept an arbitrary redirect URL.
+  return requested === 'dashboard.html' ? './dashboard.html' : './dashboard.html';
+}
+function goAfterAuth(){ window.location.replace(postAuthPath()); }
 function showMessage(text, error=false){$('message').textContent=text;$('message').className='message show'+(error?' error':'');}
 function setMode(next){
   recoveryMode=false;$('recoveryFields').classList.add('hidden');$('authForm').classList.remove('hidden');$('tabs').classList.remove('hidden');$('resetButton').classList.remove('hidden');
@@ -75,9 +81,9 @@ $('authForm').addEventListener('submit',async(e)=>{
       const fullName=$('fullName').value.trim(),phone=$('phone').value.trim();
       if(!fullName){showMessage('Please enter your full name.',true);return;}
       if(password!==$('confirmPassword').value){showMessage('Passwords do not match.',true);return;}
-      const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:new URL('./dashboard.html',window.location.href).href,data:{full_name:fullName,phone,preferred_language:$('language').value}}});
+      const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:new URL(postAuthPath(),window.location.href).href,data:{full_name:fullName,phone,preferred_language:$('language').value}}});
       if(error)throw error;
-      if(data.session){showMessage('Account created. Opening your dashboard…');window.location.href='./dashboard.html';}
+      if(data.session){showMessage('Account created. Opening your dashboard…');goAfterAuth();}
       else showMessage('Account created. Please check your email and confirm your address before signing in.');
     }else{
       const {data,error}=await supabase.auth.signInWithPassword({email,password});
@@ -110,7 +116,7 @@ $('saveNewPassword').addEventListener('click',async()=>{
     if(error)throw error;
     showMessage('Your password has been updated. You can now continue to your dashboard.');
     $('recoveryFields').classList.add('hidden');
-    setTimeout(()=>window.location.replace('./dashboard.html'),900);
+    setTimeout(()=>goAfterAuth(),900);
   }catch(err){showMessage(err.message||'Could not update your password. Please reopen the latest reset email link.',true);}
   finally{$('saveNewPassword').disabled=false;}
 });
