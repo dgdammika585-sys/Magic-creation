@@ -87,3 +87,19 @@ Source assertions for these controls passed after refetch. This fix still requir
 4. Test cross-device reload, template selection, save, publish, anonymous open, unpublish.
 5. Test upload/playback and cross-account denial.
 6. Diagnose Cloudflare build logs and verify hosting source before any release.
+
+
+## Follow-up cloud concurrency and account-switch audit (21 November 2026)
+
+A further source review found two additional hazards in the local-first sync queue:
+- A stale invitation editor could overwrite a newer cloud revision because updates did not compare the revision read before writing.
+- A queued snapshot from one customer could remain pending while the browser switched to another customer account.
+
+Source changes committed on the development branch:
+- `assets/js/mc-cloud-store.js` now reads the row's `updated_at` revision and applies it as a conditional update predicate when an expected revision is supplied. If the row has changed, the write returns an error rather than silently overwriting the newer revision.
+- `assets/js/mc-cloud-sync.js` supplies the expected cloud revision for existing invitation saves, hydration updates, publish and unpublish actions; it rechecks the active owner during sync; and it discards pending debounce snapshots when the active owner changes.
+- Both ID-based and slug-based existing-row lookups retrieve `updated_at`.
+
+Static source assertions passed for both lookup paths, revision comparison, conditional update, owner rechecks, revision propagation, and queue clearing. These are source-level checks only. They do not prove the behavior against live Supabase or multiple browser sessions.
+
+Still required: two-account browser test, two-tab/device concurrent-edit test (verify stale save is rejected), publish/unpublish tests, and end-to-end public link test. Do not mark cloud save as production-verified until those tests pass.
