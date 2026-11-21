@@ -50,7 +50,13 @@ function adminClient() {
   const url = Deno.env.get("SUPABASE_URL");
   const secretMap = Deno.env.get("SUPABASE_SECRET_KEYS");
   let key = "";
-  if (secretMap) { try { key = JSON.parse(secretMap).default || ""; } catch { throw new Error("SERVER_CONFIG"); } }
+  if (secretMap) {
+    try {
+      const names = JSON.parse(secretMap);
+      const envName = names.default || "";
+      key = envName ? Deno.env.get(envName) || "" : "";
+    } catch { throw new Error("SERVER_CONFIG"); }
+  }
   key = key || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
   if (!url || !key) throw new Error("SERVER_CONFIG");
   return createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
