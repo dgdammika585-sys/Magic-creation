@@ -39,8 +39,12 @@ create policy "guest gallery owner moderate" on public.guest_gallery_submissions
   for update to authenticated
   using (exists (select 1 from public.invitations i
     where i.id = guest_gallery_submissions.invitation_id and i.owner_id = (select auth.uid())))
-  with check (exists (select 1 from public.invitations i
-    where i.id = guest_gallery_submissions.invitation_id and i.owner_id = (select auth.uid())));
+  with check (
+    status in ('approved', 'rejected')
+    and reviewed_at is not null
+    and exists (select 1 from public.invitations i
+      where i.id = guest_gallery_submissions.invitation_id and i.owner_id = (select auth.uid()))
+  );
 
 -- Separate per-token upload throttling; not coupled to RSVP rate limits.
 create table if not exists public.guest_gallery_rate_limits (
