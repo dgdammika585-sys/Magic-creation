@@ -71,4 +71,4 @@ Do not consider the feature ready until all tests pass, cross-owner tests prove 
 
 - Data API grants, exposed schemas, and RLS: https://supabase.com/docs/guides/api/securing-your-api
 - Private buckets and access control: https://supabase.com/docs/guides/storage/buckets/fundamentals
-- Supabase changelog — public tables no longer auto-exposed by default, enforced across projects from 2026-10-30: https://supabase.com/changelog/2026-04-28-data-api-exposure
+- Supabase changelog — public tables no longer auto-exposed by default, enforced across projects from 2026-10-30: https://supabase.com/changelog?types=breaking-change
