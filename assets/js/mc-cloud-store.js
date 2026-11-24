@@ -45,6 +45,11 @@ function buildPublicInvitationData(event) {
   const source = event && typeof event === 'object' ? event : {};
   const output = { publicVersion: 1 };
   for (const key of PUBLIC_DATA_KEYS) {
+    // Contact information is intentionally public only when the customer
+    // has enabled the Contact Details section on the invitation.
+    if (key === 'contactEmail' || /^contactPerson[123](?:Name|Phone)$/.test(key)) {
+      if (source.sections && source.sections.contactDetails === false) continue;
+    }
     if (source[key] === undefined) continue;
     if (key === 'wishes') {
       output.wishes = Array.isArray(source.wishes)
