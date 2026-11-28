@@ -42,6 +42,9 @@ import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './assets/js/supabase-cli
 const params = new URLSearchParams(location.search);
 const token = (params.get('token') || '').toLowerCase();
 const slug = (params.get('slug') || '').trim().toLowerCase();
+// Remove bearer credentials from the address bar and current history entry
+// immediately, even when the token or slug later fails validation.
+history.replaceState(null, '', location.pathname);
 const statusBox = document.getElementById('status');
 const form = document.getElementById('uploadForm');
 const button = document.getElementById('submit');
