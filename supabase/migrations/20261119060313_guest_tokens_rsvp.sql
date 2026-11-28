@@ -53,7 +53,6 @@ on public.seating_tables
 for each row execute function public.validate_seating_table_update();
 
 revoke all on function public.validate_seating_table_update() from public, anon, authenticated;
-revoke all on function public.validate_guest_table_capacity() from public, anon, authenticated;
 
 alter table public.invitations
   add column if not exists show_guest_table boolean not null default false;
@@ -132,6 +131,8 @@ create trigger guests_validate_table_capacity
 before insert or update of table_id, guest_count, invitation_id
 on public.guests
 for each row execute function public.validate_guest_table_capacity();
+
+revoke all on function public.validate_guest_table_capacity() from public, anon, authenticated;
 
 alter table public.seating_tables enable row level security;
 alter table public.guest_invitation_tokens enable row level security;

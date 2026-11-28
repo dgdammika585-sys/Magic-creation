@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Share Your Photos | MAGIC CREATIONS</title>
+<style>
+:root{color-scheme:light;--ink:#342b2d;--muted:#776b6d;--gold:#b38b4b;--rose:#f7e9e8;--paper:#fffaf7}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#fffaf7,#f6ece9);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);display:grid;place-items:center;padding:24px}
+main{width:min(100%,560px);background:#fff;border:1px solid #eaded7;border-radius:24px;padding:clamp(22px,5vw,42px);box-shadow:0 18px 55px #503b3012}
+.brand{letter-spacing:.22em;font-size:12px;color:var(--gold);font-weight:800}.ornament{height:3px;width:64px;background:var(--gold);margin:18px 0 24px;border-radius:9px}
+h1{font-family:Georgia,serif;font-size:clamp(30px,7vw,42px);font-weight:500;margin:0 0 8px}p{color:var(--muted);line-height:1.65}.guest{font-weight:700;color:var(--ink);font-size:18px}
+label{display:block;font-weight:650;margin:22px 0 8px}input[type=file],input[type=text]{width:100%;padding:13px;border:1px solid #ded3ce;border-radius:12px;background:var(--paper);font:inherit}
+button{margin-top:18px;width:100%;border:0;border-radius:999px;padding:15px 20px;background:var(--ink);color:#fff;font-size:15px;font-weight:700;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}
+.notice{background:var(--rose);padding:13px 15px;border-radius:12px;font-size:13px}.status{margin-top:18px;padding:13px;border-radius:12px;display:none}.status.show{display:block}.status.error{background:#fff0ef;color:#8c3028}.status.success{background:#eef8ef;color:#245b35}
+.small{font-size:12px}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<div class="brand">MAGIC CREATIONS</div><div class="ornament"></div>
+<h1>Share your moments</h1>
+<p id="intro">A private photo-sharing space for invited guests.</p>
+<div id="guest" class="guest hidden"></div>
+<section id="uploadPanel" class="hidden">
+<p class="notice">Photos are sent privately to the event host for approval. They will not appear publicly unless the host approves them.</p>
+<form id="uploadForm">
+<label for="photo">Choose a photo</label>
+<input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+<p class="small">JPG, PNG or WebP · Maximum 8 MB per photo.</p>
+<label for="caption">Add a short caption (optional)</label>
+<input id="caption" type="text" maxlength="160" placeholder="A lovely moment…">
+<button id="submit" type="submit">Send photo for approval</button>
+</form>
+</section>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+<p class="small">This personal link is your access key. Do not forward it to others. MAGIC CREATIONS does not send an SMS code in this version.</p>
+</main>
+<script type="module">
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './assets/js/supabase-client.js';
+const params = new URLSearchParams(location.search);
+const token = (params.get('token') || '').toLowerCase();
+const slug = (params.get('slug') || '').trim().toLowerCase();
+// Remove bearer credentials from the address bar and current history entry
+// immediately, even when the token or slug later fails validation.
+history.replaceState(null, '', location.pathname);
+const statusBox = document.getElementById('status');
+const form = document.getElementById('uploadForm');
+const button = document.getElementById('submit');
+const showStatus = (message, kind='error') => { statusBox.textContent=message; statusBox.className='status show '+kind; };
+const validToken = /^[a-f0-9]{64}$/.test(token);
+if (validToken && slug && /^[a-z0-9-]{1,80}$/.test(slug)) {
+  // Keep the bearer token in memory only; remove it from the visible URL and browser history.
+  history.replaceState(null, '', location.pathname);
+  try {
+    const response = await fetch(SUPABASE_URL + '/functions/v1/guest-lookup', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_PUBLISHABLE_KEY},
+      body:JSON.stringify({token,slug})
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'This invitation link is invalid or expired.');
+    document.getElementById('intro').textContent = 'You are invited to share a photo from this celebration.';
+    const guest = document.getElementById('guest');
+    guest.textContent = 'Welcome, ' + (data.guest?.name || 'Guest');
+    guest.classList.remove('hidden');
+    document.getElementById('uploadPanel').classList.remove('hidden');
+  } catch (error) { showStatus(error.message || 'Could not verify this invitation link.'); }
+} else {
+  showStatus('This photo-sharing link is incomplete or invalid. Please open the personal link shared with you by the event host.');
+}
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const file = document.getElementById('photo').files?.[0];
+  if (!file) return showStatus('Please choose a photo first.');
+  if (file.size > 8*1024*1024) return showStatus('Each photo must be 8 MB or smaller.');
+  if (!['image/jpeg','image/png','image/webp'].includes(file.type)) return showStatus('Please choose a JPG, PNG or WebP photo.');
+  button.disabled = true; button.textContent='Sending securely…';
+  try {
+    const response = await fetch(SUPABASE_URL + '/functions/v1/guest-gallery-upload', {
+      method:'POST',
+      headers:{
+        'apikey':SUPABASE_PUBLISHABLE_KEY,
+        'x-guest-token':token,
+        'content-type':file.type,
+        'x-caption':document.getElementById('caption').value.slice(0,160)
+      },
+      body:file
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Upload failed. Please try again.');
+    form.reset();
+    showStatus('Thank you! Your photo has been submitted privately and is waiting for the host’s approval.','success');
+  } catch (error) { showStatus(error.message || 'The photo could not be uploaded. Please try again.'); }
+  finally { button.disabled=false; button.textContent='Send photo for approval'; }
+});
+</script>
+</body>
+</html>

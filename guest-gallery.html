@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f1eb">
+<title>Guest Gallery | MAGIC CREATIONS</title>
+<style>
+:root{--paper:#fffdf9;--cream:#f7f1eb;--ink:#282523;--muted:#81766e;--rose:#ad7475;--line:#e9ded6;--sage:#71846e}
+*{box-sizing:border-box}body{margin:0;background:#f6f4f1;color:var(--ink);font:14px/1.55 "DM Sans","Noto Sans Sinhala",Arial,sans-serif}
+button,select{font:inherit}.shell{max-width:1180px;margin:auto;padding:26px 22px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border:1px solid #c3a297;display:grid;place-items:center;color:var(--rose);font:20px Georgia}.brand strong{display:block;font-size:11px;letter-spacing:.15em}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.14em;margin-top:3px}
+a{color:#87615a;text-decoration:none}.back{font-size:12px}.eyebrow{font-size:10px;letter-spacing:.16em;color:#9a766a;font-weight:700}.head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:10px 0 20px}.head h1{font:400 clamp(30px,4vw,44px)/1.1 Georgia,serif;margin:8px 0}.head p{color:var(--muted);font-size:12px;margin:0;max-width:680px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.toolbar label{font-size:11px;color:var(--muted);font-weight:600}.select{min-width:220px;max-width:100%;border:1px solid #ded2c9;background:#fffefa;border-radius:6px;padding:10px 12px;color:var(--ink)}.btn{border:1px solid #d9c8bc;background:#fff;color:#54453e;border-radius:6px;padding:9px 13px;font-size:11px;font-weight:600;cursor:pointer}.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.btn.approve{background:#edf4e9;color:#4e7047;border-color:#d3e2cc}.btn.reject{background:#f8e7e4;color:#914e49;border-color:#efd0ca}.btn:disabled{opacity:.5;cursor:not-allowed}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 13px;color:#71675f;font-size:10px;cursor:pointer}.tab.active{background:#f2e6e0;border-color:#e6d4c8;color:#634941;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:8px;padding:13px}.stat span{display:block;color:var(--muted);font-size:10px}.stat strong{display:block;font:28px Georgia;margin-top:5px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.photo{border:1px solid var(--line);border-radius:9px;background:#fff;overflow:hidden;min-width:0}.photo img{width:100%;height:230px;display:block;object-fit:cover;background:#f4eee8}.photo-body{padding:13px}.photo-title{display:flex;justify-content:space-between;gap:8px;align-items:start}.photo-title strong{font-size:12px}.pill{font-size:9px;padding:4px 8px;border-radius:20px;background:#f1ece8;color:#776a60;white-space:nowrap}.pill.approved{background:#e7f0e3;color:#55734e}.pill.rejected{background:#f9e8e5;color:#9c544f}.caption{font-size:11px;color:#74685f;margin:9px 0;overflow-wrap:anywhere}.meta{font-size:9px;color:#9a8c82}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.empty,.notice{padding:24px;border:1px dashed #ded0c5;border-radius:8px;color:var(--muted);font-size:12px;text-align:center}.notice{background:#fcf3dd;border-style:solid;border-color:#eadcb6;color:#78633e;text-align:left;line-height:1.7}.notice strong{display:block;color:#6d5837;margin-bottom:4px}.error{background:#f9e8e5;color:#8e4b45;border:1px solid #efd0ca;padding:12px;border-radius:7px;font-size:11px;margin:12px 0}.status{font-size:11px;color:var(--muted);min-height:18px;margin-top:10px}.footer-note{font-size:10px;color:#94867d;margin-top:18px;line-height:1.7}
+@media(max-width:820px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo img{height:200px}}
+@media(max-width:560px){.shell{padding:18px 13px 42px}.head{display:block}.stats{gap:7px}.stat{padding:10px}.grid{grid-template-columns:1fr}.photo img{height:260px}.top{align-items:flex-start}.select{width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+ <header class="top">
+  <div class="brand"><div class="mark">MC</div><div><strong>MAGIC CREATIONS</strong><small>EVENT OWNER WORKSPACE</small></div></div>
+  <a class="back" href="./dashboard.html">← Back to Dashboard</a>
+ </header>
+ <div class="eyebrow">GUEST EXPERIENCE · PHOTO MODERATION</div>
+ <div class="head"><div><h1>Guest Gallery</h1><p>Review guest-submitted photos before they are considered for your invitation gallery. Private previews are temporary and visible only to the signed-in event owner.</p></div></div>
+ <section class="panel">
+  <div class="toolbar"><label for="invitationSelect">Choose invitation</label><select class="select" id="invitationSelect"><option value="">Loading your invitations…</option></select><button class="btn" id="refreshBtn" type="button">↻ Refresh</button></div>
+  <div class="stats"><div class="stat"><span>Pending review</span><strong id="pendingCount">—</strong></div><div class="stat"><span>Approved</span><strong id="approvedCount">—</strong></div><div class="stat"><span>Rejected</span><strong id="rejectedCount">—</strong></div></div>
+  <div class="tabs" role="group" aria-label="Filter guest photos">
+   <button class="tab active" data-filter="all" type="button">All photos</button>
+   <button class="tab" data-filter="pending" type="button">Pending</button>
+   <button class="tab" data-filter="approved" type="button">Approved</button>
+   <button class="tab" data-filter="rejected" type="button">Rejected</button>
+  </div>
+  <div id="message" class="status" role="status" aria-live="polite"></div>
+  <div id="error" hidden></div>
+  <div id="photoGrid" class="grid"><div class="empty">Loading invitations…</div></div>
+ </section>
+ <div class="notice"><strong>Guest privacy and approval</strong>All new uploads are private and start as Pending. Approving a photo records your decision; this page does not yet publish approved photos on the public invitation. Rejected files remain private and are not automatically deleted.</div>
+ <p class="footer-note">Preview links expire after five minutes. If a preview expires, refresh this page. QR-code creation, guest mobile verification, upload intake and public approved-gallery display are separate launch steps and are not active yet.</p>
+</div>
+<script type="module">
+import { listMyInvitations } from './assets/js/mc-cloud-store.js';
+import { listGuestGallerySubmissions, reviewGuestGallerySubmission } from './assets/js/mc-guest-gallery.js';
+
+const $ = (id) => document.getElementById(id);
+const select = $('invitationSelect');
+const grid = $('photoGrid');
+const message = $('message');
+const errorBox = $('error');
+let invitations = [];
+let allRows = [];
+let filter = 'all';
+let busy = false;
+
+function esc(value) {
+ return String(value == null ? '' : value).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showError(error) {
+ errorBox.hidden = false;
+ errorBox.className = 'error';
+ const text = String(error && error.message || error || 'Something went wrong.');
+ errorBox.textContent = text.includes('guest_gallery_submissions') || text.includes('relation') || text.includes('does not exist')
+  ? 'Guest Gallery database setup is not complete yet. The private photo table and Storage bucket must be created before guest submissions can appear.'
+  : text;
+}
+function clearError() { errorBox.hidden = true; errorBox.textContent = ''; }
+function counts() {
+ $('pendingCount').textContent = allRows.filter(x => x.status === 'pending').length;
+ $('approvedCount').textContent = allRows.filter(x => x.status === 'approved').length;
+ $('rejectedCount').textContent = allRows.filter(x => x.status === 'rejected').length;
+}
+function render() {
+ counts();
+ const rows = allRows.filter(x => filter === 'all' || x.status === filter);
+ if (!rows.length) {
+  grid.innerHTML = '<div class="empty" style="grid-column:1/-1">No photos in this view yet. New guest uploads will appear here as Pending after the secure upload service is enabled.</div>';
+  return;
+ }
+ grid.innerHTML = rows.map(row => {
+  const label = row.status.charAt(0).toUpperCase() + row.status.slice(1);
+  const when = row.created_at ? new Date(row.created_at).toLocaleString() : '';
+  return '<article class="photo"><img src="' + esc(row.previewUrl) + '" alt="Private guest photo preview" loading="lazy" referrerpolicy="no-referrer"><div class="photo-body"><div class="photo-title"><strong>' + esc(row.guest_display_name || 'Guest') + '</strong><span class="pill ' + esc(row.status) + '">' + esc(label) + '</span></div>' +
+   (row.caption ? '<p class="caption">' + esc(row.caption) + '</p>' : '') +
+   '<div class="meta">' + esc(when) + '</div><div class="actions">' +
+   (row.status !== 'approved' ? '<button class="btn approve" data-review="approved" data-id="' + esc(row.id) + '" type="button">✓ Approve</button>' : '') +
+   (row.status !== 'rejected' ? '<button class="btn reject" data-review="rejected" data-id="' + esc(row.id) + '" type="button">× Reject</button>' : '') +
+   '</div></div></article>';
+ }).join('');
+}
+async function loadPhotos() {
+ const invitationId = select.value;
+ if (!invitationId) {
+  allRows = []; counts();
+  grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Select one of your invitations to review its guest photos.</div>';
+  return;
+ }
+ busy = true; clearError(); message.textContent = 'Loading private guest photos…';
+ $('refreshBtn').disabled = true;
+ try {
+  allRows = await listGuestGallerySubmissions(invitationId, 'all');
+  render();
+  message.textContent = 'Showing ' + allRows.length + ' private submission(s).';
+ } catch (error) {
+  allRows = []; counts(); grid.innerHTML = '';
+  showError(error); message.textContent = 'Could not load guest photos.';
+ } finally { busy = false; $('refreshBtn').disabled = false; }
+}
+async function boot() {
+ try {
+  invitations = await listMyInvitations();
+  select.innerHTML = '<option value="">Select an invitation…</option>' + invitations.map(e => {
+   const id = e._cloudId || '';
+   return id ? '<option value="' + esc(id) + '">' + esc(e.names || e.title || e.invitationTitle || 'Untitled invitation') + '</option>' : '';
+  }).join('');
+  const requested = new URLSearchParams(location.search).get('invitationId');
+  if (requested && invitations.some(e => e._cloudId === requested)) select.value = requested;
+  if (!select.value && select.options.length > 1) select.selectedIndex = 1;
+  await loadPhotos();
+ } catch (error) {
+  showError(error); grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Please sign in to manage your invitations.</div>';
+ }
+}
+select.addEventListener('change', loadPhotos);
+$('refreshBtn').addEventListener('click', loadPhotos);
+document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
+ filter = button.dataset.filter;
+ document.querySelectorAll('[data-filter]').forEach(x => x.classList.toggle('active', x === button));
+ render();
+}));
+grid.addEventListener('click', async (event) => {
+ const button = event.target.closest('[data-review]');
+ if (!button || busy) return;
+ const decision = button.dataset.review;
+ const submissionId = button.dataset.id;
+ if (!submissionId || !['approved','rejected'].includes(decision)) return;
+ if (!window.confirm(decision === 'approved' ? 'Approve this guest photo?' : 'Reject this guest photo?')) return;
+ busy = true; button.disabled = true; message.textContent = 'Saving your decision…'; clearError();
+ try {
+  await reviewGuestGallerySubmission(submissionId, decision);
+  message.textContent = decision === 'approved' ? 'Photo approved.' : 'Photo rejected.';
+  await loadPhotos();
+ } catch (error) { showError(error); message.textContent = 'Your decision could not be saved.'; }
+ finally { busy = false; }
+});
+boot();
+</script>
+</body>
+</html>
